@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Mái nhà Việt cách điệu -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,30L28,50h6v22h40V50h6L54,30z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M22,50h64v4H22z" />
+    <path
+        android:fillColor="#8C1C13"
+        android:pathData="M48,58h12v14h-12z" />
+</vector>

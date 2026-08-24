@@ -1,0 +1,23 @@
+# --- Gradle / build ---
+.gradle/
+/build
+app/build/
+/captures
+.cxx
+.externalNativeBuild
+
+# --- Kotlin compiler session data (Kotlin 2.x) ---
+.kotlin/
+
+# --- Máy cục bộ: chứa đường dẫn SDK, KHÔNG commit ---
+local.properties
+
+# --- IDE ---
+.idea/
+*.iml
+
+# --- macOS ---
+.DS_Store
+
+# LƯU Ý: app/schemas/ (Room schema export) CỐ Ý được commit
+# để review diff khi làm migration.

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      NẾP NHÀ — OFFLINE-FIRST.
+
+      CỐ Ý KHÔNG khai báo android.permission.INTERNET.
+      Đây là hàng rào cứng: nếu bất kỳ code nào lỡ gọi mạng, app sẽ crash ngay
+      lúc dev thay vì âm thầm tạo hidden network dependency.
+
+      Các quyền sẽ được bổ sung ĐÚNG PHASE cần đến:
+        - POST_NOTIFICATIONS      -> Phase 8
+        - RECEIVE_BOOT_COMPLETED  -> Phase 8
+        - SCHEDULE_EXACT_ALARM    -> Phase 8
+      Phase 0 không xin bất kỳ quyền nào.
+    -->
+
+    <application
+        android:name=".NepNhaApp"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.NepNha">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.NepNha"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
