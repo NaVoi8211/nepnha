@@ -35,6 +35,7 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/PHASE_3A_ORACLE_GATE.md](docs/PHASE_3A_ORACLE_GATE.md) | **Cổng provenance/license — quyết định có được viết engine hay chưa** |
 | [docs/PHASE_3A1_DATASET_VERIFICATION.md](docs/PHASE_3A1_DATASET_VERIFICATION.md) | Kiểm chứng dữ liệu NASA/HKO và múi giờ lịch sử bằng dữ liệu thật |
 | [docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) | Giấy phép & khả thi kỹ thuật của nguồn thiên văn (SOFA/ERFA/NASA) |
+| [docs/PHASE_3_FINAL_AUDIT.md](docs/PHASE_3_FINAL_AUDIT.md) | **Kiểm toán cuối Phase 3 — 1 blocker ΔT** |
 | [docs/PHASE_3_IMPLEMENTATION.md](docs/PHASE_3_IMPLEMENTATION.md) | **Engine lịch âm — kiến trúc, kiểm thử, giới hạn** |
 | [docs/LUNAR_API.md](docs/LUNAR_API.md) | **Hợp đồng API lịch âm** |
 | [docs/LUNAR_DATASET_PROVENANCE.md](docs/LUNAR_DATASET_PROVENANCE.md) | **Provenance dataset thiên văn** |

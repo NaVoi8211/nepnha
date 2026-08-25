@@ -151,7 +151,14 @@ class LunarBoundaryAndErrorTest {
                 LocalDate.of(2026, 2, 17), LocalDate.of(2100, 12, 31),
             )
             val chuan = mocs.map { LunarTestSupport.lunarOf(it.year, it.monthValue, it.dayOfMonth) }
-            for (tz in listOf("Asia/Tokyo", "UTC", "America/New_York", "Pacific/Kiritimati")) {
+            // Phủ đúng các zone mà audit §XIII T2 yêu cầu, cộng vài zone cực đoan:
+            // UTC+7 (chính quy chiếu), UTC+8 (lệch một giờ — dễ lộ nếu engine lỡ đọc
+            // giờ máy), UTC, Los Angeles (lệch ngày), Kiritimati (UTC+14).
+            val zones = listOf(
+                "UTC", "Asia/Ho_Chi_Minh", "Asia/Shanghai", "America/Los_Angeles",
+                "Asia/Tokyo", "America/New_York", "Pacific/Kiritimati",
+            )
+            for (tz in zones) {
                 java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone(tz))
                 assertEquals(
                     "đổi timezone sang $tz làm đổi kết quả",

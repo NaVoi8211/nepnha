@@ -165,6 +165,27 @@ def main():
         ],
         "precisionNote": "Cờ này KHÔNG được dùng để đổi kết quả và KHÔNG lộ ra API. "
                          "Chọn NASA thay ERFA làm đổi đúng 4 tháng âm trong 200 năm.",
+        # Khối dưới đây trước kia được thêm tay vào JSON sau khi sinh, khiến file
+        # không tái lập được từ script (audit A1). Đưa vào đây để `python3
+        # tools/generate_lunar_dataset.py` sinh ra ĐÚNG file đã commit.
+        # ⚠️ Danh sách này được suy ra từ bảng trung khí HIỆN TẠI. Xem
+        # docs/PHASE_3_FINAL_AUDIT.md §B — bảng đó có lỗi ΔT, nên khối này phải
+        # được sinh lại cùng lúc khi blocker được xử lý.
+        "precisionSensitiveTerms": {
+            "note": "Trung khí sát 00:00 giờ VN. Chỉ ca nằm ĐÚNG ranh giới tháng mới "
+                    "có thể ảnh hưởng quy tắc tháng nhuận.",
+            "withinTwoMinutesOfLocalMidnight": 7,
+            "totalPrincipalTermsInRange": 2400,
+            "couldChangeContainingMonth": [
+                {"utc": "1938-09-23T17:00Z", "vnDate": "1938-09-24",
+                 "reason": "rơi đúng ngày đầu tháng âm", "flag": "PRECISION_SENSITIVE_TERM"},
+            ],
+            "othersNoEffect": ["1924-06-21", "1938-01-20", "1953-06-21",
+                               "2004-05-20", "2038-07-22", "2074-08-22"],
+        },
+        "quantisation": "Dataset lưu PHÚT nên có lượng tử hoá ±30 giây. Khi đối chiếu "
+                        "với nguồn cũng làm tròn phút (HKO), chênh lệch quan sát được "
+                        "có thể tới 60 giây mà không phải sai số thật.",
     }
     with open(os.path.join(OUT_DIR, "vn_lunar_v1.json"), "w", encoding="utf-8") as f:
         json.dump(provenance, f, ensure_ascii=False, indent=2)
