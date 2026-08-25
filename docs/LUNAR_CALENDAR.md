@@ -1,5 +1,11 @@
 # Lịch âm Việt Nam — chiến lược (chốt Phase 0, thực thi Phase 3)
 
+> **CẬP NHẬT sau Phase 3 Preflight (2026-08-25):** phần "port thuật toán Hồ Ngọc Đức"
+> dưới đây **đã bị thay đổi**. Giấy phép source code của tác giả là *personal,
+> non-commercial* ⇒ **không dùng code**, chỉ dùng bản mô tả quy tắc rồi tự viết
+> Kotlin. Phạm vi bảo đảm rút về **1901–2100** (theo oracle chính thức) thay vì
+> 1800–2199. Chi tiết và bằng chứng: **[PHASE_3_PREFLIGHT.md](PHASE_3_PREFLIGHT.md)**.
+
 Đây là phần **critical** nhất của app. Sai lịch âm ⇒ sai ngày giỗ ⇒ app vô dụng.
 
 ## 1. Vì sao không dùng thư viện có sẵn

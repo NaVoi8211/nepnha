@@ -6,7 +6,8 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 
 ## Trạng thái
 
-**Phase 0 hoàn thành** — project shell + build config. Chưa có tính năng.
+**Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
+**Phase 3 Preflight hoàn thành** — nghiên cứu lịch âm, chưa có engine.
 
 ## Build
 
@@ -30,6 +31,8 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 |---|---|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Kiến trúc, manual DI, build config, quyết định & lý do |
 | [docs/LUNAR_CALENDAR.md](docs/LUNAR_CALENDAR.md) | Chiến lược lịch âm Việt Nam + kế hoạch test (Phase 3) |
+| [docs/PHASE_3_PREFLIGHT.md](docs/PHASE_3_PREFLIGHT.md) | **Nghiên cứu license/thuật toán/oracle trước khi viết engine** |
+| [docs/LUNAR_TEST_VECTORS.md](docs/LUNAR_TEST_VECTORS.md) | Bảng test vector lịch âm kèm nguồn |
 | [docs/CONTENT_SCHEMA.md](docs/CONTENT_SCHEMA.md) | Schema `rituals/prayers/checklists` + template variables |
 | [docs/ROOM_SCHEMA.md](docs/ROOM_SCHEMA.md) | Entity Room cho user data |
 | [docs/MEMORIAL_RULES.md](docs/MEMORIAL_RULES.md) | Quy tắc nghiệp vụ ngày giỗ: tháng nhuận & ngày 30 |
