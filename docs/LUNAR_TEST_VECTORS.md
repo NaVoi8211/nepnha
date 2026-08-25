@@ -28,6 +28,27 @@ không** được dùng làm `expected_value_source`. Kiểm engine phải bằn
 
 ---
 
+## Phân hạng mức xác nhận (Phase 3A.4)
+
+Một vector chỉ được dùng làm **expected value** khi đạt **V1**.
+
+| Mức | Nguồn | Dùng làm gì |
+|---|---|---|
+| **V1** Independent Tier 1 | Trần Tiến Bình · văn bản nhà nước | ✅ **expected value** |
+| **V2** Independent astronomical | NASA · HKO · ERFA | ✅ cho thiên văn · ❌ cho quy tắc lịch VN |
+| **V3** Vietnamese-calendar implementation | lichviet.app, các lịch VN khác | ⚠️ **chỉ cảnh báo sai lệch** |
+| **V4** Online black-box | Nguồn ancestry UNKNOWN | ⚠️ chỉ phát hiện sai lệch |
+| **V5** Unresolved | Nguồn mâu thuẫn | ⛔ điều tra, không chọn bên |
+
+> ⛔ **V3/V4 đồng ý KHÔNG BAO GIỜ nâng thành "verified".** Nhiều website cùng cho một
+> kết quả chỉ chứng minh chúng cùng một implementation. Xem
+> [LUNAR_ONLINE_ORACLE_PROVENANCE.md](LUNAR_ONLINE_ORACLE_PROVENANCE.md).
+>
+> ⛔ **Không commit dữ liệu lấy từ lichviet.app** — điều khoản của họ cấm sao chép/
+> tái tạo/phân phối "dữ liệu" nếu không có văn bản cho phép.
+
+---
+
 ## Quy ước trạng thái
 
 | Ký hiệu | Nghĩa |
@@ -258,7 +279,8 @@ hay `UnsupportedYear`? Cần bảng biên rồi mới định nghĩa.
 | Ngày (UT) | Giờ VN | Yêu cầu với engine |
 |---|---|---|
 | 1944-06-20 17:00 | 00:00 | ⛔ **CHƯA QUYẾT** hành vi |
-| 1967-07-07 17:00 | 00:00 | ⛔ trùng giai đoạn múi giờ tranh cãi |
+| *(1967 xem dòng dưới — đã có thêm dữ kiện V3)* | | |
+| 1967-07-07 17:00 | 00:00 | ⛔ trùng giai đoạn múi giờ tranh cãi. **3A.4:** NASA ⇒ Sóc 08/07 · ERFA ⇒ 07/07 · lichviet.app ⇒ 08/07 (V3, ancestry UNKNOWN ⇒ **không đếm phiếu**). Cần V1 |
 | 2054-05-07 17:00 | 00:00 | ⛔ |
 | 2077-11-15 17:00 | 00:00 | ⛔ |
 | 2085-10-18 17:00 | 00:00 | ⛔ |
