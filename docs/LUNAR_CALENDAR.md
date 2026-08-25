@@ -1,5 +1,11 @@
 # Lịch âm Việt Nam — chiến lược (chốt Phase 0, thực thi Phase 3)
 
+> ✅ **ĐÃ IMPLEMENT (Phase 3).** Engine ở `core/lunar/`, dataset ở
+> `assets/lunar/vn_lunar_v1.bin`. Xem
+> **[PHASE_3_IMPLEMENTATION.md](PHASE_3_IMPLEMENTATION.md)** ·
+> **[LUNAR_API.md](LUNAR_API.md)** ·
+> **[LUNAR_DATASET_PROVENANCE.md](LUNAR_DATASET_PROVENANCE.md)**.
+
 > **CẬP NHẬT sau Phase 3 Preflight (2026-08-25):** phần "port thuật toán Hồ Ngọc Đức"
 > dưới đây **đã bị thay đổi**. Giấy phép source code của tác giả là *personal,
 > non-commercial* ⇒ **không dùng code**, chỉ dùng bản mô tả quy tắc rồi tự viết

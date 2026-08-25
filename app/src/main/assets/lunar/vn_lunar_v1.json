@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "supportedGregorianRange": [
+    1901,
+    2100
+  ],
+  "note": "Chỉ chứa dữ kiện thiên văn. Quy tắc lịch nằm trong Kotlin.",
+  "epochUtc": "1890-01-01T00:00:00Z",
+  "unit": "phút UTC kể từ epoch, u32 big-endian",
+  "internalPaddingLunations": 30,
+  "paddingIsNotSupportedRange": true,
+  "newMoonCount": 2534,
+  "principalTermCount": 2448,
+  "sha256": "a9b36e14e9efc455a8341e631b9402a81775ec55aa1152eec8c7816dc02f3ba0",
+  "sizeBytes": 19946,
+  "sources": {
+    "newMoon": {
+      "role": "DATA SOURCE",
+      "name": "NASA/GSFC Six Millennium Catalog of the Phases of the Moon",
+      "url": "https://eclipse.gsfc.nasa.gov/phase/phasecat.html",
+      "attribution": "Moon Phase Predictions by Fred Espenak, NASA/GSFC",
+      "resolution": "1 minute (UT)",
+      "note": "Không dùng eraMoon98. Xem readiness Q2."
+    },
+    "principalTerms": {
+      "role": "DATA SOURCE",
+      "name": "Sinh bằng ERFA eraEpv00 + eraEqec06 + eraNut06a",
+      "license": "BSD-3-Clause (ERFA, NumFOCUS; phái sinh có phép từ IAU SOFA)",
+      "attribution": "Dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh từ IAU SOFA",
+      "meeusFree": true,
+      "validatedAgainst": "HKO 24 solar terms 2026-2028, |lệch| <= 38 s"
+    },
+    "deltaT": {
+      "role": "DATA SOURCE",
+      "name": "cột ΔT của catalog NASA"
+    },
+    "calendarRules": {
+      "role": "ALGORITHM SOURCE",
+      "rulesR1toR5": "Aslaksen, The Mathematics of the Chinese Calendar (NUS); Explanatory Supplement to the Astronomical Almanac",
+      "ruleR6meridian": "105°E — Quyết định 121-CP điều 1",
+      "independentOfHoNgocDuc": true
+    },
+    "validation": {
+      "role": "VALIDATION SOURCE",
+      "hko": "Bảng Dương-Âm 1901-2100 (lịch Trung Quốc) — chỉ đối chiếu, không vào APK",
+      "government": "6150/TB-BLĐTBXH, 9441/TB-BNV"
+    }
+  },
+  "precisionSensitive": [
+    {
+      "utcDate": "1944-06-20",
+      "nasaUt": "17:00",
+      "erfaUt": "16:59:52",
+      "marginSeconds": 7.9,
+      "chosen": "NASA",
+      "flag": "PRECISION_SENSITIVE"
+    },
+    {
+      "utcDate": "1967-07-07",
+      "nasaUt": "17:00",
+      "erfaUt": "16:59:41",
+      "marginSeconds": 18.6,
+      "chosen": "NASA",
+      "flag": "PRECISION_SENSITIVE"
+    },
+    {
+      "utcDate": "2054-05-07",
+      "nasaUt": "17:00",
+      "erfaUt": "17:00:06",
+      "marginSeconds": 6.5,
+      "chosen": "NASA",
+      "flag": "PRECISION_SENSITIVE"
+    },
+    {
+      "utcDate": "2072-12-09",
+      "nasaUt": "16:59",
+      "erfaUt": "16:59:09",
+      "marginSeconds": 50.3,
+      "chosen": "NASA",
+      "flag": "PRECISION_SENSITIVE"
+    },
+    {
+      "utcDate": "2077-11-15",
+      "nasaUt": "17:00",
+      "erfaUt": "16:59:25",
+      "marginSeconds": 34.7,
+      "chosen": "NASA",
+      "flag": "PRECISION_SENSITIVE"
+    },
+    {
+      "utcDate": "2085-10-18",
+      "nasaUt": "17:00",
+      "erfaUt": "16:59:22",
+      "marginSeconds": 37.5,
+      "chosen": "NASA",
+      "flag": "PRECISION_SENSITIVE"
+    }
+  ],
+  "precisionNote": "Cờ này KHÔNG được dùng để đổi kết quả và KHÔNG lộ ra API. Chọn NASA thay ERFA làm đổi đúng 4 tháng âm trong 200 năm.",
+  "precisionSensitiveTerms": {
+    "note": "Trung khí sát 00:00 giờ VN. Chỉ ca nằm ĐÚNG ranh giới tháng mới có thể ảnh hưởng quy tắc tháng nhuận.",
+    "withinTwoMinutesOfLocalMidnight": 7,
+    "totalPrincipalTermsInRange": 2400,
+    "couldChangeContainingMonth": [
+      {
+        "utc": "1938-09-23T17:00Z",
+        "vnDate": "1938-09-24",
+        "reason": "rơi đúng ngày đầu tháng âm",
+        "flag": "PRECISION_SENSITIVE_TERM"
+      }
+    ],
+    "othersNoEffect": [
+      "1924-06-21",
+      "1938-01-20",
+      "1953-06-21",
+      "2004-05-20",
+      "2038-07-22",
+      "2074-08-22"
+    ]
+  },
+  "quantisation": "Dataset lưu PHÚT nên có lượng tử hoá ±30 giây. Khi đối chiếu với nguồn cũng làm tròn phút (HKO), chênh lệch quan sát được có thể tới 60 giây mà không phải sai số thật."
+}

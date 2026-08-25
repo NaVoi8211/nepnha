@@ -7,7 +7,7 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 ## Trạng thái
 
 **Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
-**Phase 3A.5 hoàn thành** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
+**Phase 3 hoàn thành** — engine lịch âm Việt Nam (Kotlin thuần, offline). Trước đó: **Phase 3A.5** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
 
 ## Build
 
@@ -35,6 +35,10 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/PHASE_3A_ORACLE_GATE.md](docs/PHASE_3A_ORACLE_GATE.md) | **Cổng provenance/license — quyết định có được viết engine hay chưa** |
 | [docs/PHASE_3A1_DATASET_VERIFICATION.md](docs/PHASE_3A1_DATASET_VERIFICATION.md) | Kiểm chứng dữ liệu NASA/HKO và múi giờ lịch sử bằng dữ liệu thật |
 | [docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) | Giấy phép & khả thi kỹ thuật của nguồn thiên văn (SOFA/ERFA/NASA) |
+| [docs/PHASE_3_IMPLEMENTATION.md](docs/PHASE_3_IMPLEMENTATION.md) | **Engine lịch âm — kiến trúc, kiểm thử, giới hạn** |
+| [docs/LUNAR_API.md](docs/LUNAR_API.md) | **Hợp đồng API lịch âm** |
+| [docs/LUNAR_DATASET_PROVENANCE.md](docs/LUNAR_DATASET_PROVENANCE.md) | **Provenance dataset thiên văn** |
+| [docs/PHASE_3_IMPLEMENTATION_READINESS.md](docs/PHASE_3_IMPLEMENTATION_READINESS.md) | Freeze trước khi code |
 | [docs/PHASE_3A5_ONLINE_CROSSCHECK.md](docs/PHASE_3A5_ONLINE_CROSSCHECK.md) | **Đối chiếu đa nguồn + Gate O1–O10 + quyết định CONDITIONAL GO** |
 | [docs/LUNAR_ONLINE_CROSSCHECK_MATRIX.md](docs/LUNAR_ONLINE_CROSSCHECK_MATRIX.md) | Ma trận đối chiếu chi tiết |
 | [docs/LUNAR_ONLINE_ANOMALIES.md](docs/LUNAR_ONLINE_ANOMALIES.md) | Nhật ký bất thường và phân loại discrepancy |
