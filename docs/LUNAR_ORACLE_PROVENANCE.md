@@ -117,6 +117,34 @@ bổ khuyết cho sách Trần Tiến Bình (chỉ có bản in).
 
 ---
 
+## 4b. Provenance của sách Trần Tiến Bình (Phase 3A.4)
+
+Trước khi gọi sách là "oracle độc lập tuyệt đối", đã tra phần giới thiệu của nhà
+phát hành:
+
+**FACT (nguồn thứ cấp).** Sách *"biên soạn theo múi giờ thứ 7, phù hợp với Quyết định
+121/CP"*, có trình bày *"quá trình phát triển của lịch Việt Nam, cơ sở tính toán,
+nguyên nhân và sự khác biệt với lịch Trung Quốc"*.
+
+**FACT.** Nội dung: đối chiếu dương–âm · can chi · ngày Julius · giờ mọc lặn Mặt Trời
+· nhật/nguyệt thực · ngày lễ tết.
+
+| Câu hỏi | Trả lời |
+|---|---|
+| Có bảng âm–dương 1901–2100? | **FACT: có** |
+| Có tháng nhuận? | **INFERENCE: có** (bảng đầy đủ tất yếu thể hiện) |
+| Có 29/30 ngày? | **INFERENCE: có** (suy từ ngày đầu các tháng liên tiếp) |
+| Có dựa vào HND/Meeus không? | **UNKNOWN** — sách 2005, HND 2004, không có bằng chứng theo chiều nào |
+| Có giờ chuyển tiết? | **UNKNOWN** |
+| Có cơ sở dữ liệu thiên văn? | **UNKNOWN** |
+
+⚠️ **Cảnh báo.** Nếu *"biên soạn theo múi giờ thứ 7"* nghĩa là dùng UTC+7 cho **toàn
+bộ** 1901–2100, sách **không mô hình hoá** miền Nam UTC+8 (1960–1975) và miền Bắc
+trước 1968 ⇒ **không giải được G9**. Đây là **INFERENCE, chưa VERIFIED** — phải đọc
+phần dẫn nhập mới biết.
+
+---
+
 ## 5. Kết luận về độ độc lập
 
 | Câu hỏi | Trả lời |

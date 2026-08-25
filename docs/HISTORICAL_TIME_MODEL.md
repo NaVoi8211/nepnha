@@ -44,6 +44,18 @@ quyết định để không thay đổi gì thì bất thường.
 **STATUS: NOT VERIFIED.** Theo đúng chỉ đạo mục 11, giả thuyết này **không được**
 biến thành hành vi của engine.
 
+### FACT MỚI (Phase 3A.4) — tiêu đề của 121-CP
+
+**FACT.** Tiêu đề chính thức của Quyết định 121-CP là **"về việc tính lịch và quản lý
+lịch của Nhà nước"** — *không phải* một quyết định thuần về giờ dân sự.
+
+**INFERENCE.** Đây đúng là văn bản cần tìm: nó nói về **tính lịch**, chạm thẳng vào
+cột "múi giờ dùng để tính lịch" đang để trống ở §1.
+
+**BLOCKED.** Toàn văn vẫn không đọc được: `thuvienphapluat.vn` trả **HTTP 403** cho
+cả hai bản ghi (18212 và 18929) kể cả khi gửi User-Agent trình duyệt;
+`hethongphapluat.com` trả body rỗng.
+
 ### Đã tìm thêm nhưng chưa đủ
 
 - ✅ Xác định được số hiệu, ngày ký, ngày hiệu lực của 121-CP.

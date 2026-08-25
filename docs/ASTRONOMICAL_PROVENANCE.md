@@ -61,6 +61,33 @@ SOFA. Đã tải và đọc **nguyên văn** file `LICENSE`:
 3. Không được dùng tên SOFA Board, IAU hay tên người đóng góp để quảng bá sản phẩm
    phái sinh nếu không có văn bản cho phép.
 
+**FACT (3A.4) — bằng chứng primary source về quyền relicense.** File `INFO` của ERFA
+chứa **nguyên văn email cho phép** của Chủ tịch IAU SOFA Board:
+
+> The IAU Standards Of Fundamental Astronomy Board approves the relicensing of a
+> changed SOFA library by the NumFOCUS Foundation to use a "Three Clause BSD"
+> license… all function names shall change to use "era" as a prefix in place of
+> "iau", and… the SOFA Board shall be removed as a copyright holder.
+>
+> — Catherine [Hohenkerk], Chair, IAU SOFA Board, HM Nautical Almanac Office, UKHO
+
+`README.rst` xác nhận: *"Permission for this release has been obtained from the SOFA
+board."*
+
+**FACT (3A.4) — inventory Mặt Trăng, quét toàn bộ 251 file:**
+
+| | |
+|---|---|
+| Ephemeris Mặt Trăng trong ERFA | **đúng một: `moon98.c`** |
+| Routine Mặt Trăng thay thế | **không có** (`faf03/fad03/fal03/faom03` chỉ là đối số cơ bản cho chương động) |
+| File nhắc tới Meeus | **đúng một: `moon98.c`** |
+
+⇒ Vết Meeus **gói gọn trong một file**. Nhánh Mặt Trời sạch hoàn toàn.
+
+⚠️ **LEGAL UNCERTAINTY:** phép của SOFA Board nói về quyền của **SOFA**, không nói gì
+về quyền của Willmann-Bell với thuật toán Meeus mà `moon98` hiện thực. Xem
+[PHASE_3A_NEXT_GATE.md §A.2](PHASE_3A_NEXT_GATE.md).
+
 **FACT.** ERFA khuyến nghị cách ghi công:
 
 > If you wish to acknowledge the SOFA heritage, please acknowledge that you are using

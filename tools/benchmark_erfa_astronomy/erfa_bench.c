@@ -108,7 +108,7 @@ static void print_ut(double jd_tt, double deltaT_sec)
 int main(int argc, char **argv)
 {
     if (argc < 2) { fprintf(stderr, "xem chú thích đầu file\n"); return 2; }
-    if (strcmp(argv[1], "batch") && argc < 4) {
+    if (strcmp(argv[1], "batch") && strcmp(argv[1], "sunbatch") && argc < 4) {
         fprintf(stderr, "thiếu tham số\n"); return 2;
     }
 
@@ -122,6 +122,15 @@ int main(int argc, char **argv)
         double jd = solve_sunlon(deg * ERFA_DD2R, guess);
         printf("jdTT=%.9f  UT=", jd); print_ut(jd, dt);
         printf("  lon=%.6f deg\n", sun_apparent_lon(jd, 0.0) * ERFA_DR2D);
+    } else if (!strcmp(argv[1], "sunbatch")) {
+        /* stdin: "deltaT target_deg jdTT_guess" mỗi dòng.
+           Chỉ dùng eraEpv00 — nhánh Mặt Trời, KHÔNG dính Meeus. */
+        double dt, deg, guess;
+        while (scanf("%lf %lf %lf", &dt, &deg, &guess) == 3) {
+            double jd = solve_sunlon(deg * ERFA_DD2R, guess);
+            printf("%.9f %.6f %.9f\n", jd, dt,
+                   sun_apparent_lon(jd, 0.0) * ERFA_DR2D);
+        }
     } else if (!strcmp(argv[1], "batch")) {
         /* Đọc từ stdin các dòng "deltaT jdTT_guess", in ra JD(TT) của điểm Sóc.
            Chạy hàng loạt trong một tiến trình để quét cả 1901-2100 cho nhanh. */
