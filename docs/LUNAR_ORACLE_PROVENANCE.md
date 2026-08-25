@@ -145,6 +145,24 @@ phần dẫn nhập mới biết.
 
 ---
 
+## 4c. ⛔ ĐÍNH CHÍNH (Phase 3A.5) — ba lớp phải tách
+
+| Lớp | Là gì | Không phải là gì |
+|---|---|---|
+| `robots.txt` | Chỉ dẫn cho crawler | **Không** phải giấy phép, **không** override Terms |
+| Terms of Service | Ràng buộc hợp đồng | Không phải tuyên bố về quyền tác giả |
+| Quyền tác giả / quyền dữ liệu | Vấn đề riêng | **LEGAL-UNKNOWN** |
+
+Phase 3A.4 trình bày ba thứ này lẫn vào nhau. Đã sửa ở
+[PHASE_3A5_ORACLE_CONSOLIDATION.md §1](PHASE_3A5_ORACLE_CONSOLIDATION.md).
+
+## 4d. ⛔ ĐÍNH CHÍNH — NASA và ERFA cùng nhánh Meeus
+
+Nhánh C ở §1 (NASA) và ERFA **không** phải hai nhánh độc lập về thuật toán: cả hai
+dựa trên Meeus 1998. Nhánh thiên văn thật sự độc lập hiện có: **HKO** (HM Nautical
+Almanac Office) và **JPL DE440** (tích phân số). Xem
+[PHASE_3A5_ORACLE_CONSOLIDATION.md §2, §7](PHASE_3A5_ORACLE_CONSOLIDATION.md).
+
 ## 5. Kết luận về độ độc lập
 
 | Câu hỏi | Trả lời |

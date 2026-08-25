@@ -40,6 +40,10 @@ Một vector chỉ được dùng làm **expected value** khi đạt **V1**.
 | **V4** Online black-box | Nguồn ancestry UNKNOWN | ⚠️ chỉ phát hiện sai lệch |
 | **V5** Unresolved | Nguồn mâu thuẫn | ⛔ điều tra, không chọn bên |
 
+> ⛔ **Phase 3A.5:** NASA và ERFA `moon98` **cùng nhánh Meeus** ⇒ hai nguồn này đồng ý
+> chỉ là **V2 một-nhánh**, không phải hai xác nhận độc lập. Nhánh thiên văn độc lập
+> hiện có: **HKO** và **JPL DE440**.
+>
 > ⛔ **V3/V4 đồng ý KHÔNG BAO GIỜ nâng thành "verified".** Nhiều website cùng cho một
 > kết quả chỉ chứng minh chúng cùng một implementation. Xem
 > [LUNAR_ONLINE_ORACLE_PROVENANCE.md](LUNAR_ONLINE_ORACLE_PROVENANCE.md).

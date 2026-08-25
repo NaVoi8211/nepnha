@@ -15,6 +15,34 @@
 
 Đây là phần **critical** nhất của app. Sai lịch âm ⇒ sai ngày giỗ ⇒ app vô dụng.
 
+## 0. NGUYÊN TẮC SẢN PHẨM — chốt ở Phase 3A.5
+
+> **Nếp Nhà KHÔNG cố "giống đa số website lịch".**
+>
+> Nếp Nhà ưu tiên **đúng theo quy tắc lịch Việt Nam có provenance mạnh nhất**.
+
+Khi kết quả của Nếp Nhà khác một lịch trực tuyến (ví dụ lichviet.app):
+
+**KHÔNG sửa Nếp Nhà chỉ để giống.** Phải xét theo thứ tự:
+
+1. bằng chứng chính thức / lịch sử (V1)
+2. bằng chứng thiên văn độc lập (V2)
+3. quy tắc lịch Việt Nam
+4. provenance của từng nguồn
+5. ancestry của implementation đối chiếu
+6. mức tương thích với lịch trực tuyến (V3/V4)
+
+**Chỉ sửa engine khi bằng chứng cho thấy engine sai** — không phải khi engine thiểu số.
+
+Lý do: nhiều lịch Việt Nam trực tuyến có thể là hậu duệ của **cùng một**
+implementation. "Đa số đồng ý" không phải bằng chứng. Xem
+[LUNAR_ONLINE_ORACLE_PROVENANCE.md](LUNAR_ONLINE_ORACLE_PROVENANCE.md).
+
+Đánh đổi đã biết và chấp nhận: nếu Nếp Nhà đúng nhưng lệch với lịch người dùng đang
+dùng, app phải **giải thích được vì sao**, chứ không âm thầm khác.
+
+---
+
 ## 1. Vì sao không dùng thư viện có sẵn
 
 Đã tra Maven Central ở Phase 0 với các từ khoá `amlich`, `lunar vietnam`,

@@ -123,6 +123,35 @@ Nhưng đây là một trong những lý do dẫn tới đề xuất kiến trú
 
 ---
 
+## 2b. ⛔ ĐÍNH CHÍNH (Phase 3A.5) — NASA và ERFA KHÔNG độc lập về thuật toán
+
+**FACT.** NASA: *"The phases of the Moon… are based on Jean Meeus' Astronomical
+Algorithms."* **FACT.** ERFA `moon98`: *"a full implementation of the algorithm
+published by Meeus"*, p337.
+
+**INFERENCE.** Benchmark ERFA↔NASA ở Phase 3A.3 là **implementation/institutional
+cross-check**, **KHÔNG** phải independent astronomical-method proof. Bốn loại độc lập
+phải tách: thuật toán ❌ · hiện thực ✅ · nguồn dữ liệu ❓ · thể chế ✅.
+
+Benchmark **tiết khí** với HKO vẫn đứng vững — HKO dùng số liệu HM Nautical Almanac
+Office, khác nhánh Meeus.
+
+## 2c. 🆕 JPL DE440 — nguồn Mặt Trăng KHÔNG thuộc nhánh Meeus
+
+**FACT.** DE440/DE441 sinh bằng **tích phân số quỹ đạo khớp quan trắc**, không phải
+chuỗi giải tích của Meeus. **FACT.** DE440 phủ **1550–2650** ⇒ trọn 1901–2100.
+
+**FACT (naif.jpl.nasa.gov/naif/rules.html):** *"Use of SPICE components in commercial
+products is allowed… No fees or licensing are required."* · *"Redistribution of SPICE
+kernels distributed by NAIF is permitted as long as they have not been modified."* ·
+ghi công *"encouraged"*.
+
+⛔ **Đính chính trong chính phase này:** kết quả tìm kiếm nói SPICE là *"public
+domain"* — **trang gốc NAIF nói KHÔNG**: SPICE được xếp **TSPA**, không phải public
+domain. Dùng phát biểu của nguồn gốc.
+
+**NOT VERIFIED:** chưa tải kernel, chưa benchmark. Là **ứng viên**, không phải kết luận.
+
 ## 3. NASA / GSFC Moon Phases
 
 **FACT** (Phase 3A.1, đã kiểm bằng dữ liệu): phủ 1901–2100 trong 2 file, 2.474 điểm
