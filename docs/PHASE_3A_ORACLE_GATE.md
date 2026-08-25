@@ -7,6 +7,12 @@
 > thiếu chính xác cái gì.
 
 **KẾT QUẢ CỔNG: ⛔ BLOCKED.** Chi tiết ở §G.
+>
+> **Cập nhật sau Phase 3A.1 (2026-08-25):** đã kiểm chứng dữ liệu thật của NASA và
+> HKO. Kết quả: mở được một phần G8, nhưng **phát hiện thêm blocker mới** —
+> HKO không có giờ tiết khí cho 1901–2100, làm "Hướng 1 thuần dữ liệu" không khả
+> thi. Bảng gate cập nhật ở §G. Chi tiết:
+> **[PHASE_3A1_DATASET_VERIFICATION.md](PHASE_3A1_DATASET_VERIFICATION.md)**.
 
 ---
 
@@ -293,8 +299,10 @@ ranh giới này đã chốt ở [MEMORIAL_RULES.md](MEMORIAL_RULES.md).
 | G5 | **Có oracle độc lập đủ mạnh** | ⛔ **BLOCKED** | Tier 1 cho lịch VN đầy đủ = sách Trần Tiến Bình, **chưa có trong tay**. Văn bản nghỉ Tết chỉ phủ quanh Tết |
 | G6 | Test vector cho tháng nhuận | ⛔ **BLOCKED** | Chỉ có nguồn phổ thông, chưa đạt Tier 1 |
 | G7 | Test vector cho 29/30 ngày | ⛔ **BLOCKED** | **Chưa có nguồn nào** |
-| G8 | Test vector cho VN ≠ TQ | 🟡 **MỘT PHẦN** | Có phía VN; phía TQ lấy được từ HKO (A10) nhưng **chưa tải** |
-| G9 | Test vector cho múi giờ lịch sử | 🟡 **MỘT PHẦN** | Có Tết Mậu Thân; giai đoạn Bắc 1954–1967 **chưa xác minh** |
+| G8 | Test vector cho VN ≠ TQ | 🟡 **MỘT PHẦN — tiến bộ** | **1985 đã PASS** với đối chiếu chéo thật (VN nhánh A vs HKO nhánh B, đã tải `T1985e.txt`). 7 năm còn lại có phía TQ, thiếu phía VN Tier 1 |
+| G9 | Test vector cho múi giờ lịch sử | ⛔ **BLOCKED (xấu đi)** | Phase 3A.1 phát hiện **mâu thuẫn trực tiếp** về miền Bắc 1954–1967 giữa Ban Lịch Nhà nước và HND. Trước đây tưởng chỉ thiếu dữ liệu; nay là hai nguồn nói ngược nhau |
+| **G14** | **Nguồn công thức hoàng kinh Mặt Trời có provenance rõ** | ⛔ **BLOCKED (mới)** | HKO chỉ có giờ tiết khí cho 3 năm ⇒ vẫn phải tự tính. Meeus đã loại, USNO chưa truy cập được |
+| **G15** | **Độ chính xác dữ liệu đủ để không "fake precision"** | 🟡 **MỘT PHẦN (mới)** | Đã lượng hoá: **5 điểm Sóc rơi đúng 00:00 giờ VN**, dữ liệu phút không quyết định được. Cần chọn cách xử lý |
 | G10 | Test vector biên 1901 / 2100 | ⛔ **BLOCKED** | Trống |
 | G11 | **Meeus đã giải quyết hoặc loại bỏ** | ✅ **PASS (bằng cách loại)** | Loại khỏi kế hoạch. Nguồn thay thế xem §G.1 |
 | G12 | Historical calendar model đã thiết kế | ✅ **PASS** | `CalendarContext` ở §E.2 |
@@ -302,8 +310,15 @@ ranh giới này đã chốt ở [MEMORIAL_RULES.md](MEMORIAL_RULES.md).
 
 ### KẾT QUẢ: ⛔ **BLOCKED — KHÔNG ĐƯỢC BẮT ĐẦU IMPLEMENTATION**
 
-Bốn mục CRITICAL đang BLOCKED: **G5, G6, G7, G10**. Tất cả đều cùng một nguyên nhân
-gốc: **chưa có oracle Tier 1 phủ toàn bộ lịch âm Việt Nam**.
+**Cập nhật sau Phase 3A.1.** BLOCKED: **G5, G6, G7, G9, G10, G14**. Hai nguyên nhân
+gốc, không phải một:
+
+1. **Chưa có oracle Tier 1 phủ toàn bộ lịch âm Việt Nam** (G5, G6, G7, G10) — cần
+   sách Trần Tiến Bình.
+2. **Chưa có nguồn công thức hoàng kinh Mặt Trời hợp lệ** (G14) — blocker kỹ thuật
+   mới, Phase 3A chưa thấy vì lúc đó mới đọc landing page của HKO.
+
+Và G9 **xấu đi**: từ "thiếu dữ liệu" thành "hai nguồn có thẩm quyền nói ngược nhau".
 
 ### G.1 Đường đi thay thế cho phần thiên văn (sau khi loại Meeus)
 

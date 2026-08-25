@@ -3,6 +3,31 @@
 > Bảng oracle cho Phase 3. **Chưa dùng để code.** Mỗi dòng phải có nguồn.
 > Nghiên cứu 2026-08-25.
 
+## Metadata bắt buộc cho mỗi vector
+
+Theo mục 12 của chỉ đạo Phase 3A. Không lưu trần trụi `2026-02-17 -> 01/01/2026`.
+
+```yaml
+- input:                 2026-02-17          # ngày dương
+  expected:              01/01/2026          # ngày âm
+  leap_month:            false
+  input_source:          —                   # rỗng nếu input do ta chọn
+  expected_value_source: Thông báo 9441/TB-BNV (Bộ Nội vụ)
+  source_tier:           1
+  independence:          Nhánh A (nhà nước) — độc lập với HND
+  license_status:        Văn bản pháp quy
+  verified:              true
+  verification_date:     2026-08-25
+  notes:                 Tết Bính Ngọ
+```
+
+`verified: false` ⇒ **không được dùng làm authoritative assertion**, chỉ để ghi nhận.
+
+**Data source ≠ Oracle.** NASA Moon Phases là *data source* của engine ⇒ **tuyệt đối
+không** được dùng làm `expected_value_source`. Kiểm engine phải bằng nhánh khác.
+
+---
+
 ## Quy ước trạng thái
 
 | Ký hiệu | Nghĩa |
@@ -29,7 +54,8 @@
 | Quý Mão 2023 | 22/01/2023 | 🟡 | Wikipedia *Tết* |
 | Giáp Thìn 2024 | 10/02/2024 | 🟡 | Wikipedia *Tết* |
 | Ất Tỵ 2025 | 29/01/2025 | 🟡 | Wikipedia *Tết* |
-| **Bính Ngọ 2026** | **17/02/2026** | ✅ **TIER 1** | **Thông báo 9441/TB-BNV (Bộ Nội vụ)** — văn bản nhà nước, nhánh A + Wikipedia |
+| **Ất Tỵ 2025** | **29/01/2025** | ✅ **TIER 1** | **6150/TB-BLĐTBXH** (03/12/2024) — văn bản nhà nước, nhánh A |
+| **Bính Ngọ 2026** | **17/02/2026** | ✅ **TIER 1** | **Thông báo 9441/TB-BNV (Bộ Nội vụ)** — văn bản nhà nước, nhánh A |
 | Đinh Mùi 2027 | 06/02/2027 | 🟡 | Wikipedia *Tết* |
 | Mậu Thân 2028 | 26/01/2028 | 🟡 | Wikipedia *Tết* |
 | Kỷ Dậu 2029 | 13/02/2029 | 🟡 | Wikipedia *Tết* |
@@ -37,6 +63,22 @@
 | Tân Hợi 2031 | 23/01/2031 | 🟡 | Wikipedia *Tết* |
 
 Wikipedia còn có tới 2043; sẽ bổ sung sau khi đối chiếu sách.
+
+### A.0 Vector từ văn bản nhà nước — đã xác minh (Phase 3A.1)
+
+| Ngày dương | Ngày âm | Văn bản | verified |
+|---|---|---|---|
+| 25/01/2025 | 26 tháng Chạp Giáp Thìn | 6150/TB-BLĐTBXH | ✅ |
+| **29/01/2025** | **Mùng 1 Tết Ất Tỵ** | 6150/TB-BLĐTBXH | ✅ |
+| 02/02/2025 | Mùng 5 tháng Giêng Ất Tỵ | 6150/TB-BLĐTBXH | ✅ |
+| 14/02/2026 | 27 tháng Chạp Ất Tỵ | 9441/TB-BNV | ✅ |
+| **17/02/2026** | **Mùng 1 Tết Bính Ngọ** | 9441/TB-BNV | ✅ |
+| 22/02/2026 | Mùng 6 Tết Bính Ngọ | 9441/TB-BNV | ✅ |
+
+Sáu cặp dương↔âm Tier 1, nhánh A. Đây là **nhóm vector đầu tiên của dự án đạt
+`verified: true`**.
+
+---
 
 ### A.1 Nguồn Tier 1 mới: văn bản nhà nước công bố nghỉ Tết
 
@@ -64,7 +106,7 @@ nhiều năm. Chưa làm ⇒ hiện chỉ có 2026.
 
 | Năm | Việt Nam | Trung Quốc | Lệch | Trạng thái | Nguồn |
 |---|---|---|---|---|---|
-| **1985** | Tết **21/01/1985** | Tết **20/02/1985** | **1 tháng** | 🟡 | Thanh Niên + Wikipedia EN *Tết* — **phía TQ cần lấy từ HKO** để thành Tier 1 |
+| **1985** | Tết **21/01/1985** | Tết **20/02/1985** | **1 tháng** | ✅ **TIER 1** | VN: Thanh Niên (nhánh A) · TQ: **HKO `T1985e.txt` đã tải, đọc trực tiếp** (nhánh B). Hai nhánh độc lập |
 | 1984 | **không** nhuận | nhuận **tháng 10** | tháng nhuận | 🟡 | Hànộimới (dẫn Ban Lịch Nhà nước) |
 | 1987 | nhuận **tháng 7** | nhuận **tháng 6** | tháng nhuận | 🟡 | Hànộimới |
 | 2006 | khác nhau **25/06 → 24/07** | | 1 ngày | 🟡 | Tuổi Trẻ |
@@ -205,6 +247,26 @@ hay `UnsupportedYear`? Cần bảng biên rồi mới định nghĩa.
 | Tháng nhuận ở năm thường | `NoSuchLeapMonth` |
 | Ngày 30 ở tháng chỉ 29 ngày | `NonexistentLunarDate(lastValidDay = 29)` |
 | Năm 1900 / 2101 | `UnsupportedYear` |
+
+---
+
+## H2. Fake precision — 5 ca dữ liệu KHÔNG quyết định được (Phase 3A.1)
+
+Điểm Sóc NASA chỉ chính xác tới **phút**. Ranh giới ngày VN là 17:00:00 UTC. Năm
+điểm Sóc rơi **đúng 17:00 UT**, tức giá trị thật nằm hai bên nửa đêm:
+
+| Ngày (UT) | Giờ VN | Yêu cầu với engine |
+|---|---|---|
+| 1944-06-20 17:00 | 00:00 | ⛔ **CHƯA QUYẾT** hành vi |
+| 1967-07-07 17:00 | 00:00 | ⛔ trùng giai đoạn múi giờ tranh cãi |
+| 2054-05-07 17:00 | 00:00 | ⛔ |
+| 2077-11-15 17:00 | 00:00 | ⛔ |
+| 2085-10-18 17:00 | 00:00 | ⛔ |
+
+Engine **không được** âm thầm chọn một ngày rồi trả về như thể chắc chắn. Ba lựa
+chọn ở [PHASE_3A1_DATASET_VERIFICATION.md §A.3](PHASE_3A1_DATASET_VERIFICATION.md).
+
+Tái lập: `python3 tools/verify_nasa_newmoons.py`
 
 ---
 
