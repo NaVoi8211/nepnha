@@ -3,6 +3,11 @@
 > Bảng oracle cho Phase 3. **Chưa dùng để code.** Mỗi dòng phải có nguồn.
 > Nghiên cứu 2026-08-25.
 
+> 🟢 **Phase 3A.5:** đã có **reference model** ở `tools/reference_model/` và kiểm
+> chứng cấu trúc với HKO: **492/492 tháng khớp 100 %** trên 40 năm rải khắp
+> 1901–2100. Vector V1: **7/7 PASS**. Xem
+> [LUNAR_ONLINE_CROSSCHECK_MATRIX.md](LUNAR_ONLINE_CROSSCHECK_MATRIX.md).
+
 ## Metadata bắt buộc cho mỗi vector
 
 Theo mục 12 của chỉ đạo Phase 3A. Không lưu trần trụi `2026-02-17 -> 01/01/2026`.
