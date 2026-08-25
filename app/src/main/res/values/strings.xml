@@ -1,4 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Nếp Nhà</string>
+
+    <!-- Điều hướng -->
+    <string name="nav_home">Nhà</string>
+    <string name="nav_calendar">Lịch</string>
+    <string name="nav_family">Gia đình</string>
+    <string name="nav_settings">Cài đặt</string>
+    <string name="action_back">Quay lại</string>
+
+    <!-- Chung -->
+    <string name="lunar_not_ready">Lịch âm sẽ hiển thị ở bản cập nhật tới</string>
+
+    <!-- Màn hình Nhà -->
+    <string name="home_today_label">Hôm nay</string>
+    <string name="home_section_today">Hôm nay</string>
+    <string name="home_no_ritual_title">Chưa có nghi lễ được thiết lập</string>
+    <string name="home_no_ritual_body">Khi có nghi lễ hoặc ngày giỗ rơi vào hôm nay, Nếp Nhà sẽ nhắc bạn ở đây.</string>
+    <string name="home_section_upcoming">Sắp tới</string>
+    <string name="home_no_memorial_title">Chưa có ngày giỗ</string>
+    <string name="home_no_memorial_body">Thêm ngày giỗ để Nếp Nhà nhắc trước 7 ngày và 1 ngày.</string>
+    <string name="home_section_family">Gia đình tôi</string>
+    <string name="home_no_family_title">Chưa thiết lập thành viên</string>
+    <string name="home_no_family_body">Thêm thành viên để bài khấn được xưng đúng tên và năm sinh.</string>
+    <string name="home_setup_family">Thiết lập gia đình</string>
+
+    <!-- Màn hình Lịch -->
+    <string name="calendar_title">Lịch</string>
+    <string name="calendar_today_marker">Hôm nay</string>
+    <string name="calendar_placeholder_title">Lịch âm chưa được kết nối</string>
+    <string name="calendar_placeholder_body">Màn hình này hiện chỉ hiển thị ngày dương. Ngày âm, ngày lễ và ngày giỗ sẽ xuất hiện khi bộ lịch âm Việt Nam hoàn thành.</string>
+
+    <!-- Màn hình Gia đình -->
+    <string name="family_title">Gia đình tôi</string>
+    <string name="family_empty_title">Chưa có thành viên</string>
+    <string name="family_empty_body">Thêm ông bà, bố mẹ, vợ chồng, con cái để Nếp Nhà cá nhân hoá bài khấn cho gia đình bạn.</string>
+    <string name="family_add_member">Thêm thành viên</string>
+    <string name="family_add_member_title">Thêm thành viên</string>
+    <string name="family_add_member_placeholder_title">Màn hình đang được xây dựng</string>
+    <string name="family_add_member_placeholder_body">Biểu mẫu thêm thành viên và việc lưu dữ liệu sẽ có ở bản cập nhật tới. Dữ liệu sẽ chỉ nằm trên máy của bạn.</string>
+
+    <!-- Màn hình Cài đặt -->
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_about_title">Giới thiệu Nếp Nhà</string>
+    <string name="settings_about_body">Nếp Nhà giúp gia đình bạn biết hôm nay có nghi lễ gì, cần chuẩn bị những gì và có bài khấn phù hợp.</string>
+    <string name="settings_version_title">Phiên bản</string>
+    <string name="settings_privacy_title">Dữ liệu của bạn</string>
+    <string name="settings_privacy_body">Toàn bộ dữ liệu gia đình và ngày giỗ được lưu trên thiết bị này. Nếp Nhà không có tài khoản, không gửi dữ liệu đi đâu và hoạt động bình thường khi không có mạng.</string>
+    <string name="settings_display_title">Hiển thị</string>
+    <string name="settings_display_body">Nếp Nhà dùng cỡ chữ và giao diện sáng/tối theo cài đặt của điện thoại.</string>
 </resources>

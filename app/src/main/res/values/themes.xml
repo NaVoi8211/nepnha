@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-      Theme XML tối giản: toàn bộ màu sắc/typography do Compose Material 3 quản lý
-      (ui/theme). Dùng theme hệ thống làm parent để KHÔNG phải thêm dependency
+      Theme XML tối giản: màu sắc & typography do Compose Material 3 quản lý
+      (ui/theme). Parent là theme hệ thống để KHÔNG phải thêm dependency
       com.google.android.material.
     -->
-    <style name="Theme.NepNha" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.NepNha" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
 </resources>

@@ -5,8 +5,8 @@
 | Phase | Nội dung | Trạng thái |
 |---|---|---|
 | 0 | Audit + architecture + dependency setup | ✅ **Xong** |
-| 1 | App shell + navigation + theme + Home placeholder | ⏳ Chờ duyệt |
-| 2 | Room + Family + Member | |
+| 1 | App shell + navigation + theme + Home placeholder | ✅ **Xong** |
+| 2 | Room + Family + Member | ⏳ Chờ duyệt |
 | 3 | Vietnamese lunar calendar engine + tests | |
 | 4 | Ritual content + local JSON + ritual engine | |
 | 5 | Prayer template engine + Prayer Reader | |

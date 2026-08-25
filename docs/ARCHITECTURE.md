@@ -125,3 +125,17 @@ datastore-preferences, kotlinx-serialization-json.
 | Bất kỳ SDK mạng/analytics/crash | — | Vi phạm hard constraint |
 
 Thêm dependency mới ⇒ phải ghi lý do vào bảng này.
+
+## 8. Quyết định UI (Phase 1)
+
+| Quyết định | Lý do |
+|---|---|
+| **Không dùng dynamic color (Material You)** | Để hệ thống nhuộm màu theo hình nền thì app khi tím khi xanh — mất bản sắc và không bảo đảm được tương phản chữ cho người lớn tuổi |
+| **Icon là vector tự đóng gói** trong `res/drawable`, không dùng `material-icons-*` | Material 3 1.4 đã bỏ phụ thuộc vào thư viện icon, và bản thân thư viện đó nay deprecated. Thêm nó chỉ để lấy 5 hình là không đáng |
+| **Khai báo đủ nhóm token `surfaceContainer*`** | Bỏ trống thì M3 rơi về baseline TÍM — thanh điều hướng lạc tông hoàn toàn. Đã gặp đúng lỗi này khi test trên A32 |
+| Typography phóng to (body 18sp thay vì 16sp) | Ông bà, bố mẹ phải đọc được mà không cần zoom |
+| Font hệ thống, không đóng gói font ngoài | APK nhẹ, dấu tiếng Việt do hệ thống lo, tôn trọng cỡ chữ người dùng đã đặt |
+| **Chưa có ViewModel nào** | Rule: không tạo ViewModel khi màn hình chưa có state cần giữ. Ngày hôm nay được truyền vào như tham số ⇒ vừa test được vừa không cần bộ máy nào thêm. ViewModel sẽ xuất hiện ở Phase 4/7 |
+| Màn hình con nhận **callback**, không cầm `NavController` | `NepNhaShell` là nơi duy nhất biết cấu trúc điều hướng ⇒ mỗi màn hình preview và test được độc lập |
+| Không khoá hướng xoay | Compose dựng lại, `rememberNavController`/`rememberScrollState` tự khôi phục. Đã kiểm chứng xoay ngang trên A32 |
+| **Không hiển thị ngày âm giả** | Chưa có engine thì nói thẳng "Lịch âm sẽ hiển thị ở bản cập nhật tới". Một con số trông như thật mà sai còn tệ hơn không có |
