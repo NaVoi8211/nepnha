@@ -8,6 +8,14 @@
 
 **KẾT QUẢ CỔNG: ⛔ BLOCKED.** Chi tiết ở §G.
 >
+> **Cập nhật sau Phase 3A.2 (2026-08-25):** G14 chuyển từ BLOCKED sang PARTIAL nhờ
+> tìm được **ERFA** — bản phái sinh SOFA dưới **BSD-3-Clause**, đã đọc được chính văn
+> giấy phép (bản thân SOFA thì trang giấy phép trả 404). Đồng thời phát sinh **G16**:
+> ΔT cho 1901–1960. Chi tiết:
+> **[PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md)** ·
+> **[ASTRONOMICAL_PROVENANCE.md](ASTRONOMICAL_PROVENANCE.md)** ·
+> **[HISTORICAL_TIME_MODEL.md](HISTORICAL_TIME_MODEL.md)**.
+>
 > **Cập nhật sau Phase 3A.1 (2026-08-25):** đã kiểm chứng dữ liệu thật của NASA và
 > HKO. Kết quả: mở được một phần G8, nhưng **phát hiện thêm blocker mới** —
 > HKO không có giờ tiết khí cho 1901–2100, làm "Hướng 1 thuần dữ liệu" không khả
@@ -301,8 +309,9 @@ ranh giới này đã chốt ở [MEMORIAL_RULES.md](MEMORIAL_RULES.md).
 | G7 | Test vector cho 29/30 ngày | ⛔ **BLOCKED** | **Chưa có nguồn nào** |
 | G8 | Test vector cho VN ≠ TQ | 🟡 **MỘT PHẦN — tiến bộ** | **1985 đã PASS** với đối chiếu chéo thật (VN nhánh A vs HKO nhánh B, đã tải `T1985e.txt`). 7 năm còn lại có phía TQ, thiếu phía VN Tier 1 |
 | G9 | Test vector cho múi giờ lịch sử | ⛔ **BLOCKED (xấu đi)** | Phase 3A.1 phát hiện **mâu thuẫn trực tiếp** về miền Bắc 1954–1967 giữa Ban Lịch Nhà nước và HND. Trước đây tưởng chỉ thiếu dữ liệu; nay là hai nguồn nói ngược nhau |
-| **G14** | **Nguồn công thức hoàng kinh Mặt Trời có provenance rõ** | ⛔ **BLOCKED (mới)** | HKO chỉ có giờ tiết khí cho 3 năm ⇒ vẫn phải tự tính. Meeus đã loại, USNO chưa truy cập được |
-| **G15** | **Độ chính xác dữ liệu đủ để không "fake precision"** | 🟡 **MỘT PHẦN (mới)** | Đã lượng hoá: **5 điểm Sóc rơi đúng 00:00 giờ VN**, dữ liệu phút không quyết định được. Cần chọn cách xử lý |
+| **G14** | **Nguồn công thức hoàng kinh Mặt Trời có provenance rõ** | 🟡 **MỘT PHẦN — tiến bộ lớn ở 3A.2** | Tìm được **ERFA (BSD-3-Clause)**, đã đọc chính văn giấy phép, có đủ routine. **Chưa PASS**: chưa biên dịch, chưa sinh bảng, chưa đối chiếu. Xem [PHASE_3A2](PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) |
+| **G15** | **Độ chính xác dữ liệu đủ để không "fake precision"** | 🟡 **MỘT PHẦN** | Đã lượng hoá 5 điểm Sóc rơi đúng 00:00 giờ VN. **3A.2:** xác nhận NASA **không có bản mịn hơn phút**; chưa xác minh được 5 ca bằng oracle độc lập |
+| **G16** | **ΔT cho 1901–1960** *(mới ở 3A.2)* | ⛔ **BLOCKED** | `eraDat` không định nghĩa trước 1960 (chưa có UTC). Cần bảng ΔT lịch sử nếu tự tính vị trí Mặt Trời |
 | G10 | Test vector biên 1901 / 2100 | ⛔ **BLOCKED** | Trống |
 | G11 | **Meeus đã giải quyết hoặc loại bỏ** | ✅ **PASS (bằng cách loại)** | Loại khỏi kế hoạch. Nguồn thay thế xem §G.1 |
 | G12 | Historical calendar model đã thiết kế | ✅ **PASS** | `CalendarContext` ở §E.2 |

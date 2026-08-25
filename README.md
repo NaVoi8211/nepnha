@@ -7,7 +7,7 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 ## Trạng thái
 
 **Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
-**Phase 3A.1 hoàn thành** — đã kiểm chứng dữ liệu NASA/HKO. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
+**Phase 3A.2 hoàn thành** — đã xác minh giấy phép nguồn thiên văn (ERFA = BSD-3). Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
 
 ## Build
 
@@ -34,6 +34,9 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/PHASE_3_PREFLIGHT.md](docs/PHASE_3_PREFLIGHT.md) | **Nghiên cứu license/thuật toán/oracle trước khi viết engine** |
 | [docs/PHASE_3A_ORACLE_GATE.md](docs/PHASE_3A_ORACLE_GATE.md) | **Cổng provenance/license — quyết định có được viết engine hay chưa** |
 | [docs/PHASE_3A1_DATASET_VERIFICATION.md](docs/PHASE_3A1_DATASET_VERIFICATION.md) | Kiểm chứng dữ liệu NASA/HKO và múi giờ lịch sử bằng dữ liệu thật |
+| [docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) | Giấy phép & khả thi kỹ thuật của nguồn thiên văn (SOFA/ERFA/NASA) |
+| [docs/ASTRONOMICAL_PROVENANCE.md](docs/ASTRONOMICAL_PROVENANCE.md) | Provenance từng nguồn thiên văn |
+| [docs/HISTORICAL_TIME_MODEL.md](docs/HISTORICAL_TIME_MODEL.md) | Giờ dân sự vs múi giờ tính lịch qua các thời kỳ |
 | [docs/LUNAR_ORACLE_PROVENANCE.md](docs/LUNAR_ORACLE_PROVENANCE.md) | Phân tích độc lập của các nguồn oracle |
 | [docs/LUNAR_TEST_VECTORS.md](docs/LUNAR_TEST_VECTORS.md) | Bảng test vector lịch âm kèm nguồn |
 | [docs/CONTENT_SCHEMA.md](docs/CONTENT_SCHEMA.md) | Schema `rituals/prayers/checklists` + template variables |
