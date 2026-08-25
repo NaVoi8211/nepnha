@@ -163,6 +163,22 @@ dựa trên Meeus 1998. Nhánh thiên văn thật sự độc lập hiện có: 
 Almanac Office) và **JPL DE440** (tích phân số). Xem
 [PHASE_3A5_ORACLE_CONSOLIDATION.md §2, §7](PHASE_3A5_ORACLE_CONSOLIDATION.md).
 
+## 4e. Nguồn QUY TẮC độc lập với HND (Phase 3A.5)
+
+Trước đây quy tắc lịch chỉ lấy từ mô tả của HND. Nay có nguồn học thuật độc lập:
+
+| Quy tắc | Nguồn độc lập |
+|---|---|
+| Ngày chứa Sóc là mùng 1, lấy trọn ngày | **Aslaksen**, *The Mathematics of the Chinese Calendar* (NUS) |
+| Đông chí nằm trong tháng 11 | Aslaksen · *Explanatory Supplement to the Astronomical Almanac* |
+| Tháng không có trung khí là tháng nhuận; hai tháng thì lấy tháng đầu sau Đông chí | Aslaksen |
+| 12 trung khí ở bội số 30° | Aslaksen |
+| **Kinh tuyến 105°Đ cho Việt Nam** | **Quyết định 121-CP điều 1** (NOT INDEPENDENTLY VERIFIED — 403) |
+
+**INFERENCE.** Quy tắc 1–5 **dùng chung với lịch Trung Quốc**; khác biệt Việt Nam nằm
+gọn ở **một tham số**. Cấu trúc này cho phép kiểm chứng cấu trúc qua HKO — xem
+[PHASE_3A5_FINAL_PROVENANCE_GATE.md §8](PHASE_3A5_FINAL_PROVENANCE_GATE.md).
+
 ## 5. Kết luận về độ độc lập
 
 | Câu hỏi | Trả lời |

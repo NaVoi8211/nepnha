@@ -56,6 +56,33 @@ cột "múi giờ dùng để tính lịch" đang để trống ở §1.
 cả hai bản ghi (18212 và 18929) kể cả khi gửi User-Agent trình duyệt;
 `hethongphapluat.com` trả body rỗng.
 
+### 🔴 FACT MỚI (Phase 3A.5) — cấu trúc điều khoản của 121-CP
+
+| Điều | Nội dung |
+|---|---|
+| **1** | Việt Nam nằm trọn **múi giờ thứ 7**; giờ chính thức là giờ múi 7 |
+| **2** | **Dương lịch** là lịch chính thức |
+| **3** | **"Việc sửa đổi cách tính âm lịch"** cần thiết để chính xác và **phù hợp với giờ chính thức** |
+| **4** | Giao **Nha Khí tượng** tính **âm lịch thống nhất cả nước**, quản lý việc lịch |
+| **6** | UB Khoa học Kỹ thuật NN, Bộ Nội vụ, VN Thông tấn xã, Nha Khí tượng thi hành |
+
+**FACT.** Tồn tại **Thông tư 01-VLĐC (1967)** của Nha Khí tượng *"giải thích và hướng
+dẫn thi hành Quyết định 121-CP"*.
+
+> ⚠️ **NOT INDEPENDENTLY VERIFIED.** Không đọc được toàn văn: `thuvienphapluat.vn`
+> (18212, 18929, cả bản mobile) và `luatminhkhue.vn` đều **HTTP 403** kể cả với
+> User-Agent trình duyệt. Nội dung trên từ **trích xuất của công cụ tìm kiếm**.
+
+**INFERENCE.** Điều 3 nói **"sửa đổi cách tính âm lịch"** — một quyết định sửa đổi chỉ
+có nghĩa nếu cách tính trước đó **khác**. Nghiêng mạnh về **P2**.
+
+**KHÔNG chuyển G9 sang PASS**, vì: (1) chưa đọc được văn bản gốc; (2) điều 3 nói *có
+sửa đổi*, **không nói** trước đó là múi giờ nào; (3) chỉ nói về miền Bắc.
+
+**HYPOTHESIS.** **Thông tư 01-VLĐC** có thể là văn bản quan trọng nhất chưa đọc được —
+một thông tư hướng dẫn *cách tính lịch* nhiều khả năng nêu **phương pháp**, tức có thể
+là nguồn V1 cho chính các quy tắc lịch.
+
 ### Đã tìm thêm nhưng chưa đủ
 
 - ✅ Xác định được số hiệu, ngày ký, ngày hiệu lực của 121-CP.

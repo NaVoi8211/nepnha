@@ -35,6 +35,7 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/PHASE_3A_ORACLE_GATE.md](docs/PHASE_3A_ORACLE_GATE.md) | **Cổng provenance/license — quyết định có được viết engine hay chưa** |
 | [docs/PHASE_3A1_DATASET_VERIFICATION.md](docs/PHASE_3A1_DATASET_VERIFICATION.md) | Kiểm chứng dữ liệu NASA/HKO và múi giờ lịch sử bằng dữ liệu thật |
 | [docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) | Giấy phép & khả thi kỹ thuật của nguồn thiên văn (SOFA/ERFA/NASA) |
+| [docs/PHASE_3A5_FINAL_PROVENANCE_GATE.md](docs/PHASE_3A5_FINAL_PROVENANCE_GATE.md) | **FINAL GATE — provenance, NASA-first, gate matrix G1–G16** |
 | [docs/PHASE_3A5_ORACLE_CONSOLIDATION.md](docs/PHASE_3A5_ORACLE_CONSOLIDATION.md) | **Hợp nhất oracle, đính chính provenance, tiêu chí PASS khách quan** |
 | [docs/PHASE_3A4_ONLINE_ORACLE.md](docs/PHASE_3A4_ONLINE_ORACLE.md) | **Chiến lược oracle trực tuyến + composite oracle 5 mức** |
 | [docs/LUNAR_ONLINE_ORACLE_PROVENANCE.md](docs/LUNAR_ONLINE_ORACLE_PROVENANCE.md) | Provenance các lịch Việt Nam trực tuyến |

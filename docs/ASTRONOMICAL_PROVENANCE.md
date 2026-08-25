@@ -171,6 +171,30 @@ thêm chữ số từ NASA**. Phải giải bằng đường khác — xem §5 v
 
 ---
 
+## 3b. NASA — TERMS VERIFIED (Phase 3A.5)
+
+**FACT** (chính sách bản quyền NASA mà trang catalog trỏ tới):
+
+> "NASA material is not protected by copyright unless noted… **If not copyrighted,
+> NASA material may be reproduced and distributed without further permission from
+> NASA.**"
+
+Kết hợp với permission riêng của catalog ⇒ **TERMS VERIFIED** cho việc dùng dữ liệu
+Sóc của NASA trong sản phẩm thương mại, **kèm ghi công bắt buộc**
+`Moon Phase Predictions by Fred Espenak, NASA/GSFC`.
+
+Rủi ro tồn dư: dữ liệu *"based on Meeus"* — **LEGAL-UNKNOWN** ở lớp thuật toán. Xem
+[PHASE_3A5_FINAL_PROVENANCE_GATE.md §A](PHASE_3A5_FINAL_PROVENANCE_GATE.md).
+
+## 3c. ERFA dev-only — nghĩa vụ gắn vào PHÂN PHỐI
+
+**INFERENCE.** BSD-3 đặt điều kiện lên *"redistribution and use in source and binary
+forms"*. Điều 1 và 2 chỉ kích hoạt khi **phân phối** ERFA — ta không phân phối. Điều 3
+(không dùng tên SOFA Board/IAU để quảng bá) luôn áp dụng và ta tuân thủ. Giấy phép
+**không nói gì** về đầu ra của việc chạy phần mềm.
+
+⚠️ **LEGAL-UNKNOWN** nếu cần chắc chắn tuyệt đối.
+
 ## 4. Các nguồn khác — chưa nghiên cứu tới nơi
 
 | Nguồn | Trạng thái |

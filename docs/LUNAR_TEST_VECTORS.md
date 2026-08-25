@@ -275,6 +275,20 @@ hay `UnsupportedYear`? Cần bảng biên rồi mới định nghĩa.
 
 ---
 
+## H1b. Kiểm chứng cấu trúc qua HKO (đề xuất Phase 3A.5, CHƯA CHẠY)
+
+Vì quy tắc 1–5 dùng chung với lịch Trung Quốc và khác biệt Việt Nam nằm gọn ở kinh
+tuyến, có thể kiểm chứng **toàn bộ 1901–2100** bằng cách chạy engine ở **120°Đ** rồi
+so với bảng HKO: ngày đầu mọi tháng · tháng nhuận mọi năm · độ dài 29/30 mọi tháng.
+
+Khớp 100% ⇒ quy tắc 1–5 và tầng thiên văn được kiểm chứng trên toàn dải, đối chiếu
+một đài thiên văn quốc gia khác nhánh Meeus.
+
+⚠️ **Không** chứng minh lịch chính thức VN = quy tắc 1–5 tại 105°Đ. Mắt xích đó vẫn
+cần V1. Chi tiết: [PHASE_3A5_FINAL_PROVENANCE_GATE.md §8](PHASE_3A5_FINAL_PROVENANCE_GATE.md).
+
+---
+
 ## H2. Fake precision — 5 ca dữ liệu KHÔNG quyết định được (Phase 3A.1)
 
 Điểm Sóc NASA chỉ chính xác tới **phút**. Ranh giới ngày VN là 17:00:00 UTC. Năm
@@ -289,8 +303,13 @@ hay `UnsupportedYear`? Cần bảng biên rồi mới định nghĩa.
 | 2077-11-15 17:00 | 00:00 | ⛔ |
 | 2085-10-18 17:00 | 00:00 | ⛔ |
 
-Engine **không được** âm thầm chọn một ngày rồi trả về như thể chắc chắn. Ba lựa
-chọn ở [PHASE_3A1_DATASET_VERIFICATION.md §A.3](PHASE_3A1_DATASET_VERIFICATION.md).
+Engine **không được** âm thầm chọn một ngày rồi trả về như thể chắc chắn.
+
+**Đề xuất Phase 3A.5 (chưa duyệt):** dataset định nghĩa **theo nguồn** — *"giá trị
+công bố của NASA"*. Khi đó dataset tất định; điều mơ hồ là *"giá trị công bố có khớp
+thực tế không"*, và điều đó được **ghi lại** chứ không giấu. Đánh dấu
+`LOW_CONFIDENCE_DAY_BOUNDARY` trong **metadata của dataset**, KHÔNG đưa vào API công
+khai. Không hardcode ngoại lệ.
 
 Tái lập: `python3 tools/verify_nasa_newmoons.py`
 
