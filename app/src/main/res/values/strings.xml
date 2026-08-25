@@ -49,4 +49,60 @@
     <string name="settings_privacy_body">Toàn bộ dữ liệu gia đình và ngày giỗ được lưu trên thiết bị này. Nếp Nhà không có tài khoản, không gửi dữ liệu đi đâu và hoạt động bình thường khi không có mạng.</string>
     <string name="settings_display_title">Hiển thị</string>
     <string name="settings_display_body">Nếp Nhà dùng cỡ chữ và giao diện sáng/tối theo cài đặt của điện thoại.</string>
+
+    <!-- Gia đình / thành viên (Phase 2) -->
+    <string name="family_default_name">Gia đình tôi</string>
+    <string name="family_rename">Đổi tên gia đình</string>
+    <string name="family_rename_label">Tên gia đình</string>
+    <string name="family_members_section">Thành viên</string>
+    <string name="family_member_count">%1$d thành viên</string>
+    <string name="family_worshipper_section">Tín chủ</string>
+    <string name="family_no_worshipper">Chưa chọn tín chủ</string>
+    <string name="family_no_worshipper_body">Tín chủ là người đứng khấn. Nếp Nhà không tự chọn thay bạn.</string>
+    <string name="family_choose_worshipper">Chọn tín chủ</string>
+    <string name="family_change_worshipper">Đổi tín chủ</string>
+    <string name="family_choose_worshipper_title">Chọn tín chủ</string>
+    <string name="family_choose_worshipper_empty">Hãy thêm thành viên trước khi chọn tín chủ.</string>
+
+    <string name="member_new_title">Thêm thành viên</string>
+    <string name="member_edit_title">Sửa thành viên</string>
+    <string name="member_full_name">Họ và tên</string>
+    <string name="member_full_name_required">Họ và tên (bắt buộc)</string>
+    <string name="member_gender">Giới tính</string>
+    <string name="member_gender_male">Nam</string>
+    <string name="member_gender_female">Nữ</string>
+    <string name="member_gender_unspecified">Không nêu</string>
+    <string name="member_solar_birth">Ngày sinh dương lịch</string>
+    <string name="member_lunar_birth">Ngày sinh âm lịch</string>
+    <string name="member_lunar_birth_hint">Ngày âm do bạn cung cấp. Nếp Nhà chưa quy đổi từ ngày dương.</string>
+    <string name="member_leap_month">Tháng nhuận</string>
+    <string name="member_field_day">Ngày</string>
+    <string name="member_field_month">Tháng</string>
+    <string name="member_field_year">Năm</string>
+    <string name="member_role">Vai trò trong nhà</string>
+    <string name="member_role_hint">Ví dụ: ông nội, mẹ, con trai</string>
+    <string name="member_note">Ghi chú</string>
+    <string name="member_optional_hint">Không bắt buộc — để trống nếu chưa biết.</string>
+    <string name="member_save">Lưu</string>
+    <string name="member_delete">Xoá thành viên</string>
+    <string name="member_lunar_unknown">Ngày âm: chưa xác định</string>
+    <string name="member_solar_unknown">Ngày sinh dương: chưa xác định</string>
+    <string name="member_worshipper_badge">Tín chủ</string>
+
+    <string name="error_name_required">Hãy nhập họ và tên.</string>
+    <string name="error_solar_incomplete">Hãy nhập đủ ngày, tháng và năm sinh dương lịch, hoặc để trống cả ba.</string>
+    <string name="error_solar_invalid">Ngày sinh dương lịch không hợp lệ.</string>
+    <string name="error_lunar_incomplete">Hãy nhập đủ ngày, tháng và năm sinh âm lịch, hoặc để trống cả ba.</string>
+    <string name="error_lunar_invalid">Ngày sinh âm lịch không hợp lệ.</string>
+
+    <string name="delete_member_title">Xoá thành viên này?</string>
+    <string name="delete_member_body">Thông tin thành viên sẽ bị xoá khỏi thiết bị.</string>
+    <string name="action_cancel">Huỷ</string>
+    <string name="action_delete">Xoá</string>
+    <string name="action_save">Lưu</string>
+
+    <!-- Home tích hợp dữ liệu gia đình thật -->
+    <string name="home_family_members">Thành viên: %1$d</string>
+    <string name="home_family_worshipper">Tín chủ: %1$s</string>
+    <string name="home_open_family">Mở Gia đình tôi</string>
 </resources>

@@ -1,4 +1,7 @@
-# Room — chỉ cho user-generated data (chốt Phase 0, implement Phase 2/7)
+# Room — chỉ cho user-generated data
+
+> Chốt ở Phase 0. **Family + FamilyMember đã implement ở Phase 2** (database version 1,
+> schema export tại `app/schemas/`). Memorial thuộc Phase 7.
 
 Room **không** lưu nội dung cố định (nghi lễ, văn khấn, checklist) — xem
 [CONTENT_SCHEMA.md](CONTENT_SCHEMA.md).
@@ -24,6 +27,7 @@ Room **không** lưu nội dung cố định (nghi lễ, văn khấn, checklist)
 | `lunarBirthMonth` | `Int?` | |
 | `lunarBirthYear` | `Int?` | |
 | `lunarBirthIsLeapMonth` | `Boolean` | mặc định `false` |
+| `lunarBirthSource` | `String?` | `USER_PROVIDED` khi có ngày âm, `null` khi không. Xem giải thích (4) |
 | `role` | `String?` | vai trò trong nhà (ông, bà, bố, mẹ…) |
 | `note` | `String?` | |
 
@@ -54,6 +58,10 @@ Room **không** lưu nội dung cố định (nghi lễ, văn khấn, checklist)
    để sau này không phải migration.
 3. **`gender`/`role` lưu `String`.** Đơn giản, dễ đọc khi debug bằng `adb`; enum
    chuyển đổi ở tầng repository.
+4. **`lunarBirthSource`.** Từ Phase 3 sẽ có thêm ngày âm do engine quy đổi ra. Ngày
+   âm **người nhà khai** và ngày âm **máy tính ra** là hai thứ khác nhau — trộn lại
+   là mất dấu vết dữ liệu gốc. Thêm cột ngay ở version 1 để sau khỏi migration.
+   Phase 2 chỉ có duy nhất giá trị `USER_PROVIDED`: chưa có engine thì không đoán.
 
 ## Quyết định thiết kế
 
@@ -65,7 +73,8 @@ Room **không** lưu nội dung cố định (nghi lễ, văn khấn, checklist)
   ở DataStore thì không thể sai.
 - **Không dùng `Flow` thô ra UI** — DAO trả `Flow`, repository map sang model
   domain, ViewModel phơi `StateFlow`.
-- **Schema export bật** (`room.schemaLocation = app/schemas`) để review diff khi
-  migration; MVP chỉ có version 1 nên chưa cần `Migration`.
+- **Schema export bật** (`room.schemaLocation = app/schemas`) và `app/schemas/…/1.json`
+  **được commit** để còn diff mà viết migration. Hiện là version 1 nên chưa có
+  `Migration` nào.
 - **Không destructive migration ở release.** Dữ liệu gia phả/ngày giỗ của người dùng
   không có bản sao trên cloud (cố ý), mất là mất thật.

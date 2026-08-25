@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.nepnha.R
 import com.nepnha.core.time.VietnameseDateFormatter
 import com.nepnha.ui.components.EmptyStateCard
+import com.nepnha.ui.components.InfoCard
 import com.nepnha.ui.components.SectionHeader
 import com.nepnha.ui.theme.NepNhaTheme
 import java.time.LocalDate
@@ -36,6 +37,7 @@ import java.time.LocalDate
  */
 @Composable
 fun HomeScreen(
+    state: HomeUiState,
     onSetupFamily: () -> Unit,
     modifier: Modifier = Modifier,
     today: LocalDate = LocalDate.now(),
@@ -69,13 +71,30 @@ fun HomeScreen(
         }
 
         Column {
-            SectionHeader(text = stringResource(R.string.home_section_family))
-            EmptyStateCard(
-                title = stringResource(R.string.home_no_family_title),
-                body = stringResource(R.string.home_no_family_body),
-                actionLabel = stringResource(R.string.home_setup_family),
-                onAction = onSetupFamily,
-            )
+            SectionHeader(text = state.familyName ?: stringResource(R.string.home_section_family))
+            if (state.memberCount == 0) {
+                EmptyStateCard(
+                    title = stringResource(R.string.home_no_family_title),
+                    body = stringResource(R.string.home_no_family_body),
+                    actionLabel = stringResource(R.string.home_setup_family),
+                    onAction = onSetupFamily,
+                )
+            } else if (state.primaryMemberName == null) {
+                // Có người trong nhà nhưng chưa ai đứng khấn — nhắc, không tự chọn.
+                EmptyStateCard(
+                    title = stringResource(R.string.family_no_worshipper),
+                    body = stringResource(R.string.home_family_members, state.memberCount),
+                    actionLabel = stringResource(R.string.family_choose_worshipper),
+                    onAction = onSetupFamily,
+                    modifier = Modifier.testTag("home_no_worshipper"),
+                )
+            } else {
+                InfoCard(
+                    title = stringResource(R.string.home_family_members, state.memberCount),
+                    body = stringResource(R.string.home_family_worshipper, state.primaryMemberName),
+                    modifier = Modifier.testTag("home_family_summary"),
+                )
+            }
         }
     }
 }
@@ -117,6 +136,10 @@ private fun TodayHeader(today: LocalDate, modifier: Modifier = Modifier) {
 @Composable
 private fun HomeScreenPreview() {
     NepNhaTheme {
-        HomeScreen(onSetupFamily = {}, today = LocalDate.of(2026, 8, 24))
+        HomeScreen(
+            state = HomeUiState(familyName = "Gia đình tôi"),
+            onSetupFamily = {},
+            today = LocalDate.of(2026, 8, 24),
+        )
     }
 }

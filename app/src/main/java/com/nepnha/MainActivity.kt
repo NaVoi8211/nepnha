@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             NepNhaTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    NepNhaShell()
+                    NepNhaShell(container = (application as NepNhaApp).container)
                 }
             }
         }

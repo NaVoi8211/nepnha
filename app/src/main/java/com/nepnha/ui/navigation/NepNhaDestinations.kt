@@ -27,5 +27,14 @@ enum class TopLevelDestination(
 
 /** Các điểm đến không nằm trên thanh dưới. */
 object Routes {
-    const val ADD_MEMBER = "family/add"
+    const val ARG_MEMBER_ID = "memberId"
+
+    /** Giá trị "không có id" — thêm mới thay vì sửa. NavType.LongType không nhận null. */
+    const val NO_MEMBER_ID = -1L
+
+    const val MEMBER_EDITOR = "family/member?$ARG_MEMBER_ID={$ARG_MEMBER_ID}"
+    const val CHOOSE_WORSHIPPER = "family/worshipper"
+
+    fun memberEditor(memberId: Long?): String =
+        "family/member?$ARG_MEMBER_ID=${memberId ?: NO_MEMBER_ID}"
 }
