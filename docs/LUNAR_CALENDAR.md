@@ -5,6 +5,13 @@
 > non-commercial* ⇒ **không dùng code**, chỉ dùng bản mô tả quy tắc rồi tự viết
 > Kotlin. Phạm vi bảo đảm rút về **1901–2100** (theo oracle chính thức) thay vì
 > 1800–2199. Chi tiết và bằng chứng: **[PHASE_3_PREFLIGHT.md](PHASE_3_PREFLIGHT.md)**.
+>
+> **CẬP NHẬT Phase 3A (2026-08-25):** Meeus **đã bị loại khỏi kế hoạch** (sách yêu
+> cầu xin phép bằng văn bản của Willmann-Bell). Hướng thay thế: dựng lịch từ **dữ
+> liệu thiên văn có giấy phép rõ ràng** (NASA/GSFC cho điểm Sóc, HKO cho tiết khí).
+> Cổng an toàn thương mại hiện **⛔ BLOCKED** vì chưa có oracle Tier 1 phủ toàn bộ
+> lịch âm VN. Xem **[PHASE_3A_ORACLE_GATE.md](PHASE_3A_ORACLE_GATE.md)** và
+> **[LUNAR_ORACLE_PROVENANCE.md](LUNAR_ORACLE_PROVENANCE.md)**.
 
 Đây là phần **critical** nhất của app. Sai lịch âm ⇒ sai ngày giỗ ⇒ app vô dụng.
 

@@ -7,7 +7,7 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 ## Trạng thái
 
 **Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
-**Phase 3 Preflight hoàn thành** — nghiên cứu lịch âm, chưa có engine.
+**Phase 3A hoàn thành** — cổng provenance/oracle. Engine lịch âm **chưa được phép viết** (BLOCKED).
 
 ## Build
 
@@ -32,6 +32,8 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Kiến trúc, manual DI, build config, quyết định & lý do |
 | [docs/LUNAR_CALENDAR.md](docs/LUNAR_CALENDAR.md) | Chiến lược lịch âm Việt Nam + kế hoạch test (Phase 3) |
 | [docs/PHASE_3_PREFLIGHT.md](docs/PHASE_3_PREFLIGHT.md) | **Nghiên cứu license/thuật toán/oracle trước khi viết engine** |
+| [docs/PHASE_3A_ORACLE_GATE.md](docs/PHASE_3A_ORACLE_GATE.md) | **Cổng provenance/license — quyết định có được viết engine hay chưa** |
+| [docs/LUNAR_ORACLE_PROVENANCE.md](docs/LUNAR_ORACLE_PROVENANCE.md) | Phân tích độc lập của các nguồn oracle |
 | [docs/LUNAR_TEST_VECTORS.md](docs/LUNAR_TEST_VECTORS.md) | Bảng test vector lịch âm kèm nguồn |
 | [docs/CONTENT_SCHEMA.md](docs/CONTENT_SCHEMA.md) | Schema `rituals/prayers/checklists` + template variables |
 | [docs/ROOM_SCHEMA.md](docs/ROOM_SCHEMA.md) | Entity Room cho user data |

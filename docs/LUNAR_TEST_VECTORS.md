@@ -29,14 +29,32 @@
 | Quý Mão 2023 | 22/01/2023 | 🟡 | Wikipedia *Tết* |
 | Giáp Thìn 2024 | 10/02/2024 | 🟡 | Wikipedia *Tết* |
 | Ất Tỵ 2025 | 29/01/2025 | 🟡 | Wikipedia *Tết* |
-| **Bính Ngọ 2026** | **17/02/2026** | 🟡 | Wikipedia *Tết* |
+| **Bính Ngọ 2026** | **17/02/2026** | ✅ **TIER 1** | **Thông báo 9441/TB-BNV (Bộ Nội vụ)** — văn bản nhà nước, nhánh A + Wikipedia |
 | Đinh Mùi 2027 | 06/02/2027 | 🟡 | Wikipedia *Tết* |
 | Mậu Thân 2028 | 26/01/2028 | 🟡 | Wikipedia *Tết* |
 | Kỷ Dậu 2029 | 13/02/2029 | 🟡 | Wikipedia *Tết* |
-| **Canh Tuất 2030** | **02/02/2030** | ✅ | Wikipedia *Tết* **+** HND *calrules_en* (hai nguồn độc lập) |
+| **Canh Tuất 2030** | **02/02/2030** | 🟡 *(hạ từ ✅)* | Wikipedia *Tết* + HND *calrules_en* — **có thể cùng nhánh**, xem cảnh báo trên |
 | Tân Hợi 2031 | 23/01/2031 | 🟡 | Wikipedia *Tết* |
 
 Wikipedia còn có tới 2043; sẽ bổ sung sau khi đối chiếu sách.
+
+### A.1 Nguồn Tier 1 mới: văn bản nhà nước công bố nghỉ Tết
+
+Mỗi năm Chính phủ/Bộ ra văn bản ấn định lịch nghỉ Tết, **ghi kèm cả ngày âm lẫn ngày
+dương**. Đây là quyết định hành chính, **không phải kết quả của phần mềm nào** ⇒
+nhánh A, độc lập hoàn toàn với HND.
+
+| Ngày âm | Ngày dương | Văn bản |
+|---|---|---|
+| 27 tháng Chạp Ất Tỵ | 14/02/2026 | Thông báo 9441/TB-BNV (Bộ Nội vụ) |
+| **Mùng 1 Tết Bính Ngọ** | **17/02/2026** | như trên |
+| Mùng 6 Tết Bính Ngọ | 22/02/2026 | như trên |
+
+⛔ **CẦN LÀM:** truy các văn bản tương ứng của những năm trước để dựng chuỗi Tier 1
+nhiều năm. Chưa làm ⇒ hiện chỉ có 2026.
+
+> Giới hạn: chỉ phủ vùng quanh Tết. Không giúp gì cho Rằm tháng 7, Trung Thu, tháng
+> nhuận hay số ngày của tháng âm.
 
 ---
 
@@ -46,14 +64,24 @@ Wikipedia còn có tới 2043; sẽ bổ sung sau khi đối chiếu sách.
 
 | Năm | Việt Nam | Trung Quốc | Lệch | Trạng thái | Nguồn |
 |---|---|---|---|---|---|
-| **1985** | Tết **21/01/1985** | Tết **20/02/1985** | **1 tháng** | ✅ | Thanh Niên **+** Wikipedia EN *Tết* ("a month before China") |
+| **1985** | Tết **21/01/1985** | Tết **20/02/1985** | **1 tháng** | 🟡 | Thanh Niên + Wikipedia EN *Tết* — **phía TQ cần lấy từ HKO** để thành Tier 1 |
 | 1984 | **không** nhuận | nhuận **tháng 10** | tháng nhuận | 🟡 | Hànộimới (dẫn Ban Lịch Nhà nước) |
 | 1987 | nhuận **tháng 7** | nhuận **tháng 6** | tháng nhuận | 🟡 | Hànộimới |
 | 2006 | khác nhau **25/06 → 24/07** | | 1 ngày | 🟡 | Tuổi Trẻ |
-| **2007** | Tết **17/02/2007** | Tết **18/02/2007** | 1 ngày | ✅ | HND *calrules_en* **+** Tuổi Trẻ (lệch 17/02 → 18/03) |
+| **2007** | Tết **17/02/2007** | Tết **18/02/2007** | 1 ngày | 🟡 | HND *calrules_en* + Tuổi Trẻ — **phía TQ cần lấy từ HKO** |
 | 2008 | khác nhau **27/11 → 26/12** | | 1 ngày | 🟡 | Tuổi Trẻ |
-| **2030** | Tết **02/02/2030** | Tết **03/02/2030** | 1 ngày | ✅ | HND *calrules_en* **+** Wikipedia *Tết* |
+| **2030** | Tết **02/02/2030** | Tết **03/02/2030** | 1 ngày | 🟡 *(hạ từ ✅)* | HND + Wikipedia, **có thể cùng nhánh** |
 | 2053 | Tết **18/02/2053** | Tết **19/02/2053** | 1 ngày | 🟡 | HND *calrules_en* |
+
+### B.1 Phía Trung Quốc phải lấy từ HKO, không lấy từ nguồn VN
+
+Đài Thiên văn Hồng Kông (HKO) công bố **bảng đối chiếu Dương–Âm 1901–2100** trên
+data.gov.hk, điều khoản **cho phép dùng thương mại** kèm attribution. Đây là nhánh B
+— độc lập hoàn toàn với cả HND lẫn Ban Lịch Nhà nước.
+
+⛔ **CẦN LÀM:** tải bảng HKO cho 1984, 1985, 1987, 2006, 2007, 2008, 2030, 2053 và
+điền cột "Trung Quốc". Khi đó cột VN (nhánh A) và cột TQ (nhánh B) tạo thành đối
+chiếu chéo **thật sự độc lập**, và nhóm test này lên Tier 1.
 
 **1985 là ca xương sống của cả bộ test.** Lệch cả một tháng chứ không phải một ngày:
 nếu engine trả 20/02/1985 thì nó đang là lịch Trung Quốc, không cần bàn thêm.
@@ -107,73 +135,101 @@ tiếp**, lấy 2025 (nhuận tháng 6) làm ví dụ:
 
 ---
 
-## E. Ngày 29 / 30 âm
+## E. Âm → Dương (nhóm C2 của đặc tả Phase 3A)
 
-⛔ **CHƯA XÁC MINH — chưa có nguồn nào cho biết tháng âm cụ thể nào có 29 hay 30 ngày.**
+⛔ **CHƯA XÁC MINH — chưa có nguồn Tier 1 nào cho nhóm này.**
 
-Cần từ sách, tối thiểu:
+Cần từ sách Trần Tiến Bình, tối thiểu mỗi loại một vector:
 
-| Cần | Vì sao |
-|---|---|
-| Một tháng âm **có** ngày 30 | `daysInLunarMonth` phải trả 30 |
-| Một tháng âm **chỉ có 29** ngày | `toSolar(30/…)` phải trả `NonexistentLunarDate(lastValidDay = 29)` |
-| Cùng tháng đó ở một năm **khác** lại có 30 | Chứng minh không hard-code |
+| Loại | Input | Kỳ vọng |
+|---|---|---|
+| Ngày 1 | (1, m, y, thường) | ngày dương |
+| Ngày 15 | (15, m, y, thường) | ngày dương |
+| Ngày 29 | (29, m, y) ở tháng **thiếu** | ngày dương — ngày cuối tháng |
+| Ngày 30 | (30, m, y) ở tháng **đủ** | ngày dương — ngày cuối tháng |
+| **Ngày 30 ở tháng thiếu** | (30, m, y) mà tháng đó chỉ 29 ngày | **`NonexistentLunarDate(lastValidDay = 29)`** |
+| Tháng nhuận | (15, m, y, **nhuận**) | ngày dương ≠ ngày của tháng thường |
+| Tháng nhuận không tồn tại | (15, m, y, nhuận) ở năm thường | **`NoSuchLeapMonth`** |
 
-Đây là nhóm test nối thẳng với `MemorialRule.missingDayPolicy` ở
-[MEMORIAL_RULES.md](MEMORIAL_RULES.md).
+Nhóm này nối thẳng với `MemorialRule.missingDayPolicy` ở [MEMORIAL_RULES.md](MEMORIAL_RULES.md):
+engine trả lỗi, `EventCalculator` mới được phép lùi 30→29.
 
 ---
 
-## F. Rằm, Mùng 1, Giao thừa
+## F. Dương → Âm cho các ngày lễ MVP (nhóm C1)
 
 ⛔ **CHƯA XÁC MINH.**
 
-Về nguyên tắc suy ra được từ Tết (mùng 1 tháng 1) — nhưng **suy ra không phải là
-kiểm chứng**. Rằm tháng Giêng = Tết + 14 ngày chỉ đúng nếu tháng Giêng đủ ngày; đó
-lại chính là thứ ta đang cần kiểm.
+Cần cho ít nhất 3 năm khác nhau: Rằm tháng Giêng (15/1 âm) · Tết Hàn Thực (3/3 âm) ·
+Tết Đoan Ngọ (5/5 âm) · Rằm tháng 7 (15/7 âm) · Trung Thu (15/8 âm) · Ông Công Ông
+Táo (23/12 âm) · **ngày cuối năm âm** (29 hoặc 30 tháng Chạp — chú ý nhóm E) ·
+**mùng 1 Tết** (đã có, nhánh A).
 
-Phải tra trực tiếp từ sách:
-
-- Rằm tháng Giêng, Rằm tháng 7, Trung Thu (15/8 âm) của vài năm.
-- Giao thừa = ngày dương liền trước mùng 1 Tết (suy được, nhưng vẫn nên đối chiếu).
-- Ông Công Ông Táo 23/12 âm, Tất niên 30 hoặc 29/12 âm — chú ý đúng nhóm E.
+> **Không được suy** Rằm tháng Giêng = Tết + 14 ngày. Suy ra không phải kiểm chứng,
+> và nó chỉ đúng nếu tháng Giêng đủ ngày — mà đó chính là thứ đang cần kiểm.
 
 ---
 
-## G. Năm biên và chuyển năm
+## G. Biên và chuyển năm (nhóm C6)
 
 ⛔ **CHƯA XÁC MINH.**
 
-| Cần | Kỳ vọng |
-|---|---|
-| 01/01/1901 (biên dưới) | Có kết quả, không lỗi |
-| 31/12/2100 (biên trên) | Có kết quả, không lỗi |
-| 31/12/1900 | `UnsupportedYear` |
-| 01/01/2101 | `UnsupportedYear` |
-| 31/12 ↔ 01/01 quanh giao thừa dương | Năm âm **không** đổi tại 01/01 dương |
-| Ngày trước và sau mùng 1 Tết | Năm âm đổi đúng **tại Tết** |
+| Input | Kỳ vọng | Nguồn cần |
+|---|---|---|
+| 01/01/1901 | Tính được | Sách (1901 là năm đầu sách phủ) |
+| 31/12/1902 | Tính được | Sách |
+| 01/01/2099 | Tính được | Sách |
+| 31/12/2100 | Tính được | Sách (2100 là năm cuối sách phủ) |
+| 31/12/1900 | **`UnsupportedYear`** | Không cần oracle |
+| 01/01/2101 | **`UnsupportedYear`** | Không cần oracle |
+| 31/12 ↔ 01/01 dương | Năm âm **không** đổi tại 01/01 dương | Sách |
+| Ngày trước / sau mùng 1 Tết | Năm âm đổi **đúng tại Tết** | Nhánh A |
+
+Câu hỏi thiết kế chưa quyết: ngày dương đầu 1901 thuộc **năm âm 1900**. Trả kết quả
+hay `UnsupportedYear`? Cần bảng biên rồi mới định nghĩa.
 
 ---
 
-## H. Round-trip (không cần oracle)
+## H. Input không hợp lệ (nhóm C7) — không cần oracle ngoài
 
-Nhóm này tự kiểm, không cần nguồn ngoài — nhưng chỉ chứng minh **nhất quán**, không
-chứng minh **đúng**. Đừng nhầm hai thứ đó.
+✅ **Đặc tả xong.** Đây là nhóm duy nhất tự định nghĩa được.
+
+| Input | Kỳ vọng |
+|---|---|
+| 31/02/2026 dương | `InvalidGregorianDate` |
+| 29/02/2025 dương (năm không nhuận) | `InvalidGregorianDate` |
+| Ngày âm 0 | `InvalidLunarDate(DAY_OUT_OF_RANGE)` |
+| Ngày âm 31 | `InvalidLunarDate(DAY_OUT_OF_RANGE)` |
+| Tháng âm 0 | `InvalidLunarDate(MONTH_OUT_OF_RANGE)` |
+| Tháng âm 13 | `InvalidLunarDate(MONTH_OUT_OF_RANGE)` |
+| Tháng nhuận ở năm thường | `NoSuchLeapMonth` |
+| Ngày 30 ở tháng chỉ 29 ngày | `NonexistentLunarDate(lastValidDay = 29)` |
+| Năm 1900 / 2101 | `UnsupportedYear` |
+
+---
+
+## I. Round-trip — chỉ chứng minh NHẤT QUÁN, không chứng minh ĐÚNG
+
+Nhóm này không cần nguồn ngoài. **Đừng nhầm hai thứ đó.** Code sai một cách nhất
+quán vẫn pass toàn bộ nhóm này.
 
 | Test | Phạm vi |
 |---|---|
-| `toSolar(toLunar(d)) == d` | mọi ngày dương 1990–2050 (≈22.000 ngày) |
-| `toLunar(toSolar(l)) == l` | mọi ngày âm hợp lệ trong dải đó, **gồm cả tháng nhuận** |
-| Đổi `TimeZone.setDefault()` sang Tokyo/UTC/New York | Kết quả **không đổi** |
+| `toSolar(toLunar(d)) == d` | mọi ngày dương 1901–2100 (~73.000 ngày) |
+| `toLunar(toSolar(l)) == l` | mọi ngày âm hợp lệ, **gồm tháng nhuận** |
+| Đổi `TimeZone.setDefault()` sang Tokyo / UTC / New York | Kết quả **không đổi** |
+| Gọi song song từ nhiều thread | Kết quả không đổi (API là hàm thuần) |
 
 ---
 
-## Việc cần làm trước khi code
+## Việc cần làm trước khi code — cổng chặn
 
-1. ⛔ Có **sách Trần Tiến Bình** trong tay.
-2. ⛔ Điền các ô CHƯA XÁC MINH ở mục **D, E, F, G**.
-3. ⛔ Nâng các dòng 🟡 ở mục A và B lên ✅ bằng cách đối chiếu sách.
-4. ⛔ Chốt phương án Bắc/Nam 1955–1975 rồi mới viết test mục C.
+| # | Việc | Ai | Mở khoá |
+|---|---|---|---|
+| 1 | **Có sách Trần Tiến Bình** | Chủ dự án | E, F, G, D — **đường găng** |
+| 2 | Tải bảng HKO, điền cột Trung Quốc | Tôi (khi được duyệt) | B lên Tier 1 |
+| 3 | Truy văn bản nghỉ Tết các năm trước | Tôi (khi được duyệt) | A lên Tier 1 nhiều năm |
+| 4 | Chốt phương án Bắc/Nam A/B/C | **Chủ dự án** | C |
 
-**Chưa xong 4 việc này thì bảng test chưa đủ tư cách làm oracle**, và engine viết ra
-sẽ không có gì để chứng minh là đúng.
+**Chưa xong thì bảng này chưa đủ tư cách làm oracle**, và engine viết ra sẽ không có
+gì chứng minh là đúng. Xem cổng đầy đủ ở [PHASE_3A_ORACLE_GATE.md §G](PHASE_3A_ORACLE_GATE.md).
