@@ -14,7 +14,14 @@
 Thiên văn Quốc tế, phủ: lịch, thang thời gian, ephemeris, tuế sai–chương động,
 chuyển đổi toạ độ.
 
-**FACT.** SOFA **không có ephemeris Mặt Trăng.** Muốn vị trí Mặt Trăng phải dùng
+> ⛔ **ĐÍNH CHÍNH (Phase 3A.3, 2026-08-25):** đoạn dưới đây **SAI**. ERFA/SOFA **CÓ**
+> routine Mặt Trăng: `eraMoon98` (`moon98.c`, 23.973 byte). Sai vì tôi tra danh sách
+> chức năng tổng quát thay vì liệt kê thư mục source. Xem
+> [PHASE_3A3_ASTRONOMICAL_BENCHMARK.md §2](PHASE_3A3_ASTRONOMICAL_BENCHMARK.md).
+> Lưu ý thêm: `eraMoon98` là implementation **thuật toán Meeus** — vấn đề chính sách,
+> xem §4.2 của tài liệu đó.
+
+**FACT ~~(SAI, đã đính chính ở trên)~~.** SOFA **không có ephemeris Mặt Trăng.** Muốn vị trí Mặt Trăng phải dùng
 nguồn khác (JPL DE…). Với Trái Đất/Mặt Trời, SOFA có `iau_EPV00`.
 
 **INFERENCE.** ⇒ SOFA (và ERFA) giải được **trung khí** (cần hoàng kinh Mặt Trời),

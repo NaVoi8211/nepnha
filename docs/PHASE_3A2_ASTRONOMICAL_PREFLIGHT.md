@@ -21,7 +21,11 @@ giấy phép **sạch hơn cả SOFA**. Chi tiết §A.
 Theo chỉ đạo mục 5 và 6: **không kết luận "SOFA PASS"**, và không copy dòng code
 SOFA nào.
 
-### A.2 SOFA không có Mặt Trăng
+### A.2 SOFA không có Mặt Trăng — ⛔ ĐÃ ĐÍNH CHÍNH
+
+> **SAI. Xem [PHASE_3A3 §2](PHASE_3A3_ASTRONOMICAL_BENCHMARK.md).** ERFA có
+> `eraMoon98`. Benchmark ở Phase 3A.3 cho thấy nó đủ chính xác (trung vị 18,9 s so
+> với NASA). Phần dưới giữ lại để đối chiếu lịch sử sai lầm.
 
 **FACT.** SOFA phủ lịch, thang thời gian, ephemeris, tuế sai–chương động, toạ độ —
 **không có ephemeris Mặt Trăng**. Vị trí Trái Đất quanh Mặt Trời có qua `iau_EPV00`.
