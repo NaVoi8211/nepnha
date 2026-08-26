@@ -2,7 +2,9 @@ package com.nepnha.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nepnha.R
 import com.nepnha.core.time.VietnameseDateFormatter
+import com.nepnha.core.time.VietnameseLunarFormatter
+import com.nepnha.domain.calendar.LunarDay
 import com.nepnha.ui.components.EmptyStateCard
 import com.nepnha.ui.components.InfoCard
 import com.nepnha.ui.components.SectionHeader
@@ -31,16 +35,15 @@ import java.time.LocalDate
  * số nên vừa test được vừa không cần bộ máy nào thêm. ViewModel sẽ xuất hiện ở
  * Phase 4/7 khi có nghi lễ và ngày giỗ thật.
  *
- * TRUNG THỰC VỀ DỮ LIỆU: ngày dương là thật (`java.time`), còn ngày âm **không**
- * được bịa. Bộ lịch âm Việt Nam thuộc Phase 3; tới lúc đó chỗ này chỉ nói rõ là
- * chưa có, tuyệt đối không hiển thị một con số trông như thật.
+ * TRUNG THỰC VỀ DỮ LIỆU: ngày dương từ `java.time`, ngày âm từ engine đã đóng băng
+ * ở Phase 3. Màn hình **không tự tính gì cả** — kể cả tháng nhuận và can chi đều do
+ * `LunarCalendarService` trả về. Không tra được thì nói thẳng, không hiển thị số giả.
  */
 @Composable
 fun HomeScreen(
     state: HomeUiState,
     onSetupFamily: () -> Unit,
     modifier: Modifier = Modifier,
-    today: LocalDate = LocalDate.now(),
 ) {
     Column(
         modifier = modifier
@@ -50,7 +53,7 @@ fun HomeScreen(
             .testTag("screen_home"),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        TodayHeader(today = today)
+        TodayHeader(today = state.today, lunar = state.lunar)
 
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -100,7 +103,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun TodayHeader(today: LocalDate, modifier: Modifier = Modifier) {
+private fun TodayHeader(today: LocalDate, lunar: LunarDay, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -123,12 +126,34 @@ private fun TodayHeader(today: LocalDate, modifier: Modifier = Modifier) {
             text = VietnameseDateFormatter.fullDate(today),
             style = MaterialTheme.typography.displaySmall,
         )
-        // Chỗ dành cho ngày âm. Chưa có engine ⇒ nói thẳng, không hiển thị số giả.
+        Spacer(Modifier.height(6.dp))
         Text(
-            text = stringResource(R.string.lunar_not_ready),
+            text = stringResource(R.string.home_lunar_label),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        when (lunar) {
+            // Gộp ngày âm và can chi vào MỘT dòng: giữ header đủ thấp để nút "Thiết
+            // lập gia đình" không bị đẩy khỏi màn hình trên máy nhỏ như A32.
+            is LunarDay.Known -> Text(
+                // Tháng nhuận luôn kèm chữ "nhuận" — xem VietnameseLunarFormatter.
+                text = VietnameseLunarFormatter.full(lunar.lunar, lunar.sexagenaryYear),
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.testTag("home_lunar_date"),
+            )
+            is LunarDay.Unknown -> Text(
+                text = stringResource(
+                    when (lunar.reason) {
+                        LunarDay.Reason.OUT_OF_SUPPORTED_RANGE -> R.string.lunar_out_of_range
+                        LunarDay.Reason.ENGINE_UNAVAILABLE -> R.string.lunar_unavailable
+                    },
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.testTag("home_lunar_date"),
+            )
+        }
     }
 }
 
@@ -137,9 +162,12 @@ private fun TodayHeader(today: LocalDate, modifier: Modifier = Modifier) {
 private fun HomeScreenPreview() {
     NepNhaTheme {
         HomeScreen(
-            state = HomeUiState(familyName = "Gia đình tôi"),
+            state = HomeUiState(
+                today = LocalDate.of(2026, 8, 24),
+                lunar = LunarDay.Unknown(LocalDate.of(2026, 8, 24), LunarDay.Reason.ENGINE_UNAVAILABLE),
+                familyName = "Gia đình tôi",
+            ),
             onSetupFamily = {},
-            today = LocalDate.of(2026, 8, 24),
         )
     }
 }

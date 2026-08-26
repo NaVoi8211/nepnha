@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.nepnha.R
 import com.nepnha.data.TestEnvironment
@@ -90,7 +91,9 @@ class NavigationTest {
     @Test
     fun nut_thiet_lap_gia_dinh_o_man_Nha_dan_sang_tab_Gia_dinh() {
         rule.onNodeWithTag("screen_home").assertIsDisplayed()
-        rule.onNodeWithText(text(R.string.home_setup_family)).performClick()
+        // Màn Nhà cuộn được và nội dung đã dài thêm khi nối lịch âm ⇒ phải cuộn tới
+        // nút rồi mới bấm, thay vì giả định nó luôn nằm trong khung nhìn.
+        rule.onNodeWithText(text(R.string.home_setup_family)).performScrollTo().performClick()
         rule.onNodeWithTag("screen_family").assertIsDisplayed()
     }
 }

@@ -6,11 +6,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.nepnha.core.lunar.LunarDataset
+import com.nepnha.core.lunar.VietnameseLunarCalendar
 import com.nepnha.data.db.NepNhaDatabase
 import com.nepnha.data.prefs.SettingsRepository
 import com.nepnha.data.repository.FamilyOverviewSource
 import com.nepnha.data.repository.FamilyRepository
 import com.nepnha.data.repository.MemberRepository
+import com.nepnha.domain.calendar.LunarCalendarService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -53,10 +56,34 @@ class AppContainer(
     val familyRepository: FamilyRepository,
     val memberRepository: MemberRepository,
     val settingsRepository: SettingsRepository,
+    val lunarCalendar: LunarCalendarService,
 ) {
     val familyOverview = FamilyOverviewSource(familyRepository, memberRepository, settingsRepository)
 
     companion object {
+
+        /** Đường dẫn asset của dataset lịch âm. Xem `docs/LUNAR_DATASET_PROVENANCE.md`. */
+        const val LUNAR_ASSET = "lunar/vn_lunar_v1.bin"
+
+        /**
+         * Nạp engine lịch âm từ asset.
+         *
+         * Dataset ~20 KB, dựng chỉ số một lần rồi bất biến; đo trên A32 là 365 lượt
+         * chuyển đổi trong ~30 ms, nên nạp thẳng lúc khởi động là an toàn — không
+         * cần lazy, không cần đẩy sang luồng nền.
+         *
+         * Hỏng asset thì trả về service không có engine thay vì ném: app vẫn mở
+         * được và nói thật là lịch âm chưa dùng được. Trường hợp này chỉ xảy ra khi
+         * đóng gói sai, vì checksum dataset đã bị khoá trong unit test.
+         */
+        fun loadLunarCalendar(context: Context): LunarCalendarService {
+            val engine = runCatching {
+                val bytes = context.assets.open(LUNAR_ASSET).use { it.readBytes() }
+                VietnameseLunarCalendar.create(LunarDataset.parse(bytes))
+            }.getOrNull()
+            return LunarCalendarService(engine)
+        }
+
         fun create(context: Context): AppContainer {
             val database = NepNhaDatabase.create(context)
             val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
@@ -68,6 +95,7 @@ class AppContainer(
                 familyRepository = FamilyRepository(database.familyDao()),
                 memberRepository = MemberRepository(database.memberDao(), settings),
                 settingsRepository = settings,
+                lunarCalendar = loadLunarCalendar(context),
             )
         }
     }

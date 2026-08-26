@@ -8,7 +8,8 @@
 | 1 | App shell + navigation + theme + Home placeholder | ✅ **Xong** |
 | 2 | Room + Family + Member | ✅ **Xong** |
 | 3 | Vietnamese lunar calendar engine + tests | ✅ **Xong** — Kotlin thuần, dataset NASA+ERFA, 32 test |
-| 4 | Ritual content + local JSON + ritual engine | ⏳ Chờ duyệt |
+| 4 | Nối lịch âm vào Home + màn Lịch | ✅ **Xong** — lưới tháng, tháng nhuận, can chi năm |
+| 5 | Ritual content + local JSON + ritual engine | ⏳ Chờ duyệt |
 | 5 | Prayer template engine + Prayer Reader | |
 | 6 | Auto-scroll | |
 | 7 | Memorial system | |

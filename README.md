@@ -7,7 +7,7 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 ## Trạng thái
 
 **Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
-**Phase 3 hoàn thành** — engine lịch âm Việt Nam (Kotlin thuần, offline). Trước đó: **Phase 3A.5** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
+**Phase 4 hoàn thành** — lịch âm đã hiển thị trên màn Nhà và màn Lịch. Trước đó: **Phase 3** — engine lịch âm Việt Nam (Kotlin thuần, offline). Trước đó: **Phase 3A.5** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
 
 ## Build
 
@@ -36,6 +36,7 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/PHASE_3A1_DATASET_VERIFICATION.md](docs/PHASE_3A1_DATASET_VERIFICATION.md) | Kiểm chứng dữ liệu NASA/HKO và múi giờ lịch sử bằng dữ liệu thật |
 | [docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) | Giấy phép & khả thi kỹ thuật của nguồn thiên văn (SOFA/ERFA/NASA) |
 | [docs/PHASE_3_MEEUS_PROVENANCE.md](docs/PHASE_3_MEEUS_PROVENANCE.md) | **Quan hệ với Meeus — nêu đúng phạm vi** |
+| [docs/PHASE_4_INTEGRATION.md](docs/PHASE_4_INTEGRATION.md) | **Nối lịch âm vào Home và màn Lịch** |
 | [docs/PHASE_3_FINAL_HANDOFF.md](docs/PHASE_3_FINAL_HANDOFF.md) | **Bàn giao Phase 3 → Phase 4** |
 | [docs/PHASE_3_DATASET_CORRECTION.md](docs/PHASE_3_DATASET_CORRECTION.md) | **Sửa dataset: ΔT + floor, pháp y ca 1938** |
 | [docs/PHASE_3_FINAL_AUDIT.md](docs/PHASE_3_FINAL_AUDIT.md) | **Kiểm toán cuối Phase 3 — 1 blocker ΔT** |

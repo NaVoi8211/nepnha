@@ -10,7 +10,9 @@
     <string name="action_back">Quay lại</string>
 
     <!-- Chung -->
-    <string name="lunar_not_ready">Lịch âm sẽ hiển thị ở bản cập nhật tới</string>
+    <string name="lunar_out_of_range">Ngày âm chỉ có trong khoảng 1901–2100</string>
+    <string name="lunar_unavailable">Lịch âm tạm thời chưa dùng được</string>
+    <string name="home_lunar_label">Âm lịch</string>
 
     <!-- Màn hình Nhà -->
     <string name="home_today_label">Hôm nay</string>
@@ -28,8 +30,9 @@
     <!-- Màn hình Lịch -->
     <string name="calendar_title">Lịch</string>
     <string name="calendar_today_marker">Hôm nay</string>
-    <string name="calendar_placeholder_title">Lịch âm chưa được kết nối</string>
-    <string name="calendar_placeholder_body">Màn hình này hiện chỉ hiển thị ngày dương. Ngày âm, ngày lễ và ngày giỗ sẽ xuất hiện khi bộ lịch âm Việt Nam hoàn thành.</string>
+    <string name="calendar_previous_month">Tháng trước</string>
+    <string name="calendar_next_month">Tháng sau</string>
+    <string name="calendar_selected_lunar">Âm lịch: %1$s, năm %2$s</string>
 
     <!-- Màn hình Gia đình -->
     <string name="family_title">Gia đình tôi</string>
@@ -44,6 +47,8 @@
     <string name="settings_title">Cài đặt</string>
     <string name="settings_about_title">Giới thiệu Nếp Nhà</string>
     <string name="settings_about_body">Nếp Nhà giúp gia đình bạn biết hôm nay có nghi lễ gì, cần chuẩn bị những gì và có bài khấn phù hợp.</string>
+    <string name="settings_lunar_title">Nguồn và phương pháp lịch âm</string>
+    <string name="settings_lunar_body">Nếp Nhà tính lịch âm Việt Nam từ dữ liệu thiên văn và quy tắc lịch Việt Nam, quy chiếu theo kinh tuyến 105°Đ. Dữ liệu điểm sóc lấy từ Moon Phase Predictions by Fred Espenak, NASA/GSFC; dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh từ IAU SOFA. Kết quả được đối chiếu với các nguồn lịch công khai và văn bản nhà nước.\n\nPhạm vi: 1901–2100. Ứng dụng dùng quy ước múi giờ UTC+7 cho toàn bộ phạm vi này; đây không phải bản tái hiện chính xác tập quán lịch của mọi thời kỳ lịch sử. Mọi phép tính chạy hoàn toàn trên máy bạn, không cần mạng.</string>
     <string name="settings_version_title">Phiên bản</string>
     <string name="settings_privacy_title">Dữ liệu của bạn</string>
     <string name="settings_privacy_body">Toàn bộ dữ liệu gia đình và ngày giỗ được lưu trên thiết bị này. Nếp Nhà không có tài khoản, không gửi dữ liệu đi đâu và hoạt động bình thường khi không có mạng.</string>

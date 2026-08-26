@@ -41,7 +41,14 @@ class TestEnvironment(context: Context) {
     val familyRepository = FamilyRepository(database.familyDao())
     val memberRepository = MemberRepository(database.memberDao(), settingsRepository)
 
-    val container = AppContainer(familyRepository, memberRepository, settingsRepository)
+    // Nạp dataset lịch âm THẬT từ asset: test giao diện phải nhìn thấy đúng thứ
+    // người dùng nhìn thấy, không phải một engine giả.
+    val container = AppContainer(
+        familyRepository,
+        memberRepository,
+        settingsRepository,
+        AppContainer.loadLunarCalendar(context),
+    )
 
     fun close() {
         database.close()

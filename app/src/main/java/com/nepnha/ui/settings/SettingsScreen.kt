@@ -61,6 +61,13 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             title = stringResource(R.string.settings_display_title),
             body = stringResource(R.string.settings_display_body),
         )
+        // §XV Phase 4: nói thật về nguồn và giới hạn, không tuyên bố "lịch chính
+        // thức của Nhà nước" hay "được NASA chứng nhận".
+        InfoCard(
+            title = stringResource(R.string.settings_lunar_title),
+            body = stringResource(R.string.settings_lunar_body),
+            modifier = Modifier.testTag("settings_lunar_method"),
+        )
         InfoCard(
             title = stringResource(R.string.settings_version_title),
             body = versionName,

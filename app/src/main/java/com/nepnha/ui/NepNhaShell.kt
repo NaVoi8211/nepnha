@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.nepnha.AppContainer
 import com.nepnha.ui.calendar.CalendarScreen
+import com.nepnha.ui.calendar.CalendarViewModel
 import com.nepnha.ui.family.ChooseWorshipperScreen
 import com.nepnha.ui.family.FamilyScreen
 import com.nepnha.ui.family.FamilyViewModel
@@ -105,7 +106,16 @@ fun NepNhaShell(
                 )
             }
 
-            composable(TopLevelDestination.CALENDAR.route) { CalendarScreen() }
+            composable(TopLevelDestination.CALENDAR.route) {
+                val vm: CalendarViewModel = viewModel(factory = CalendarViewModel.factory(container))
+                val state by vm.state.collectAsStateWithLifecycle()
+                CalendarScreen(
+                    state = state,
+                    onPreviousMonth = vm::showPreviousMonth,
+                    onNextMonth = vm::showNextMonth,
+                    onSelectDay = vm::select,
+                )
+            }
 
             composable(TopLevelDestination.FAMILY.route) { entry ->
                 val vm: FamilyViewModel = entry.familyViewModel(container, navController)

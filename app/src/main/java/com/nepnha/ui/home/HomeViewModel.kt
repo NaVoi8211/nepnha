@@ -7,21 +7,34 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.nepnha.AppContainer
 import com.nepnha.data.repository.FamilyOverview
+import com.nepnha.domain.calendar.LunarDay
+import java.time.LocalDate
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 /**
- * Màn Nhà giờ đọc dữ liệu gia đình thật từ Room.
+ * Màn Nhà: dữ liệu gia đình thật từ Room, cộng ngày âm thật từ engine lịch.
  *
- * Vẫn KHÔNG có nghi lễ/ngày giỗ — đó là Phase 4 và Phase 7.
+ * Ngày âm được tính **ở đây**, không phải trong Composable: màn hình chỉ được nhận
+ * kết quả đã xong. Nhờ vậy test đo được mà không cần dựng UI, và không có đường nào
+ * để giao diện lỡ tay tự suy ra tháng nhuận.
+ *
+ * [today] nhận qua tham số để test tiêm được ngày cố định. Ngày được chốt **một lần**
+ * lúc tạo ViewModel — app mở qua nửa đêm sẽ chưa tự đổi ngày; đó là hành vi đã biết,
+ * chưa cần bộ đếm cho tới khi có nhắc việc theo giờ.
  */
-class HomeViewModel(container: AppContainer) : ViewModel() {
+class HomeViewModel(
+    container: AppContainer,
+    today: LocalDate = LocalDate.now(),
+) : ViewModel() {
+
+    private val initial = HomeUiState(today = today, lunar = container.lunarCalendar.dayOf(today))
 
     val state: StateFlow<HomeUiState> = container.familyOverview.observe()
-        .map { it.toHomeState() }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState())
+        .map { it.toHomeState(initial) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)
 
     companion object {
         fun factory(container: AppContainer): ViewModelProvider.Factory = viewModelFactory {
@@ -31,12 +44,14 @@ class HomeViewModel(container: AppContainer) : ViewModel() {
 }
 
 data class HomeUiState(
+    val today: LocalDate,
+    val lunar: LunarDay,
     val familyName: String? = null,
     val memberCount: Int = 0,
     val primaryMemberName: String? = null,
 )
 
-private fun FamilyOverview.toHomeState() = HomeUiState(
+private fun FamilyOverview.toHomeState(base: HomeUiState) = base.copy(
     familyName = family?.name,
     memberCount = members.size,
     primaryMemberName = primaryMember?.fullName,
