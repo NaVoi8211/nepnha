@@ -7,19 +7,31 @@
   "note": "Chỉ chứa dữ kiện thiên văn. Quy tắc lịch nằm trong Kotlin.",
   "epochUtc": "1890-01-01T00:00:00Z",
   "unit": "phút UTC kể từ epoch, u32 big-endian",
+  "quantisation": {
+    "rule": "floor",
+    "why": "Ranh giới ngày dương lịch Việt Nam nằm đúng tại một mốc phút (17:00:00Z = 00:00 UTC+7). Phút CHỨA một thời điểm luôn nằm trọn về một phía của mốc, nên floor không bao giờ đổi ngày Việt Nam; round thì có thể.",
+    "residualErrorSeconds": "[0, 60) — luôn lùi về trước, không bao giờ vượt biên"
+  },
   "internalPaddingLunations": 30,
   "paddingIsNotSupportedRange": true,
   "newMoonCount": 2534,
   "principalTermCount": 2448,
-  "sha256": "a9b36e14e9efc455a8341e631b9402a81775ec55aa1152eec8c7816dc02f3ba0",
+  "sha256": "b9f9613a0d1974ac82a024a737b8b40cbd1588869881db13c90f4c90a020f33d",
   "sizeBytes": 19946,
+  "generator": {
+    "file": "tools/generate_lunar_dataset.py",
+    "sha256": "aa89e47b6584e7ca07db9749410b1f76667eaa9f979999af25141968128ea799",
+    "deltaTModule": "tools/deltat.py",
+    "deltaTModuleSha256": "582c6df6214ea93d007e4fbb5eed55cd7224ade18f7dabc8260f0c8008892e16",
+    "noWallClockByDesign": "Không nhúng thời điểm sinh, để việc sinh lại cho ra file giống hệt từng byte. Nhận dạng phiên bản dùng sha256 của chính script."
+  },
   "sources": {
     "newMoon": {
       "role": "DATA SOURCE",
       "name": "NASA/GSFC Six Millennium Catalog of the Phases of the Moon",
       "url": "https://eclipse.gsfc.nasa.gov/phase/phasecat.html",
       "attribution": "Moon Phase Predictions by Fred Espenak, NASA/GSFC",
-      "resolution": "1 minute (UT)",
+      "resolution": "1 minute (UT) — dùng nguyên giá trị NASA công bố",
       "note": "Không dùng eraMoon98. Xem readiness Q2."
     },
     "principalTerms": {
@@ -27,12 +39,21 @@
       "name": "Sinh bằng ERFA eraEpv00 + eraEqec06 + eraNut06a",
       "license": "BSD-3-Clause (ERFA, NumFOCUS; phái sinh có phép từ IAU SOFA)",
       "attribution": "Dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh từ IAU SOFA",
-      "meeusFree": true,
-      "validatedAgainst": "HKO 24 solar terms 2026-2028, |lệch| <= 38 s"
+      "meeusFree": true
     },
     "deltaT": {
       "role": "DATA SOURCE",
-      "name": "cột ΔT của catalog NASA"
+      "name": "Espenak & Meeus, \"Polynomial Expressions for Delta T\", NASA/GSFC",
+      "url": "https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html",
+      "publication": "phụ lục Five Millennium Canon of Solar Eclipses (NASA/TP-2006-214141)",
+      "variable": "y = year + (month - 0.5) / 12",
+      "notUsed": "Cột ΔT của phases*.html — chỉ có độ phân giải PHÚT, không đủ cho pipeline quyết định ở mức giây.",
+      "knownLimitation": "Đoạn 2005-2050 là ngoại suy lập năm 2006; với thập niên 2020 đa thức cho ~75 s so với quan trắc ~69 s. Ảnh hưởng lên lịch đã được đo — xem docs/PHASE_3_DATASET_CORRECTION.md.",
+      "rangeSeconds": [
+        -3.93,
+        209.73
+      ],
+      "distinctValues": 2448
     },
     "calendarRules": {
       "role": "ALGORITHM SOURCE",
@@ -43,80 +64,151 @@
     "validation": {
       "role": "VALIDATION SOURCE",
       "hko": "Bảng Dương-Âm 1901-2100 (lịch Trung Quốc) — chỉ đối chiếu, không vào APK",
-      "government": "6150/TB-BLĐTBXH, 9441/TB-BNV"
+      "government": "6150/TB-BLĐTBXH, 9441/TB-BNV",
+      "nasaDeltaTColumn": "Cột ΔT phân giải phút của phases*.html — dùng làm kiểm chứng thô cho đa thức, trong verify_lunar_dataset.py"
     }
   },
-  "precisionSensitive": [
-    {
-      "utcDate": "1944-06-20",
-      "nasaUt": "17:00",
-      "erfaUt": "16:59:52",
-      "marginSeconds": 7.9,
-      "chosen": "NASA",
-      "flag": "PRECISION_SENSITIVE"
-    },
-    {
-      "utcDate": "1967-07-07",
-      "nasaUt": "17:00",
-      "erfaUt": "16:59:41",
-      "marginSeconds": 18.6,
-      "chosen": "NASA",
-      "flag": "PRECISION_SENSITIVE"
-    },
-    {
-      "utcDate": "2054-05-07",
-      "nasaUt": "17:00",
-      "erfaUt": "17:00:06",
-      "marginSeconds": 6.5,
-      "chosen": "NASA",
-      "flag": "PRECISION_SENSITIVE"
-    },
-    {
-      "utcDate": "2072-12-09",
-      "nasaUt": "16:59",
-      "erfaUt": "16:59:09",
-      "marginSeconds": 50.3,
-      "chosen": "NASA",
-      "flag": "PRECISION_SENSITIVE"
-    },
-    {
-      "utcDate": "2077-11-15",
-      "nasaUt": "17:00",
-      "erfaUt": "16:59:25",
-      "marginSeconds": 34.7,
-      "chosen": "NASA",
-      "flag": "PRECISION_SENSITIVE"
-    },
-    {
-      "utcDate": "2085-10-18",
-      "nasaUt": "17:00",
-      "erfaUt": "16:59:22",
-      "marginSeconds": 37.5,
-      "chosen": "NASA",
-      "flag": "PRECISION_SENSITIVE"
-    }
-  ],
-  "precisionNote": "Cờ này KHÔNG được dùng để đổi kết quả và KHÔNG lộ ra API. Chọn NASA thay ERFA làm đổi đúng 4 tháng âm trong 200 năm.",
-  "precisionSensitiveTerms": {
-    "note": "Trung khí sát 00:00 giờ VN. Chỉ ca nằm ĐÚNG ranh giới tháng mới có thể ảnh hưởng quy tắc tháng nhuận.",
-    "withinTwoMinutesOfLocalMidnight": 7,
-    "totalPrincipalTermsInRange": 2400,
-    "couldChangeContainingMonth": [
+  "boundaryScan": {
+    "note": "Quét TOÀN BỘ sự kiện, không giới hạn ở các ca đã biết. Ranh giới ngày Việt Nam = 17:00:00Z.",
+    "windowSeconds": 120,
+    "newMoonsNearBoundary": [
       {
-        "utc": "1938-09-23T17:00Z",
-        "vnDate": "1938-09-24",
-        "reason": "rơi đúng ngày đầu tháng âm",
-        "flag": "PRECISION_SENSITIVE_TERM"
+        "utc": "1944-06-20T17:00:00Z",
+        "offsetFromBoundarySeconds": 0.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 28646940,
+        "vnDate": "1944-06-21",
+        "vnDateIfRound": "1944-06-21",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "1967-07-07T17:00:00Z",
+        "offsetFromBoundarySeconds": 0.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 40767420,
+        "vnDate": "1967-07-08",
+        "vnDateIfRound": "1967-07-08",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "1998-09-20T17:01:00Z",
+        "offsetFromBoundarySeconds": 60.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 57180541,
+        "vnDate": "1998-09-21",
+        "vnDateIfRound": "1998-09-21",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "2054-05-07T17:00:00Z",
+        "offsetFromBoundarySeconds": 0.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 86438460,
+        "vnDate": "2054-05-08",
+        "vnDateIfRound": "2054-05-08",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "2072-12-09T16:59:00Z",
+        "offsetFromBoundarySeconds": -60.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 96217499,
+        "vnDate": "2072-12-09",
+        "vnDateIfRound": "2072-12-09",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "2077-11-15T17:00:00Z",
+        "offsetFromBoundarySeconds": 0.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 98812380,
+        "vnDate": "2077-11-16",
+        "vnDateIfRound": "2077-11-16",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "2079-08-26T17:02:00Z",
+        "offsetFromBoundarySeconds": 120.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 99746942,
+        "vnDate": "2079-08-27",
+        "vnDateIfRound": "2079-08-27",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "2085-10-18T17:00:00Z",
+        "offsetFromBoundarySeconds": 0.0,
+        "sourceResolution": "phút (NASA công bố)",
+        "quantisedMinute": 102979740,
+        "vnDate": "2085-10-19",
+        "vnDateIfRound": "2085-10-19",
+        "floorDiffersFromRound": false
       }
     ],
-    "othersNoEffect": [
-      "1924-06-21",
-      "1938-01-20",
-      "1953-06-21",
-      "2004-05-20",
-      "2038-07-22",
-      "2074-08-22"
+    "principalTermsNearBoundary": [
+      {
+        "utc": "1924-06-21T16:59:18.766Z",
+        "offsetFromBoundarySeconds": -41.233,
+        "deltaTSecondsUsed": 23.64,
+        "quantisedMinute": 18129179,
+        "vnDate": "1924-06-21",
+        "vnDateIfRound": "1924-06-21",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "1938-01-20T16:58:42.253Z",
+        "offsetFromBoundarySeconds": -77.747,
+        "deltaTSecondsUsed": 23.968,
+        "quantisedMinute": 25273018,
+        "vnDate": "1938-01-20",
+        "vnDateIfRound": "1938-01-20",
+        "floorDiffersFromRound": true
+      },
+      {
+        "utc": "1938-09-23T16:59:27.106Z",
+        "offsetFromBoundarySeconds": -32.894,
+        "deltaTSecondsUsed": 24.081,
+        "quantisedMinute": 25627259,
+        "vnDate": "1938-09-23",
+        "vnDateIfRound": "1938-09-23",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "1953-06-21T16:59:53.678Z",
+        "offsetFromBoundarySeconds": -6.322,
+        "deltaTSecondsUsed": 30.442,
+        "quantisedMinute": 33381659,
+        "vnDate": "1953-06-21",
+        "vnDateIfRound": "1953-06-22",
+        "floorDiffersFromRound": true
+      },
+      {
+        "utc": "2004-05-20T16:59:11.629Z",
+        "offsetFromBoundarySeconds": -48.371,
+        "deltaTSecondsUsed": 64.589,
+        "quantisedMinute": 60159899,
+        "vnDate": "2004-05-20",
+        "vnDateIfRound": "2004-05-20",
+        "floorDiffersFromRound": false
+      },
+      {
+        "utc": "2038-07-22T16:59:41.593Z",
+        "offsetFromBoundarySeconds": -18.407,
+        "deltaTSecondsUsed": 83.639,
+        "quantisedMinute": 78132539,
+        "vnDate": "2038-07-22",
+        "vnDateIfRound": "2038-07-23",
+        "floorDiffersFromRound": true
+      },
+      {
+        "utc": "2074-08-22T17:00:14.633Z",
+        "offsetFromBoundarySeconds": 14.633,
+        "deltaTSecondsUsed": 145.047,
+        "quantisedMinute": 97111740,
+        "vnDate": "2074-08-23",
+        "vnDateIfRound": "2074-08-23",
+        "floorDiffersFromRound": false
+      }
     ]
-  },
-  "quantisation": "Dataset lưu PHÚT nên có lượng tử hoá ±30 giây. Khi đối chiếu với nguồn cũng làm tròn phút (HKO), chênh lệch quan sát được có thể tới 60 giây mà không phải sai số thật."
+  }
 }

@@ -4,7 +4,12 @@
 >
 > ⚠️ Đánh giá kỹ thuật/provenance. **Không phải tư vấn pháp lý.**
 
-# ⛔ KẾT LUẬN: **NOT READY** — 1 blocker
+> ✅ **BLOCKER ĐÃ XỬ LÝ** — xem
+> [PHASE_3_DATASET_CORRECTION.md](PHASE_3_DATASET_CORRECTION.md). Nguyên nhân thật
+> khác chẩn đoán ban đầu ở §B: regex đọc **đúng** cột, nhưng cột ΔT của NASA chỉ có
+> **độ phân giải phút**.
+
+# ⛔ KẾT LUẬN LÚC AUDIT: **NOT READY** — 1 blocker
 
 Mười lăm trên mười sáu cổng PASS. Cổng **G3/G8** FAIL vì một lỗi đo được, không phải
 vì thiếu nghiên cứu. Blocker có phạm vi hẹp, nguyên nhân đã xác định chính xác, và

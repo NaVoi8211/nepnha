@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """Chuẩn bị đầu vào thiên văn cho reference model. Dev-only, ngoài app/."""
 import subprocess, sys, os
+import os
+import sys
 from datetime import datetime, timedelta, timezone
+
+# ΔT: dùng CHUNG module đã sửa ở audit cuối Phase 3. Trước đây file này lấy ΔT từ
+# cột phân giải PHÚT của trang NASA, khiến mô hình tham chiếu mắc ĐÚNG lỗi mà
+# dataset mắc — nên phép đối chiếu HKO không thể phát hiện ra.
+# Xem docs/PHASE_3_DATASET_CORRECTION.md §E.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from deltat import delta_t_seconds                                     # noqa: E402
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'benchmark_erfa_astronomy'))
 from compare_with_nasa import fetch, parse, jd_tt_guess          # noqa: E402
 from scan_all_newmoons import jd_to_datetime                     # noqa: E402
@@ -30,7 +39,8 @@ def erfa_new_moons(nasa_moons, dts, pad_lunations=30):
     chứng cấu trúc với HKO đã phát hiện đúng lỗi này (1901: 1/12 tháng, 2100: 11/13).
     """
     SYN = 29.530588853
-    guesses = [(dts.get(nm.year, 69), jd_tt_guess(nm, dts.get(nm.year, 69))) for nm in nasa_moons]
+    guesses = [(delta_t_seconds(nm.year, nm.month),
+                jd_tt_guess(nm, delta_t_seconds(nm.year, nm.month))) for nm in nasa_moons]
     first_dt, first_jd = guesses[0]
     last_dt, last_jd = guesses[-1]
     pre = [(first_dt, first_jd - SYN * k) for k in range(pad_lunations, 0, -1)]
@@ -53,7 +63,7 @@ def erfa_solar_terms(dts, y0=1899, y1=2103):
     for y in range(y0, y1):
         eq = jd_of(y, 3, 20)
         for deg in range(0, 360, 15):
-            jobs.append((dts.get(y, 69.0), deg, eq + deg / SUN_DEG_PER_DAY))
+            jobs.append((delta_t_seconds(y), deg, eq + deg / SUN_DEG_PER_DAY))
     payload = "".join(f"{dt} {deg} {g:.9f}\n" for dt, deg, g in jobs)
     out = subprocess.run([BENCH, "sunbatch"], input=payload, capture_output=True,
                          text=True, check=True).stdout.split()

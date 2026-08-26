@@ -1,7 +1,7 @@
 # Provenance của dataset lịch âm
 
 > `app/src/main/assets/lunar/vn_lunar_v1.bin` — **19.946 byte**
-> `sha256 a9b36e14e9efc455a8341e631b9402a81775ec55aa1152eec8c7816dc02f3ba0`
+> `sha256 b9f9613a0d1974ac82a024a737b8b40cbd1588869881db13c90f4c90a020f33d`
 >
 > ⚠️ Đánh giá kỹ thuật/provenance. **Không phải tư vấn pháp lý.**
 
@@ -23,7 +23,7 @@ tròn. Tách ra thì kỳ vọng trong test đến được từ nguồn thứ b
 |---|---|---|---|
 | **DATA SOURCE** — Sóc | **NASA/GSFC Six Millennium Catalog of the Phases of the Moon** | *"Permission is freely granted to reproduce this data when accompanied by an acknowledgment"* + chính sách bản quyền NASA | **Bắt buộc:** `Moon Phase Predictions by Fred Espenak, NASA/GSFC` |
 | **DATA SOURCE** — trung khí | Sinh bằng **ERFA** `eraEpv00` + `eraEqec06` + `eraNut06a`, chạy ở **máy dev** | BSD-3-Clause (NumFOCUS; phái sinh **có phép** của IAU SOFA) | *"Dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh từ IAU SOFA"* |
-| **DATA SOURCE** — ΔT | Cột ΔT của chính catalog NASA | như trên | như trên |
+| **DATA SOURCE** — ΔT | Espenak & Meeus, *Polynomial Expressions for Delta T*, NASA/GSFC | như trên | như trên |
 | **ALGORITHM SOURCE** | Aslaksen, *The Mathematics of the Chinese Calendar* (NUS); *Explanatory Supplement to the Astronomical Almanac*; kinh tuyến 105°Đ theo **QĐ 121-CP điều 1** | — | Trích dẫn |
 | **VALIDATION SOURCE** | HKO (data.gov.hk) · văn bản nhà nước 6150/TB-BLĐTBXH, 9441/TB-BNV | HKO: thương mại OK + attribution | Không vào APK |
 
@@ -57,9 +57,17 @@ Nhị phân, big-endian, chỉ số nguyên — không dấu phẩy động, kh�
 mỗi đầu). Cần vì tháng 11 âm neo vào Đông chí. **Đệm là dữ liệu tính toán nội bộ,
 KHÔNG mở rộng phạm vi công bố.**
 
-**Lượng tử hoá:** lưu theo **phút** ⇒ sai số ±30 giây. Khi đối chiếu với nguồn cũng
-làm tròn phút (HKO), chênh lệch quan sát được có thể tới 60 giây mà không phải sai số
-thật.
+**Lượng tử hoá: `floor`, không phải `round`.** Ranh giới ngày Việt Nam nằm đúng tại
+một mốc phút (17:00:00Z), nên phút *chứa* một thời điểm luôn nằm trọn về một phía —
+`floor` không bao giờ đổi ngày, `round` thì có. Sai số dư luôn thuộc **[0, 60) giây**
+và luôn lùi về trước. Xem [PHASE_3_DATASET_CORRECTION.md](PHASE_3_DATASET_CORRECTION.md) §C.
+
+Khi đối chiếu với nguồn cũng làm tròn phút (HKO), chênh lệch quan sát được có thể tới
+60 giây mà không phải sai số thật.
+
+> ⚠️ **Bảng dưới đây thuộc dataset CŨ.** Bảng quét biên đầy đủ của dataset hiện hành
+> — 8 điểm Sóc và 7 trung khí, sinh tự động vào `vn_lunar_v1.json` — nằm ở
+> [PHASE_3_DATASET_CORRECTION.md §K](PHASE_3_DATASET_CORRECTION.md).
 
 ## Sáu tháng sát ranh giới ngày
 

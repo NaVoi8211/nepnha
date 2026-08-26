@@ -1,5 +1,8 @@
 # Phase 3 — Vietnamese Lunar Calendar Engine
 
+> ⚠️ Dataset đã được sửa sau audit cuối — xem
+> **[PHASE_3_DATASET_CORRECTION.md](PHASE_3_DATASET_CORRECTION.md)**.
+>
 > Domain engine + dataset + tests. **Không nối UI, không đụng Room, không thêm
 > dependency.**
 
@@ -10,7 +13,7 @@
 | **Dataset** | `assets/lunar/vn_lunar_v1.bin` — 19.946 B, 2.534 điểm Sóc + 2.448 trung khí |
 | **Engine** | `core/lunar/` — 4 file Kotlin thuần, **không** import `android.*` |
 | **Tools** | `generate_lunar_dataset.py` · `verify_lunar_dataset.py` · `generate_test_fixture.py` |
-| **Test** | **32 unit test lịch âm** + 4 instrumented test |
+| **Test** | **38 unit test lịch âm** + 4 instrumented test |
 | **Dependency mới** | **0** |
 | **Thay đổi Room/UI** | **0** |
 
@@ -56,7 +59,7 @@ chiếu → fixture → Kotlin. Bằng chứng độc lập nằm ở **đầu**
 
 ```
 :app:assembleDebug              BUILD SUCCESSFUL, 0 lỗi 0 cảnh báo
-:app:testDebugUnitTest          53/53 pass  (32 lịch âm + 21 cũ)
+:app:testDebugUnitTest          59/59 pass  (38 lịch âm + 21 cũ)
 core/lunar import android.*     0
 APK chứa assets/lunar/          ✓ 19.946 B
 ```

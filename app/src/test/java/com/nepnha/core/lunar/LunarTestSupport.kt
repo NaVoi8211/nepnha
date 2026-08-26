@@ -11,7 +11,7 @@ import java.io.File
 object LunarTestSupport {
 
     /** SHA-256 của dataset đã đóng băng. Đổi dataset mà quên cập nhật ⇒ test đỏ. */
-    const val DATASET_SHA256 = "a9b36e14e9efc455a8341e631b9402a81775ec55aa1152eec8c7816dc02f3ba0"
+    const val DATASET_SHA256 = "b9f9613a0d1974ac82a024a737b8b40cbd1588869881db13c90f4c90a020f33d"
 
     val datasetBytes: ByteArray by lazy {
         File("src/main/assets/lunar/vn_lunar_v1.bin").readBytes()
