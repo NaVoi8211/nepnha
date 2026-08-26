@@ -58,3 +58,44 @@ data class MemberEntity(
     val createdAt: Long,
     val updatedAt: Long,
 )
+
+/**
+ * Ngày giỗ, khai báo theo **ngày âm gốc**.
+ *
+ * Cố ý KHÔNG lưu ngày dương: nó đổi mỗi năm và phụ thuộc quy tắc, lưu vào đây là
+ * đóng băng một năm cụ thể và mất ý định ban đầu của người dùng.
+ *
+ * Cũng KHÔNG có cột `isLeapMonth` riêng — tính nhuận đã nằm trong [leapMonthPolicy].
+ * Hai nguồn sự thật cho cùng một điều là mở đường cho mâu thuẫn.
+ *
+ * Policy lưu **theo từng ngày giỗ** chứ không phải cài đặt toàn app: mỗi người mất
+ * trong nhà có thể theo một tập quán khác nhau — chốt từ Phase 0.
+ */
+@Entity(
+    tableName = "memorials",
+    foreignKeys = [
+        ForeignKey(
+            entity = FamilyEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["familyId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+    indices = [Index("familyId")],
+)
+data class MemorialEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val familyId: Long,
+    val name: String,
+    /** 1..30 — giữ nguyên vĩnh viễn, kể cả năm phải lùi về 29. */
+    val lunarDay: Int,
+    /** 1..12. */
+    val lunarMonth: Int,
+    /** Tên enum `LeapMonthPolicy`, lưu dạng chữ để dump DB đọc được. */
+    val leapMonthPolicy: String,
+    /** Tên enum `MissingDayPolicy`. */
+    val missingDayPolicy: String,
+    val note: String?,
+    val createdAt: Long,
+    val updatedAt: Long,
+)

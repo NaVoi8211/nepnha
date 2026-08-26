@@ -8,6 +8,8 @@ import java.time.YearMonth
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.Test
 
 /**
@@ -125,5 +127,112 @@ class CalendarViewModelTest {
         assertEquals(YearMonth.of(2026, 12), m.state.value.month)
         assertEquals(LocalDate.of(2026, 12, 3), m.state.value.selected)
         assertEquals(service.dayOf(LocalDate.of(2026, 12, 3)), m.state.value.selectedLunar)
+    }
+}
+
+/**
+ * Marker ngày giỗ trên lưới lịch.
+ *
+ * Tách khỏi lớp trên vì cần một luồng ngày giỗ; dùng `flowOf` chứ không dựng Room —
+ * đây là test hành vi dựng lưới, phần lưu trữ đã có test riêng.
+ */
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+class CalendarMemorialMarkerTest {
+
+    private val service = LunarCalendarService(LunarTestSupport.calendar)
+
+    /**
+     * `viewModelScope` chạy trên `Dispatchers.Main`, thứ không tồn tại trong test JVM
+     * ⇒ luồng ngày giỗ sẽ không bao giờ được thu. `UnconfinedTestDispatcher` cho nó
+     * chạy ngay tại chỗ, nên `state.value` đọc được ngay sau khi dựng ViewModel.
+     */
+    @org.junit.Before
+    fun setUpDispatcher() {
+        kotlinx.coroutines.Dispatchers.setMain(kotlinx.coroutines.test.UnconfinedTestDispatcher())
+    }
+
+    @org.junit.After
+    fun tearDownDispatcher() {
+        kotlinx.coroutines.Dispatchers.resetMain()
+    }
+
+    private fun memorial(id: Long, day: Int, month: Int) = com.nepnha.domain.model.Memorial(
+        id = id,
+        familyId = 1,
+        name = "Cụ $id",
+        lunarDay = day,
+        lunarMonth = month,
+        rule = com.nepnha.domain.event.MemorialRule(),
+        note = null,
+    )
+
+    /**
+     * Mùng 1 tháng 8 âm năm 2026 = 11/09/2026.
+     *
+     * Sai thì: lịch không đánh dấu ngày giỗ, người dùng lướt qua mà không biết.
+     */
+    @Test
+    fun `ngay co ngay gio duoc danh dau`() {
+        val vm = CalendarViewModel(
+            service,
+            LocalDate.of(2026, 9, 1),
+            kotlinx.coroutines.flow.flowOf(listOf(memorial(1, 1, 8))),
+        )
+        val marked = vm.state.value.cells.filterIsInstance<CalendarCell.Day>()
+            .filter { it.memorialCount > 0 }
+        assertEquals(1, marked.size)
+        assertEquals(LocalDate.of(2026, 9, 11), marked.single().lunar.solar)
+    }
+
+    /**
+     * Sai thì: hai người mất cùng ngày chỉ hiện một, mất dấu người kia.
+     */
+    @Test
+    fun `nhieu ngay gio cung ngay deu duoc dem va liet ke`() {
+        val vm = CalendarViewModel(
+            service,
+            LocalDate.of(2026, 9, 1),
+            kotlinx.coroutines.flow.flowOf(listOf(memorial(1, 1, 8), memorial(2, 1, 8))),
+        )
+        val cell = vm.state.value.cells.filterIsInstance<CalendarCell.Day>()
+            .single { it.lunar.solar == LocalDate.of(2026, 9, 11) }
+        assertEquals(2, cell.memorialCount)
+
+        vm.select(LocalDate.of(2026, 9, 11))
+        assertEquals(2, vm.state.value.selectedMemorials.size)
+    }
+
+    /**
+     * Ngày giỗ mùng 30 tháng 7 âm 2026 phải hiện vào 10/09 (ngày 29) kèm cờ điều chỉnh.
+     *
+     * Sai thì: lịch đánh dấu sai ngày, hoặc đánh dấu mà không cho biết đã lùi ngày.
+     */
+    @Test
+    fun `ngay gio bi dieu chinh van hien dung cho va co co bao`() {
+        val vm = CalendarViewModel(
+            service,
+            LocalDate.of(2026, 9, 1),
+            kotlinx.coroutines.flow.flowOf(listOf(memorial(1, 30, 7))),
+        )
+        vm.select(LocalDate.of(2026, 9, 10))
+        val item = vm.state.value.selectedMemorials.single()
+        assertEquals(30, item.resolved.originalLunarDay)
+        assertEquals(29, item.resolved.effectiveLunarDay)
+        assertTrue(item.resolved.wasAdjusted)
+    }
+
+    /** Sai thì: tháng không có ngày giỗ nào vẫn hiện chấm đỏ lung tung. */
+    @Test
+    fun `thang khong co ngay gio thi khong co marker`() {
+        val vm = CalendarViewModel(
+            service,
+            LocalDate.of(2026, 9, 1),
+            kotlinx.coroutines.flow.flowOf(listOf(memorial(1, 1, 8))),
+        )
+        vm.showNextMonth()
+        assertTrue(
+            vm.state.value.cells.filterIsInstance<CalendarCell.Day>()
+                .all { it.memorialCount == 0 },
+        )
     }
 }

@@ -10,6 +10,7 @@ import com.nepnha.data.db.NepNhaDatabase
 import com.nepnha.data.prefs.SettingsRepository
 import com.nepnha.data.repository.FamilyRepository
 import com.nepnha.data.repository.MemberRepository
+import com.nepnha.data.repository.MemorialRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,6 +41,7 @@ class TestEnvironment(context: Context) {
     val settingsRepository = SettingsRepository(dataStore)
     val familyRepository = FamilyRepository(database.familyDao())
     val memberRepository = MemberRepository(database.memberDao(), settingsRepository)
+    val memorialRepository = MemorialRepository(database.memorialDao())
 
     // Nạp dataset lịch âm THẬT từ asset: test giao diện phải nhìn thấy đúng thứ
     // người dùng nhìn thấy, không phải một engine giả.
@@ -48,6 +50,7 @@ class TestEnvironment(context: Context) {
         memberRepository,
         settingsRepository,
         AppContainer.loadLunarCalendar(context),
+        memorialRepository,
     )
 
     fun close() {

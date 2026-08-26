@@ -35,6 +35,10 @@ import com.nepnha.ui.family.MemberEditorScreen
 import com.nepnha.ui.family.MemberEditorViewModel
 import com.nepnha.ui.home.HomeScreen
 import com.nepnha.ui.home.HomeViewModel
+import com.nepnha.ui.memorial.MemorialEditorScreen
+import com.nepnha.ui.memorial.MemorialEditorViewModel
+import com.nepnha.ui.memorial.MemorialListScreen
+import com.nepnha.ui.memorial.MemorialListViewModel
 import com.nepnha.ui.navigation.Routes
 import com.nepnha.ui.navigation.TopLevelDestination
 import com.nepnha.ui.settings.SettingsScreen
@@ -103,6 +107,7 @@ fun NepNhaShell(
                 HomeScreen(
                     state = state,
                     onSetupFamily = { navController.navigateToTab(TopLevelDestination.FAMILY) },
+                    onOpenMemorials = { navController.navigate(Routes.MEMORIALS) },
                 )
             }
 
@@ -152,6 +157,43 @@ fun NepNhaShell(
                     state = state,
                     onInputChange = vm::updateInput,
                     onSave = { vm.save { navController.popBackStack() } },
+                    onBack = { navController.popBackStack() },
+                )
+            }
+
+            composable(Routes.MEMORIALS) {
+                val vm: MemorialListViewModel =
+                    viewModel(factory = MemorialListViewModel.factory(container))
+                val state by vm.state.collectAsStateWithLifecycle()
+                MemorialListScreen(
+                    state = state,
+                    onAdd = { navController.navigate(Routes.memorialEditor(null)) },
+                    onEdit = { id -> navController.navigate(Routes.memorialEditor(id)) },
+                    onBack = { navController.popBackStack() },
+                )
+            }
+
+            composable(
+                route = Routes.MEMORIAL_EDITOR,
+                arguments = listOf(
+                    navArgument(Routes.ARG_MEMORIAL_ID) {
+                        type = NavType.LongType
+                        defaultValue = Routes.NO_MEMORIAL_ID
+                    },
+                ),
+            ) { entry ->
+                val rawId = entry.arguments?.getLong(Routes.ARG_MEMORIAL_ID) ?: Routes.NO_MEMORIAL_ID
+                val memorialId = rawId.takeIf { it != Routes.NO_MEMORIAL_ID }
+                val vm: MemorialEditorViewModel = viewModel(
+                    key = "memorial_editor_$rawId",
+                    factory = MemorialEditorViewModel.factory(container, memorialId),
+                )
+                val state by vm.state.collectAsStateWithLifecycle()
+                MemorialEditorScreen(
+                    state = state,
+                    onInputChange = vm::updateInput,
+                    onSave = { vm.save { navController.popBackStack() } },
+                    onDelete = { vm.delete { navController.popBackStack() } },
                     onBack = { navController.popBackStack() },
                 )
             }

@@ -49,6 +49,22 @@ class LunarCalendarService(private val calendar: VietnameseLunarCalendar?) {
     fun daysOfMonth(month: YearMonth): List<LunarDay> =
         (1..month.lengthOfMonth()).map { dayOf(month.atDay(it)) }
 
+    /** Năm âm của một ngày dương, `null` khi ngoài phạm vi. */
+    fun lunarYearOf(solar: LocalDate): Int? = (dayOf(solar) as? LunarDay.Known)?.lunar?.year
+
+    /**
+     * Số ngày của một tháng âm — 29 hoặc 30. `null` khi không tra được.
+     *
+     * Đây là câu hỏi engine trả lời được; **quyết định** phải làm gì khi ngày giỗ
+     * vượt quá con số này thuộc `domain/event`, không thuộc engine.
+     */
+    fun daysInLunarMonth(lunarYear: Int, month: Int, isLeapMonth: Boolean): Int? =
+        calendar?.daysInLunarMonth(lunarYear, month, isLeapMonth)?.getOrNull()
+
+    /** Ngày dương của một ngày âm cụ thể, `null` khi không tồn tại hoặc ngoài phạm vi. */
+    fun toSolar(day: Int, month: Int, year: Int, isLeapMonth: Boolean): LocalDate? =
+        calendar?.toSolar(LunarDate(day, month, year, isLeapMonth))?.getOrNull()
+
     /** Tháng nhuận của một năm âm, `null` khi không tra được. */
     fun leapMonthOf(lunarYear: Int): Int? = when (val r = calendar?.leapMonthOf(lunarYear)) {
         is LunarResult.Success -> (r.value as? com.nepnha.core.lunar.LeapMonthInfo.Month)?.month

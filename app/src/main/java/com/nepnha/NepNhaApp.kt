@@ -13,7 +13,10 @@ import com.nepnha.data.prefs.SettingsRepository
 import com.nepnha.data.repository.FamilyOverviewSource
 import com.nepnha.data.repository.FamilyRepository
 import com.nepnha.data.repository.MemberRepository
+import com.nepnha.data.repository.MemorialRepository
+import com.nepnha.data.repository.MemorialSource
 import com.nepnha.domain.calendar.LunarCalendarService
+import com.nepnha.domain.event.MemorialDateResolver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -57,8 +60,13 @@ class AppContainer(
     val memberRepository: MemberRepository,
     val settingsRepository: SettingsRepository,
     val lunarCalendar: LunarCalendarService,
+    val memorialRepository: MemorialRepository,
 ) {
     val familyOverview = FamilyOverviewSource(familyRepository, memberRepository, settingsRepository)
+    val memorials = MemorialSource(familyRepository, memorialRepository)
+
+    /** Quy tắc ngày giỗ sống ở domain, dùng chung cho Nhà, Lịch và màn danh sách. */
+    val memorialResolver = MemorialDateResolver(lunarCalendar)
 
     companion object {
 
@@ -96,6 +104,7 @@ class AppContainer(
                 memberRepository = MemberRepository(database.memberDao(), settings),
                 settingsRepository = settings,
                 lunarCalendar = loadLunarCalendar(context),
+                memorialRepository = MemorialRepository(database.memorialDao()),
             )
         }
     }

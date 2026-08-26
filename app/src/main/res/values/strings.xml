@@ -110,4 +110,43 @@
     <string name="home_family_members">Thành viên: %1$d</string>
     <string name="home_family_worshipper">Tín chủ: %1$s</string>
     <string name="home_open_family">Mở Gia đình tôi</string>
+
+    <!-- Phase 5: ngày giỗ -->
+    <string name="memorial_title">Ngày giỗ</string>
+    <string name="memorial_add">Thêm ngày giỗ</string>
+    <string name="memorial_edit">Sửa ngày giỗ</string>
+    <string name="memorial_empty_title">Chưa có ngày giỗ nào</string>
+    <string name="memorial_empty_body">Thêm ngày giỗ theo ngày âm. Nếp Nhà sẽ tự tính ra ngày dương cho từng năm.</string>
+    <string name="memorial_name">Tên người mất</string>
+    <string name="memorial_name_hint">Ví dụ: Cụ ông Nguyễn Văn A</string>
+    <string name="memorial_lunar_date">Ngày mất theo âm lịch</string>
+    <string name="memorial_day">Ngày</string>
+    <string name="memorial_month">Tháng</string>
+    <string name="memorial_leap_checkbox">Ngày này thuộc tháng nhuận</string>
+    <string name="memorial_leap_fallback_title">Năm không có tháng nhuận thì</string>
+    <string name="memorial_leap_fallback_common">Tính vào tháng thường</string>
+    <string name="memorial_leap_fallback_skip">Bỏ qua năm đó</string>
+    <string name="memorial_missing_title">Nếu tháng đó chỉ có 29 ngày</string>
+    <string name="memorial_missing_last">Giỗ vào ngày cuối tháng</string>
+    <string name="memorial_missing_skip">Bỏ qua năm đó</string>
+    <string name="memorial_note">Ghi chú</string>
+    <string name="memorial_save">Lưu</string>
+    <string name="memorial_delete">Xoá ngày giỗ</string>
+    <string name="memorial_delete_confirm">Xoá ngày giỗ này?</string>
+    <string name="memorial_delete_confirm_body">Không khôi phục lại được.</string>
+    <string name="memorial_preview_title">Lần giỗ tới</string>
+    <string name="memorial_adjusted_missing_day">Tháng %1$d âm năm nay không có ngày %2$d. Nếp Nhà tính ngày giỗ vào ngày %3$d — ngày cuối tháng, theo lựa chọn của bạn.</string>
+    <string name="memorial_adjusted_leap_fallback">Năm nay không có tháng %1$d nhuận. Nếp Nhà tính vào tháng %1$d thường, theo lựa chọn của bạn.</string>
+    <string name="memorial_no_occurrence">Với lựa chọn hiện tại, không có ngày giỗ nào trong 25 năm tới. Hãy chọn "Tính vào tháng thường" nếu bạn muốn giỗ hằng năm.</string>
+    <string name="memorial_days_until">Còn %1$d ngày</string>
+    <string name="memorial_tomorrow">Ngày mai</string>
+    <string name="memorial_today">Hôm nay</string>
+    <string name="memorial_lunar_line">%1$s âm lịch</string>
+    <string name="memorial_adjusted_badge">Đã điều chỉnh ngày</string>
+    <string name="memorial_none_upcoming">Chưa tính được ngày giỗ tới</string>
+    <string name="home_memorial_all">Xem tất cả ngày giỗ</string>
+    <string name="calendar_day_memorials">Ngày giỗ</string>
+    <string name="error_memorial_name">Hãy nhập tên người mất.</string>
+    <string name="error_memorial_day">Ngày âm phải từ 1 đến 30.</string>
+    <string name="error_memorial_month">Tháng âm phải từ 1 đến 12.</string>
 </resources>

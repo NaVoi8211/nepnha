@@ -1,4 +1,8 @@
-# Ngày giỗ — business rules (chốt Phase 0, implement Phase 7)
+# Ngày giỗ — business rules (chốt Phase 0, implement Phase 5)
+
+> ✅ **ĐÃ IMPLEMENT.** `MemorialDateResolver` ở `domain/event/`. Phase 5 bổ sung
+> `LeapMonthPolicy.LEAP_MONTH_ONLY` và `MissingDayPolicy.SKIP` — xem
+> **[PHASE_5_MEMORIAL.md](PHASE_5_MEMORIAL.md)**.
 
 Hai quy tắc dưới đây do chủ dự án chốt. Chúng được khai báo tường minh tại
 `domain/event/MemorialRule.kt` và **không** được chôn trong UI hay trong một hàm
@@ -53,7 +57,7 @@ data class ResolvedMemorialDate(
 )
 ```
 
-## Test bắt buộc ở Phase 7
+## Test bắt buộc (đã có ở `MemorialDateResolverTest`)
 
 | Trường hợp | Kỳ vọng |
 |---|---|

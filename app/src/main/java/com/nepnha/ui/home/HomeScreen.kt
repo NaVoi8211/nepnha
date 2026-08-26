@@ -18,9 +18,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nepnha.R
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TextButton
 import com.nepnha.core.time.VietnameseDateFormatter
 import com.nepnha.core.time.VietnameseLunarFormatter
 import com.nepnha.domain.calendar.LunarDay
+import com.nepnha.domain.event.UpcomingMemorial
+import com.nepnha.ui.memorial.countdownLabel
 import com.nepnha.ui.components.EmptyStateCard
 import com.nepnha.ui.components.InfoCard
 import com.nepnha.ui.components.SectionHeader
@@ -43,6 +50,7 @@ import java.time.LocalDate
 fun HomeScreen(
     state: HomeUiState,
     onSetupFamily: () -> Unit,
+    onOpenMemorials: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -67,10 +75,22 @@ fun HomeScreen(
 
         Column {
             SectionHeader(text = stringResource(R.string.home_section_upcoming))
-            EmptyStateCard(
-                title = stringResource(R.string.home_no_memorial_title),
-                body = stringResource(R.string.home_no_memorial_body),
-            )
+            if (state.upcoming.isEmpty()) {
+                EmptyStateCard(
+                    title = stringResource(R.string.home_no_memorial_title),
+                    body = stringResource(R.string.home_no_memorial_body),
+                    actionLabel = stringResource(R.string.memorial_add),
+                    onAction = onOpenMemorials,
+                )
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    state.upcoming.forEach { item -> UpcomingRow(item, onOpenMemorials) }
+                    TextButton(
+                        onClick = onOpenMemorials,
+                        modifier = Modifier.testTag("home_memorial_all"),
+                    ) { Text(stringResource(R.string.home_memorial_all)) }
+                }
+            }
         }
 
         Column {
@@ -97,6 +117,65 @@ fun HomeScreen(
                     body = stringResource(R.string.home_family_worshipper, state.primaryMemberName),
                     modifier = Modifier.testTag("home_family_summary"),
                 )
+            }
+        }
+    }
+}
+
+/**
+ * Một dòng ngày giỗ sắp tới. Mọi giá trị ở đây đã được `MemorialDateResolver` tính
+ * xong; hàng này chỉ trình bày, kể cả dấu hiệu "đã điều chỉnh".
+ */
+@Composable
+private fun UpcomingRow(item: UpcomingMemorial, onClick: () -> Unit) {
+    val next = item.next
+    Card(
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("home_upcoming_${item.memorial.id}"),
+    ) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(item.memorial.name, style = MaterialTheme.typography.titleMedium)
+                item.daysUntil?.let {
+                    Text(countdownLabel(it), style = MaterialTheme.typography.labelLarge)
+                }
+            }
+            if (next == null) {
+                Text(
+                    text = stringResource(R.string.memorial_none_upcoming),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            } else {
+                Text(
+                    text = VietnameseDateFormatter.fullDate(next.solarDate),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    text = stringResource(
+                        R.string.memorial_lunar_line,
+                        "${next.effectiveLunarDay} tháng ${next.lunarMonth}" +
+                            if (next.isLeapMonth) " nhuận" else "",
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                if (next.wasAdjusted) {
+                    Text(
+                        text = stringResource(R.string.memorial_adjusted_badge),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
             }
         }
     }
@@ -168,6 +247,7 @@ private fun HomeScreenPreview() {
                 familyName = "Gia đình tôi",
             ),
             onSetupFamily = {},
+            onOpenMemorials = {},
         )
     }
 }

@@ -9,7 +9,9 @@
 | 2 | Room + Family + Member | ✅ **Xong** |
 | 3 | Vietnamese lunar calendar engine + tests | ✅ **Xong** — Kotlin thuần, dataset NASA+ERFA, 32 test |
 | 4 | Nối lịch âm vào Home + màn Lịch | ✅ **Xong** — lưới tháng, tháng nhuận, can chi năm |
-| 5 | Ritual content + local JSON + ritual engine | ⏳ Chờ duyệt |
+| 5 | Ngày giỗ: CRUD, quy đổi, lịch, màn Nhà | ✅ **Xong** — 3 policy nhuận, 2 policy ngày thiếu, migration v1→v2 |
+| 5B | Nhắc ngày giỗ (notification) | ⏳ Chờ duyệt |
+| 6 | Ritual content + local JSON + ritual engine | ⏳ Chờ duyệt |
 | 5 | Prayer template engine + Prayer Reader | |
 | 6 | Auto-scroll | |
 | 7 | Memorial system | |

@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -76,6 +78,31 @@ fun CalendarScreen(
         MonthGrid(cells = state.cells, onSelectDay = onSelectDay)
 
         SelectedDayCard(selected = state.selected, lunar = state.selectedLunar)
+
+        if (state.selectedMemorials.isNotEmpty()) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(R.string.calendar_day_memorials),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                state.selectedMemorials.forEach { item ->
+                    InfoCard(
+                        title = item.memorial.name,
+                        body = if (item.resolved.wasAdjusted) {
+                            stringResource(R.string.memorial_adjusted_badge)
+                        } else {
+                            stringResource(
+                                R.string.memorial_lunar_line,
+                                "${item.resolved.effectiveLunarDay} tháng " +
+                                    "${item.resolved.lunarMonth}" +
+                                    if (item.resolved.isLeapMonth) " nhuận" else "",
+                            )
+                        },
+                        modifier = Modifier.testTag("calendar_memorial_${item.memorial.id}"),
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -175,7 +202,8 @@ private fun DayCell(cell: CalendarCell.Day, onSelectDay: (LocalDate) -> Unit) {
             )
             .clickable { onSelectDay(date) }
             .semantics {
-                contentDescription = "${date.dayOfMonth} tháng ${date.monthValue}, âm lịch $lunarText"
+                contentDescription = "${date.dayOfMonth} tháng ${date.monthValue}, âm lịch $lunarText" +
+                    if (cell.memorialCount > 0) ", có ngày giỗ" else ""
             }
             .testTag("day_${date}"),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -192,6 +220,18 @@ private fun DayCell(cell: CalendarCell.Day, onSelectDay: (LocalDate) -> Unit) {
             color = if (startsLunarMonth) scheme.primary else scheme.onSurfaceVariant,
             fontWeight = if (startsLunarMonth) FontWeight.SemiBold else FontWeight.Normal,
         )
+        // Chấm báo có ngày giỗ. Nhiều ngày giỗ cùng ngày thì chấm đậm hơn chứ không
+        // xếp nhiều chấm — ô lịch quá nhỏ để đếm bằng mắt.
+        if (cell.memorialCount > 0) {
+            Box(
+                Modifier
+                    .padding(top = 2.dp)
+                    .size(5.dp)
+                    .clip(CircleShape)
+                    .background(scheme.error)
+                    .testTag("memorial_dot_$date"),
+            )
+        }
     }
 }
 

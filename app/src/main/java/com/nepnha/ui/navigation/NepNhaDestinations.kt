@@ -32,7 +32,17 @@ object Routes {
     /** Giá trị "không có id" — thêm mới thay vì sửa. NavType.LongType không nhận null. */
     const val NO_MEMBER_ID = -1L
 
+    const val ARG_MEMORIAL_ID = "memorialId"
+
+    /** Giá trị "không có id" — thêm mới thay vì sửa. NavType.LongType không nhận null. */
+    const val NO_MEMORIAL_ID = -1L
+
     const val MEMBER_EDITOR = "family/member?$ARG_MEMBER_ID={$ARG_MEMBER_ID}"
+    const val MEMORIALS = "memorials"
+    const val MEMORIAL_EDITOR = "memorials/edit?$ARG_MEMORIAL_ID={$ARG_MEMORIAL_ID}"
+
+    fun memorialEditor(memorialId: Long?): String =
+        "memorials/edit?$ARG_MEMORIAL_ID=${memorialId ?: NO_MEMORIAL_ID}"
     const val CHOOSE_WORSHIPPER = "family/worshipper"
 
     fun memberEditor(memberId: Long?): String =

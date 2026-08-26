@@ -142,6 +142,12 @@ class FamilyFlowTest {
         rule.onNodeWithTag("btn_confirm_delete").performClick()
         rule.waitForIdle()
 
+        // Xoá tín chủ ghi xuống DataStore một cách bất đồng bộ; `waitForIdle` chỉ chờ
+        // Compose chứ không chờ ghi xong. Chờ có giới hạn thay vì đọc ngay — đọc ngay
+        // là một cuộc đua, và nó đã thực sự đỏ khi Phase 5 làm đổi nhịp luồng dữ liệu.
+        rule.waitUntil(timeoutMillis = 5_000) {
+            runBlocking { env.settingsRepository.primaryMemberId.first() } == null
+        }
         assertNull(runBlocking { env.settingsRepository.primaryMemberId.first() })
         rule.onNodeWithTag("card_no_worshipper").assertIsDisplayed()
     }

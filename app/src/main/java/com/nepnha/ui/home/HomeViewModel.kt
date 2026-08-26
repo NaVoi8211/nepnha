@@ -8,8 +8,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.nepnha.AppContainer
 import com.nepnha.data.repository.FamilyOverview
 import com.nepnha.domain.calendar.LunarDay
+import com.nepnha.domain.event.UpcomingMemorial
 import java.time.LocalDate
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -32,9 +34,16 @@ class HomeViewModel(
 
     private val initial = HomeUiState(today = today, lunar = container.lunarCalendar.dayOf(today))
 
-    val state: StateFlow<HomeUiState> = container.familyOverview.observe()
-        .map { it.toHomeState(initial) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)
+    val state: StateFlow<HomeUiState> = combine(
+        container.familyOverview.observe(),
+        container.memorials.observe(),
+    ) { overview, memorials ->
+        overview.toHomeState(initial).copy(
+            // Chỉ vài mục gần nhất — màn Nhà là nơi trả lời "hôm nay nhà mình có việc
+            // gì", không phải danh sách đầy đủ.
+            upcoming = container.memorialResolver.upcoming(memorials, today).take(3),
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)
 
     companion object {
         fun factory(container: AppContainer): ViewModelProvider.Factory = viewModelFactory {
@@ -46,6 +55,7 @@ class HomeViewModel(
 data class HomeUiState(
     val today: LocalDate,
     val lunar: LunarDay,
+    val upcoming: List<UpcomingMemorial> = emptyList(),
     val familyName: String? = null,
     val memberCount: Int = 0,
     val primaryMemberName: String? = null,

@@ -47,3 +47,22 @@ interface MemberDao {
     @Query("DELETE FROM members WHERE id = :id")
     suspend fun deleteById(id: Long)
 }
+
+@Dao
+interface MemorialDao {
+
+    @Query("SELECT * FROM memorials WHERE familyId = :familyId ORDER BY lunarMonth ASC, lunarDay ASC, id ASC")
+    fun observeByFamily(familyId: Long): Flow<List<MemorialEntity>>
+
+    @Query("SELECT * FROM memorials WHERE id = :id")
+    suspend fun getById(id: Long): MemorialEntity?
+
+    @Insert
+    suspend fun insert(memorial: MemorialEntity): Long
+
+    @Update
+    suspend fun update(memorial: MemorialEntity)
+
+    @Query("DELETE FROM memorials WHERE id = :id")
+    suspend fun deleteById(id: Long)
+}
