@@ -76,7 +76,7 @@ vượt biên. Kiểm ở `tools/test_generator.py §C, §D` với các mốc 16
 
 | | |
 |---|---|
-| Nguồn | Espenak & Meeus, *Polynomial Expressions for Delta T*, NASA/GSFC |
+| Nguồn | Espenak & Meeus, *Polynomial Expressions for Delta T*, NASA/GSFC — **MÔ HÌNH**, không phải số đo |
 | Biến | `y = year + (month − 0,5) / 12` |
 | Nội suy | không — đa thức khớp từng đoạn, đánh giá tại ngày của chính sự kiện |
 | Số điểm dùng | 2.448 (một cho mỗi trung khí) |
@@ -103,22 +103,30 @@ vượt biên. Kiểm ở `tools/test_generator.py §C, §D` với các mốc 16
 | 2085 | 169,36 | 180 |
 | 2100 | 204,02 | 180 |
 
-### ⚠️ Sai khác so với mục tiêu 2026 ≈ 69,5 s trong uỷ quyền
+### ΔT năm 2026 — làm rõ dứt điểm
 
-Uỷ quyền yêu cầu test chứng minh `2026 ≈ 69,5 s`. Đa thức cho **75,41 s**. Đây
-**không** phải lỗi hiện thực — 1938 và 2100 khớp mục tiêu trong 1,5 s, chỉ 2026 lệch.
+Uỷ quyền của audit trước yêu cầu `2026 ≈ 69,5 s`. **Yêu cầu đó đã được rút** và không
+còn hiệu lực.
 
-Nguyên nhân: đoạn **2005–2050 là ngoại suy lập năm 2006**. Trái Đất từ đó quay nhanh
-hơn dự báo, nên quan trắc thập niên 2020 cho ~69 s. Đây là **giới hạn của chính
-nguồn**, được nêu rõ trong `tools/deltat.py`.
+Đường sản xuất dùng **mô hình đa thức NASA/Espenak**, đoạn 2005–2050:
 
-**Đã đo ảnh hưởng, không đoán:** biên hẹp nhất trong cửa sổ 1986–2050 là **18,4 giây**
-(trung khí 2038-07-22). Sai lệch ~6 s của đa thức **không thể** đổi ngày nào trong cửa
-sổ đó. Vì vậy giữ đa thức: nó là nguồn NASA có tài liệu, tất định, không cần mạng, và
-sai lệch đã biết **không chạm** tới kết quả lịch.
+```
+ΔT = 62,92 + 0,32217·t + 0,005589·t²        t = y − 2000
+```
 
-Test khoá **giá trị của chính đa thức**, không khoá giá trị quan trắc — nói thẳng
-trong `tools/test_generator.py §A`.
+Với 2026-08 mô hình cho **75,46 s**, khớp con số **75,4 s** mà tài liệu nhật thực của
+NASA nêu cho 2026-08-12. **Đây không phải lỗi.**
+
+Ba giá trị NASA tự nêu trên trang nguồn đều khớp hiện thực:
+
+| | Tính được | NASA nêu |
+|---|---:|---:|
+| ΔT(2010) | 66,94 s | 66,9 s |
+| ΔT(2050) | 93,00 s | 93 s |
+| ΔT(2026-08) | 75,46 s | 75,4 s |
+
+**Không ép hiện thực về 69,5 s.** Con số ~69 s là **ΔT quan trắc hiện đại**, một loại
+đại lượng khác — xem ba loại A/B/C ở đầu `tools/deltat.py`.
 
 ---
 

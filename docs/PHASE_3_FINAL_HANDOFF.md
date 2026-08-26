@@ -24,10 +24,10 @@ dấu phẩy động trên đường chạy.
 
 | Quyền uy nguồn | Giá trị |
 |---|---|
-| Điểm Sóc | **NASA/GSFC Six Millennium Catalog** — dùng nguyên phút NASA công bố |
-| Trung khí | **ERFA** `eraEpv00` + `eraEqec06` + `eraNut06a` (nhánh không dính Meeus) |
-| ΔT | **Espenak & Meeus, Polynomial Expressions for Delta T, NASA/GSFC** |
-| Quy tắc R1–R5 | Aslaksen (NUS) · Explanatory Supplement — độc lập Hồ Ngọc Đức |
+| Điểm Sóc — **DỮ LIỆU** | **NASA/GSFC Six Millennium Catalog** — dùng nguyên phút NASA công bố |
+| Trung khí — **DỮ LIỆU** | **ERFA** `eraEpv00` + `eraEqec06` + `eraNut06a` — hiện thực các thủ tục IAU SOFA. Mã nguồn ba hàm này không phái sinh từ Meeus |
+| ΔT — **MÔ HÌNH** | **Đa thức NASA/Fred Espenak** (*Polynomial Expressions for Delta T*, [Espenak and Meeus]). Là **mô hình**, không phải số đo — xem [PHASE_3_MEEUS_PROVENANCE.md](PHASE_3_MEEUS_PROVENANCE.md) |
+| Quy tắc R1–R5 — **THUẬT TOÁN** | Aslaksen (NUS) · Explanatory Supplement — độc lập Hồ Ngọc Đức |
 | Kinh tuyến R6 | **105°Đ** — Quyết định 121-CP điều 1 |
 | Bối cảnh | `CalendarContext.OfficialVietnam` = **UTC+7** |
 
@@ -103,8 +103,11 @@ HKO 1901-2100 @120°Đ : 2.474 tháng, khớp 2.471 (99,88%)
                         lệch số tháng 0 · lệch cờ nhuận 0 · 73/73 năm nhuận khớp
                         3 khác biệt 1914/1916/1920 — đều trước 1929, khi Trung Quốc
                         dùng giờ mặt trời trung bình Bắc Kinh (UTC+7:45:40)
-NASA điểm Sóc         : 2.474/2.474 có mặt, đúng tới phút
-NASA cột ΔT           : 200/200 năm khớp đa thức trong lượng tử phút của cột
+NASA điểm Sóc         : 2.474/2.474 có mặt, đúng tới phút        [dữ liệu ngoài]
+NASA cột ΔT           : 200/200 năm khớp đa thức trong lượng tử phút [dữ liệu ngoài]
+ERFA trung khí        : 2.448/2.448 khớp — đây là KIỂM CHÉO HIỆN THỰC,
+                        KHÔNG phải oracle thiên văn độc lập: verifier và
+                        generator dùng chung ERFA và chung mô hình ΔT
 ```
 
 **Kết quả chạy:**
@@ -124,12 +127,16 @@ sinh lại 4 lần, 3 múi giờ, 3 locale — giống hệt từng byte
 
 | # | Giới hạn |
 |---|---|
-| **L1** | `OfficialVietnam` dùng **UTC+7 hồi tố toàn dải**. **Không** tuyên bố phản ánh đúng tập quán lịch đương thời mọi thời kỳ, đặc biệt **miền Bắc 1954–1967** |
-| **L2** | `HistoricalRegion.NORTH/SOUTH` **chưa có** — roadmap, cố ý không tạo API hứa suông |
-| **L3** | 8 điểm Sóc sát ranh giới ngày lấy nguyên giá trị NASA công bố (phân giải phút). Bất định còn lại là **của NASA**, chưa có oracle Việt Nam phân xử |
-| **L4** | **Nhuận tháng 8 năm 1938 chưa có nguồn Việt Nam bậc 1 xác nhận trực tiếp.** Bằng chứng là pipeline đã sửa + quy tắc 105°Đ + nhất quán với 1984/1987 |
-| **L5** | Đoạn ΔT 2005–2050 là ngoại suy lập năm 2006, lệch quan trắc ~6 s. **Đã đo:** biên hẹp nhất trong cửa sổ đó là 18,4 s ⇒ không đổi ngày nào |
-| **L6** | Chính sách Meeus vẫn **UNRESOLVED** — đã loại khỏi đường sản xuất, không chặn Phase 4 |
+| **L1** | `OfficialVietnam` áp **UTC+7 hồi tố** cho toàn phạm vi 1901–2100. **Không** tuyên bố phản ánh đúng tập quán lịch đương thời mọi thời kỳ, đặc biệt **miền Bắc 1954–1967** |
+| **L2** | `HistoricalRegion.NORTH/SOUTH` **chưa hiện thực** — roadmap, cố ý không tạo API hứa suông |
+| **L3** | Một số ít sự kiện thiên văn **nhạy cảm với ranh giới ngày**: 8 điểm Sóc và 7 trung khí nằm trong ±120 s quanh 17:00:00Z, hẹp nhất là 6,3 s. Điểm Sóc lấy nguyên phút NASA công bố nên bất định còn lại là **của NASA** |
+| **L4** | **Nhuận tháng 8 năm 1938 chưa có nguồn lịch sử Việt Nam bậc 1 trong tập bằng chứng của dự án.** Chỗ dựa là pipeline đã sửa + quy tắc 105°Đ + nhất quán với 1984/1987 |
+| **L5** | **ΔT tương lai phụ thuộc mô hình.** Đường sản xuất dùng đa thức NASA/Espenak cho **toàn bộ** 1901–2100. NASA ghi rõ đoạn 2050–2150 *"is derived from estimated values"*, mốc 2010 và 2050 đều là ngoại suy tuyến tính. Nếp Nhà **không** tuyên bố biết trước lịch sử quay của Trái Đất |
+| **L6** | **Quan hệ với Meeus đã được nêu đúng phạm vi, không còn là câu hỏi treo.** Không mã nguồn Meeus nào trong ứng dụng; nhưng dữ liệu NASA và mô hình ΔT đều có dẫn Meeus. Xem [PHASE_3_MEEUS_PROVENANCE.md](PHASE_3_MEEUS_PROVENANCE.md) |
+
+**Dataset 1901–2100 KHÔNG phải bản ghi lịch Việt Nam đã được kiểm chứng lịch sử cho
+từng năm.** Nó là kết quả của một mô hình thiên văn có provenance rõ ràng, được đối
+chiếu ngoài ở một số điểm.
 
 Tầng 2 và 3 **không** chứng minh lịch đúng. Cách gọi đúng cho sản phẩm này là
 **"mô hình lịch âm Việt Nam tính từ thiên văn, có provenance rõ ràng"** — không phải
@@ -142,7 +149,17 @@ Tầng 2 và 3 **không** chứng minh lịch đúng. Cách gọi đúng cho s�
 ```
 Moon Phase Predictions by Fred Espenak, NASA/GSFC
 Dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh có phép từ IAU SOFA
+Mô hình ΔT: đa thức NASA/Fred Espenak, Five Millennium Canon of Solar Eclipses
 ```
+
+Điều khoản NASA áp dụng, nguyên văn:
+
+> *"Permission is freely granted to reproduce this data when accompanied by an
+> acknowledgment."*
+
+Dự án **không** tuyên bố "NASA data is public domain" — chỗ dựa là câu cho phép trên,
+kèm ghi công. Ứng dụng không hiển thị văn bản pháp lý thừa cho người dùng; provenance
+đầy đủ nằm trong kho mã.
 
 ---
 
@@ -151,4 +168,5 @@ Dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh có phép từ
 [LUNAR_API.md](LUNAR_API.md) · [LUNAR_DATASET_PROVENANCE.md](LUNAR_DATASET_PROVENANCE.md) ·
 [PHASE_3_IMPLEMENTATION.md](PHASE_3_IMPLEMENTATION.md) ·
 [PHASE_3_FINAL_AUDIT.md](PHASE_3_FINAL_AUDIT.md) ·
-[PHASE_3_DATASET_CORRECTION.md](PHASE_3_DATASET_CORRECTION.md)
+[PHASE_3_DATASET_CORRECTION.md](PHASE_3_DATASET_CORRECTION.md) ·
+[PHASE_3_MEEUS_PROVENANCE.md](PHASE_3_MEEUS_PROVENANCE.md)

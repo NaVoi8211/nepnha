@@ -10,10 +10,12 @@ Nguồn:
   Sóc      NASA/GSFC Six Millennium Catalog of the Phases of the Moon
            "Moon Phase Predictions by Fred Espenak, NASA/GSFC"
            KHÔNG dùng eraMoon98 — xem readiness §Q2.
-  Trung khí ERFA eraEpv00 + eraEqec06 + eraNut06a (BSD-3, nhánh KHÔNG dính Meeus)
-  ΔT       Espenak & Meeus, "Polynomial Expressions for Delta T", NASA/GSFC.
-           Xem tools/deltat.py. KHÔNG dùng cột ΔT của trang phases*.html vì cột đó
-           chỉ có độ phân giải PHÚT (xem docs/PHASE_3_DATASET_CORRECTION.md §B).
+  Trung khí ERFA eraEpv00 + eraEqec06 + eraNut06a (BSD-3; mã nguồn các hàm này
+           KHÔNG phái sinh từ Meeus — nhưng xem ghi chú ΔT ngay dưới)
+  ΔT       MÔ HÌNH, không phải số đo: Espenak & Meeus, "Polynomial Expressions for
+           Delta T", NASA/GSFC. Xem tools/deltat.py. KHÔNG dùng cột ΔT của trang
+           phases*.html vì cột đó chỉ có độ phân giải PHÚT.
+           Pipeline này KHÔNG "sạch Meeus" — xem docs/PHASE_3_MEEUS_PROVENANCE.md.
 
 LƯỢNG TỬ HOÁ: floor, KHÔNG phải round. Ranh giới ngày dương lịch Việt Nam nằm đúng
 tại một mốc phút (17:00:00Z = 00:00 UTC+7), nên phút CHỨA một thời điểm luôn nằm trọn
@@ -213,6 +215,17 @@ def main():
                 "url": "https://eclipse.gsfc.nasa.gov/phase/phasecat.html",
                 "attribution": "Moon Phase Predictions by Fred Espenak, NASA/GSFC",
                 "resolution": "1 minute (UT) — dùng nguyên giá trị NASA công bố",
+                "permission": "Permission is freely granted to reproduce this data when "
+                              "accompanied by an acknowledgment.",
+                "sourceStatement": "Algorithms used in predicting the phases of the Moon "
+                                   "and eclipses are based on Jean Meeus' Astronomical "
+                                   "Algorithms (Willmann-Bell, Inc., 1998). All "
+                                   "calculations are by Fred Espenak, and he assumes "
+                                   "full responsibility for their accuracy.",
+                "meeusRelationship": "Chính NASA nói dữ liệu này do thuật toán DỰA TRÊN "
+                                     "Meeus sinh ra. Nếp Nhà tái sử dụng DỮ LIỆU theo "
+                                     "câu cho phép ở trên, không sao chép mã nguồn nào. "
+                                     "Xem docs/PHASE_3_MEEUS_PROVENANCE.md.",
                 "note": "Không dùng eraMoon98. Xem readiness Q2.",
             },
             "principalTerms": {
@@ -220,10 +233,17 @@ def main():
                 "name": "Sinh bằng ERFA eraEpv00 + eraEqec06 + eraNut06a",
                 "license": "BSD-3-Clause (ERFA, NumFOCUS; phái sinh có phép từ IAU SOFA)",
                 "attribution": "Dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh từ IAU SOFA",
-                "meeusFree": True,
+                "meeusDerivedSourceCode": False,
+                "meeusScopeNote": "Cờ trên CHỈ nói về mã nguồn ERFA dùng cho trung khí "
+                                  "(epv00/eqec06/nut06a không phái sinh từ Meeus). Nó "
+                                  "KHÔNG tuyên bố toàn bộ pipeline không liên quan "
+                                  "Meeus — mô hình ΔT là đa thức NASA/Espenak & Meeus, "
+                                  "xem khối deltaT.",
             },
             "deltaT": {
-                "role": "DATA SOURCE",
+                "role": "MODEL",
+                "roleNote": "ĐÂY LÀ MÔ HÌNH, không phải số đo. Không được gộp chung "
+                            "với DATA SOURCE điểm Sóc của NASA.",
                 "name": 'Espenak & Meeus, "Polynomial Expressions for Delta T", NASA/GSFC',
                 "url": "https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html",
                 "publication": "phụ lục Five Millennium Canon of Solar Eclipses "
@@ -231,10 +251,28 @@ def main():
                 "variable": "y = year + (month - 0.5) / 12",
                 "notUsed": "Cột ΔT của phases*.html — chỉ có độ phân giải PHÚT, "
                            "không đủ cho pipeline quyết định ở mức giây.",
-                "knownLimitation": "Đoạn 2005-2050 là ngoại suy lập năm 2006; với thập "
-                                   "niên 2020 đa thức cho ~75 s so với quan trắc ~69 s. "
-                                   "Ảnh hưởng lên lịch đã được đo — xem "
-                                   "docs/PHASE_3_DATASET_CORRECTION.md.",
+                "derivation": "Trang nguồn: các đa thức được tạo từ giá trị ΔT rút ra "
+                              "từ ghi chép lịch sử và quan trắc trực tiếp (Table 1, "
+                              "Table 2), nhằm đơn giản hoá việc tính ΔT.",
+                "extrapolatedFrom": 2050,
+                "extrapolationNote": "Chính NASA ghi đoạn 2050-2150 'is derived from "
+                                     "estimated values': mốc 2010 (66,9 s) và 2050 "
+                                     "(93 s) đều là ngoại suy tuyến tính. Phạm vi dự "
+                                     "án tới 2100 nên phần sau 2050 là GIÁ TRỊ MÔ "
+                                     "HÌNH — Nếp Nhà không tuyên bố biết trước lịch "
+                                     "sử quay của Trái Đất.",
+                "checkedAgainstSource": {
+                    "2010": "66,94 s tính được / 66,9 s NASA nêu",
+                    "2050": "93,00 s tính được / 93 s NASA nêu",
+                    "2026-08": "75,46 s tính được / 75,4 s tài liệu nhật thực NASA nêu",
+                },
+                "seamContinuity": "nhảy lớn nhất 0,0501 s tại mốc 2005; mốc 2050 chỉ "
+                                  "0,0010 s vì NASA thêm số hạng -0,5628*(2150-y) để "
+                                  "khử gián đoạn",
+                "meeusRelationship": "Trang nguồn mang tiêu đề Five Millennium Canon of "
+                                     "Solar Eclipses [Espenak and Meeus]. Không dòng mã "
+                                     "nguồn Meeus nào được sao chép hay chạy trong Nếp "
+                                     "Nhà — xem docs/PHASE_3_MEEUS_PROVENANCE.md.",
                 "rangeSeconds": [round(min(dt_used), 2), round(max(dt_used), 2)],
                 "distinctValues": len(set(round(v, 6) for v in dt_used)),
             },

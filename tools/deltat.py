@@ -2,29 +2,56 @@
 """
 ΔT (TT − UT) cho pipeline sinh dataset. Dev-only, ngoài app/, không vào APK.
 
-NGUỒN
------
-Espenak & Meeus, "Polynomial Expressions for Delta T", NASA/GSFC Eclipse Web Site
-(eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html), phụ lục của *Five Millennium Canon
-of Solar Eclipses: -1999 to +3000* (NASA/TP-2006-214141).
+NGUỒN — ĐÂY LÀ MỘT **MÔ HÌNH**, KHÔNG PHẢI SỐ ĐO
+--------------------------------------------------
+Espenak & Meeus, "Polynomial Expressions for Delta T (ΔT)", NASA/GSFC Eclipse Web
+Site — https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
+Phụ lục của *Five Millennium Canon of Solar Eclipses: -1999 to +3000*
+(NASA/TP-2006-214141).
 
-Đây là **cùng một nguồn NASA/GSFC** đã dùng cho điểm Sóc, nên chính sách NASA-first
-không thay đổi.
+Trang nguồn nói nguyên văn: các đa thức được tạo ra *"using the ΔT values derived
+from the historical record and from direct observations ... to simplify the
+evaluation of ΔT"*. Tức đây là **đa thức khớp** với số liệu lịch sử và quan trắc,
+**không phải bản thân số đo**.
+
+BA LOẠI GIÁ TRỊ — KHÔNG ĐƯỢC GỘP
+---------------------------------
+  A. ΔT quan trắc / lịch sử   giá trị đo được, nằm ở Table 1 & Table 2 của nguồn.
+                              Dự án này KHÔNG dùng trực tiếp.
+  B. ΔT theo đa thức          thứ pipeline này dùng cho TOÀN BỘ 1901-2100.
+  C. ΔT ngoại suy             với 2050-2150, chính NASA ghi rõ đa thức
+                              *"is derived from estimated values"*, mốc 2010
+                              (66,9 s) và 2050 (93 s) đều là ngoại suy tuyến tính.
+
+Vì vậy tuyệt đối KHÔNG mô tả kết quả hàm này là "ΔT đo được", "ΔT quan trắc" hay
+"ΔT thực tế". Nó là **giá trị mô hình**.
+
+Phạm vi dự án là 1901-2100, nên phần sau 2050 hoàn toàn nằm trong vùng ngoại suy:
+Nếp Nhà **không** tuyên bố biết trước lịch sử quay của Trái Đất.
+
+QUAN HỆ VỚI MEEUS — NÓI CHO ĐÚNG
+---------------------------------
+Trang nguồn ghi rõ tiêu đề *"Five Millennium Canon of Solar Eclipses [Espenak and
+Meeus]"*. Vì vậy KHÔNG được nói pipeline này "không dính Meeus".
+
+Điều đúng là: **không dòng mã nguồn nào của Meeus được sao chép hay chạy trong Nếp
+Nhà.** Ta dùng một biểu thức đa thức do NASA công bố. Xem
+docs/PHASE_3_MEEUS_PROVENANCE.md.
+
+ĐỘ CHÍNH XÁC — ĐÃ KIỂM VỚI CHÍNH TRANG NGUỒN
+---------------------------------------------
+  ΔT(2010) = 66,92 s   NASA nêu 66,9 s
+  ΔT(2050) = 93,00 s   NASA nêu 93 s
+  ΔT(2026-08) = 75,46 s   khớp giá trị 75,4 s mà tài liệu nhật thực NASA nêu
+Nhảy bậc lớn nhất tại mối nối: 0,0884 s (mốc 1900, ngoài phạm vi dự án).
+Trong 1901-2100 nhảy lớn nhất là 0,0501 s tại mốc 2005.
 
 VÌ SAO KHÔNG DÙNG CỘT ΔT CỦA TRANG PHASE CATALOG
 ------------------------------------------------
 Trang phases*.html có cột ΔT nhưng in ở dạng `HHhMMm` — **độ phân giải PHÚT**. Suốt
-1901–2000 nó chỉ nhận hai giá trị `00h00m` và `00h01m`. Pipeline này quyết định ngày
-âm bằng những khoảng cách cỡ vài giây, nên cột đó không đủ phân giải để dùng làm đầu
-vào. Nó vẫn hữu ích với vai trò **kiểm chứng thô** trong verify_lunar_dataset.py —
-xem hàm cross-check ở đó.
-
-ĐỘ CHÍNH XÁC ĐÃ BIẾT — GIỚI HẠN CÔNG BỐ
-----------------------------------------
-Đa thức đoạn 2005–2050 là **ngoại suy lập năm 2006**. Tốc độ quay của Trái Đất từ đó
-nhanh hơn dự báo, nên với thập niên 2020 đa thức cho ~75 s trong khi giá trị quan
-trắc là ~69 s — lệch khoảng 6 giây. Đây là giới hạn của chính nguồn, không phải lỗi
-hiện thực. Ảnh hưởng lên lịch đã được ĐO, xem docs/PHASE_3_DATASET_CORRECTION.md §D.
+1901-2000 nó chỉ nhận hai giá trị `00h00m` và `00h01m`. Pipeline này quyết định ngày
+âm bằng những khoảng cách cỡ vài giây nên cột đó không đủ phân giải để làm đầu vào.
+Nó vẫn hữu ích với vai trò **kiểm chứng thô** trong verify_lunar_dataset.py.
 """
 
 def delta_t_seconds(year: int, month: int = 7) -> float:

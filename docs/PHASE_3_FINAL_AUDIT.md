@@ -51,12 +51,22 @@ Regex này **không khớp cột ΔT** của trang NASA. Kết quả: ΔT chỉ 
 phân bố ΔT mà script sinh ra:  60s ×95   0s ×51   120s ×30   180s ×24
 ```
 
-| Năm | ΔT script dùng | ΔT thực tế | Sai |
+> ⚠️ **ĐÃ BỊ THAY THẾ — hai điểm trong mục này về sau xác định là sai:**
+> **(1)** *"Regex không khớp cột ΔT"* — regex đọc **đúng** cột; vấn đề là bản thân cột
+> chỉ có **độ phân giải phút**.
+> **(2)** Cột *"ΔT thực tế"* trong bảng dưới lấy giá trị quan trắc hiện đại làm chuẩn.
+> Sai chuẩn: đường sản xuất dùng **mô hình đa thức NASA/Espenak**, và với 2026 mô hình
+> cho **≈ 75,4 s** — đúng bằng con số NASA nêu, **không phải lỗi**.
+> Giữ nguyên văn bản gốc để không viết lại lịch sử. Xem
+> [PHASE_3_DATASET_CORRECTION.md](PHASE_3_DATASET_CORRECTION.md) và
+> [PHASE_3_MEEUS_PROVENANCE.md](PHASE_3_MEEUS_PROVENANCE.md).
+
+| Năm | ΔT script dùng | ΔT tham chiếu dùng lúc audit | Sai |
 |---|---:|---:|---:|
 | 1920 | 0 s | 21,2 s | −21 s |
 | **1938** | **0 s** | **23,9 s** | **−24 s** |
 | 1970 | 60 s | 40,2 s | +20 s |
-| 2026 | 60 s | 69,5 s | −10 s |
+| 2026 | 60 s | ~~69,5 s~~ ⚠️ | — |
 | 2100 | 180 s | 202,8 s | −23 s |
 
 Điểm Sóc **không bị ảnh hưởng** — chúng lấy thẳng từ NASA, không qua ΔT. Lỗi này chỉ
