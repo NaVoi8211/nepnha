@@ -7,7 +7,7 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 ## Trạng thái
 
 **Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
-**Phase 5 hoàn thành** — ngày giỗ theo lịch âm: tạo, quy đổi, hiện trên Nhà và Lịch. Trước đó: **Phase 4** — lịch âm hiển thị trên màn Nhà và màn Lịch. Trước đó: **Phase 3** — engine lịch âm Việt Nam (Kotlin thuần, offline). Trước đó: **Phase 3A.5** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
+**Phase 6 hoàn thành** — liên kết ngày giỗ ↔ thành viên, sửa vòng đời nửa đêm, đo hiệu năng, dựng được APK/AAB release. Trước đó: **Phase 5** — ngày giỗ theo lịch âm. Trước đó: **Phase 4** — lịch âm hiển thị trên màn Nhà và màn Lịch. Trước đó: **Phase 3** — engine lịch âm Việt Nam (Kotlin thuần, offline). Trước đó: **Phase 3A.5** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
 
 ## Build
 
@@ -36,6 +36,7 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/PHASE_3A1_DATASET_VERIFICATION.md](docs/PHASE_3A1_DATASET_VERIFICATION.md) | Kiểm chứng dữ liệu NASA/HKO và múi giờ lịch sử bằng dữ liệu thật |
 | [docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) | Giấy phép & khả thi kỹ thuật của nguồn thiên văn (SOFA/ERFA/NASA) |
 | [docs/PHASE_3_MEEUS_PROVENANCE.md](docs/PHASE_3_MEEUS_PROVENANCE.md) | **Quan hệ với Meeus — nêu đúng phạm vi** |
+| [docs/PHASE_6_RELEASE.md](docs/PHASE_6_RELEASE.md) | **Hardening + sẵn sàng phát hành** |
 | [docs/PHASE_5_AUDIT.md](docs/PHASE_5_AUDIT.md) | **Audit hardening trước Phase 6** |
 | [docs/PHASE_5_MEMORIAL.md](docs/PHASE_5_MEMORIAL.md) | **Ngày giỗ: quy tắc, quy đổi, lưu trữ** |
 | [docs/PHASE_4_INTEGRATION.md](docs/PHASE_4_INTEGRATION.md) | **Nối lịch âm vào Home và màn Lịch** |
