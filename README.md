@@ -36,6 +36,7 @@ Cài lên máy thật (Samsung Galaxy A32 là thiết bị test chính):
 | [docs/PHASE_3A1_DATASET_VERIFICATION.md](docs/PHASE_3A1_DATASET_VERIFICATION.md) | Kiểm chứng dữ liệu NASA/HKO và múi giờ lịch sử bằng dữ liệu thật |
 | [docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md](docs/PHASE_3A2_ASTRONOMICAL_PREFLIGHT.md) | Giấy phép & khả thi kỹ thuật của nguồn thiên văn (SOFA/ERFA/NASA) |
 | [docs/PHASE_3_MEEUS_PROVENANCE.md](docs/PHASE_3_MEEUS_PROVENANCE.md) | **Quan hệ với Meeus — nêu đúng phạm vi** |
+| [docs/PHASE_5_AUDIT.md](docs/PHASE_5_AUDIT.md) | **Audit hardening trước Phase 6** |
 | [docs/PHASE_5_MEMORIAL.md](docs/PHASE_5_MEMORIAL.md) | **Ngày giỗ: quy tắc, quy đổi, lưu trữ** |
 | [docs/PHASE_4_INTEGRATION.md](docs/PHASE_4_INTEGRATION.md) | **Nối lịch âm vào Home và màn Lịch** |
 | [docs/PHASE_3_FINAL_HANDOFF.md](docs/PHASE_3_FINAL_HANDOFF.md) | **Bàn giao Phase 3 → Phase 4** |

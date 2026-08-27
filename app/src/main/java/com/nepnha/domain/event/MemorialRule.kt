@@ -122,26 +122,27 @@ data class ResolvedMemorialDate(
     val isLeapMonth: Boolean,
     /** Ngày dương tương ứng — thứ dùng để so với "hôm nay" và để hiện lên lịch. */
     val solarDate: LocalDate,
-    /** Vì sao phải điều chỉnh — UI dựa vào đây để giải thích cho người dùng. */
-    val adjustment: AdjustmentReason,
+    /**
+     * Tháng âm của năm đó không có ngày người dùng khai (thường là mùng 30 trong
+     * tháng thiếu) nên đã dùng ngày cuối tháng, theo
+     * [MissingDayPolicy.LAST_VALID_DAY_OF_MONTH].
+     */
+    val dayWasShortened: Boolean = false,
+    /**
+     * Người dùng khai ngày thuộc tháng nhuận, nhưng năm này không có tháng nhuận mang
+     * số đó nên đã tính vào **tháng thường**, theo
+     * [LeapMonthPolicy.LEAP_MONTH_PREFERRED].
+     */
+    val fellBackToCommonMonth: Boolean = false,
 ) {
-    val wasAdjusted: Boolean get() = adjustment != AdjustmentReason.NONE
-
-    enum class AdjustmentReason {
-        NONE,
-
-        /**
-         * Tháng âm của năm đó không có ngày mà người dùng khai báo (thường là mùng
-         * 30 trong tháng thiếu). UI hiển thị đại ý:
-         * "Tháng này không có ngày 30 âm lịch. Nếp Nhà đang tính ngày giỗ vào ngày cuối tháng."
-         */
-        MISSING_DAY_IN_MONTH,
-
-        /**
-         * Người dùng khai ngày thuộc tháng nhuận, nhưng năm này không có tháng nhuận
-         * mang số đó nên đã tính vào **tháng thường** theo
-         * [LeapMonthPolicy.LEAP_MONTH_PREFERRED].
-         */
-        LEAP_MONTH_FELL_BACK_TO_COMMON,
-    }
+    /**
+     * Hai điều chỉnh trên **độc lập nhau và có thể xảy ra cùng lúc** — ví dụ giỗ mùng
+     * 30 tháng 7 nhuận, năm nay không có tháng 7 nhuận (lùi tháng thường) mà tháng 7
+     * thường lại chỉ có 29 ngày (lùi ngày).
+     *
+     * Bản đầu dùng một enum `AdjustmentReason` nên nhánh sau **ghi đè** nhánh trước
+     * và người dùng chỉ được nghe một nửa sự thật về quyết định mà app tự làm thay họ.
+     * Hai cờ riêng để không bao giờ mất thông tin nữa.
+     */
+    val wasAdjusted: Boolean get() = dayWasShortened || fellBackToCommonMonth
 }

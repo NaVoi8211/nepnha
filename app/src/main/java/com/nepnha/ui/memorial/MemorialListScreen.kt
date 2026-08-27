@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nepnha.R
 import com.nepnha.core.time.VietnameseDateFormatter
@@ -115,8 +116,25 @@ private fun MemorialRow(item: UpcomingMemorial, onClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top,
             ) {
-                Text(text = item.memorial.name, style = MaterialTheme.typography.titleMedium)
-                item.daysUntil?.let { Text(text = countdownLabel(it), style = MaterialTheme.typography.labelLarge) }
+                // Tên phải nhường chỗ cho phần đếm ngược. Không có `weight` thì tên
+                // dài bóp cột đếm ngược còn một ký tự và nó xuống dòng theo từng chữ
+                // cái — audit trực quan ở 720×1600 đã bắt đúng lỗi này.
+                Text(
+                    text = item.memorial.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f),
+                )
+                item.daysUntil?.let {
+                    Text(
+                        text = countdownLabel(it),
+                        style = MaterialTheme.typography.labelLarge,
+                        maxLines = 1,
+                        softWrap = false,
+                        modifier = Modifier.padding(start = 12.dp),
+                    )
+                }
             }
             Text(
                 text = stringResource(

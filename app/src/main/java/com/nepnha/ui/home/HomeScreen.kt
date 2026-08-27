@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nepnha.R
@@ -143,9 +144,23 @@ private fun UpcomingRow(item: UpcomingMemorial, onClick: () -> Unit) {
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(item.memorial.name, style = MaterialTheme.typography.titleMedium)
+                // Cùng lý do như ở màn danh sách: không có `weight` thì tên dài bóp
+                // nát phần đếm ngược.
+                Text(
+                    text = item.memorial.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f),
+                )
                 item.daysUntil?.let {
-                    Text(countdownLabel(it), style = MaterialTheme.typography.labelLarge)
+                    Text(
+                        text = countdownLabel(it),
+                        style = MaterialTheme.typography.labelLarge,
+                        maxLines = 1,
+                        softWrap = false,
+                        modifier = Modifier.padding(start = 12.dp),
+                    )
                 }
             }
             if (next == null) {

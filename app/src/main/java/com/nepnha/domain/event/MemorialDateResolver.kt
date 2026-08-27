@@ -20,23 +20,24 @@ import java.time.temporal.ChronoUnit
  */
 class MemorialDateResolver(private val calendar: LunarCalendarService) {
 
-    /**
-     * Số năm âm tối đa dò tới khi tìm ngày giỗ kế tiếp.
-     *
-     * 25 chứ không phải 2–3: với [LeapMonthPolicy.LEAP_MONTH_ONLY], một tháng nhuận
-     * mang số cụ thể chỉ quay lại sau nhiều chục năm. 25 phủ trọn một chu kỳ Meton
-     * (19 năm) và vẫn là số hữu hạn — vòng lặp không bao giờ chạy mãi.
-     */
-    private val lookAheadYears = 25
-
     /** Quy đổi cho đúng một năm âm. */
     fun resolve(memorial: Memorial, lunarYear: Int): MemorialResolution {
+        // Hỏi trước xem năm này có dữ liệu không, bằng THÁNG THƯỜNG — tháng thường
+        // luôn tồn tại nếu năm âm đó nằm trong dữ liệu. Không tách bước này thì năm
+        // ngoài phạm vi sẽ bị báo nhầm thành "năm không có tháng nhuận", và biểu mẫu
+        // khuyên người dùng đổi lựa chọn cho một vấn đề không phải của họ.
+        val commonLength = calendar.daysInLunarMonth(lunarYear, memorial.lunarMonth, false)
+            ?: return MemorialResolution.Skipped(
+                lunarYear,
+                MemorialResolution.Reason.OUT_OF_SUPPORTED_RANGE,
+            )
+
         val leapMonth = calendar.leapMonthOf(lunarYear)
         val wantsLeap = memorial.rule.leapMonthPolicy != LeapMonthPolicy.COMMON_MONTH_DEFAULT
         val yearHasIt = leapMonth == memorial.lunarMonth
 
         val useLeap: Boolean
-        var adjustment = ResolvedMemorialDate.AdjustmentReason.NONE
+        var fellBackToCommonMonth = false
         when {
             !wantsLeap -> useLeap = false
             yearHasIt -> useLeap = true
@@ -45,17 +46,22 @@ class MemorialDateResolver(private val calendar: LunarCalendarService) {
             else -> {
                 // LEAP_MONTH_PREFERRED: lùi về tháng thường, nhưng phải nói ra.
                 useLeap = false
-                adjustment = ResolvedMemorialDate.AdjustmentReason.LEAP_MONTH_FELL_BACK_TO_COMMON
+                fellBackToCommonMonth = true
             }
         }
 
-        val length = calendar.daysInLunarMonth(lunarYear, memorial.lunarMonth, useLeap)
-            ?: return MemorialResolution.Skipped(
-                lunarYear,
-                MemorialResolution.Reason.OUT_OF_SUPPORTED_RANGE,
-            )
+        val length = if (useLeap) {
+            calendar.daysInLunarMonth(lunarYear, memorial.lunarMonth, true)
+                ?: return MemorialResolution.Skipped(
+                    lunarYear,
+                    MemorialResolution.Reason.OUT_OF_SUPPORTED_RANGE,
+                )
+        } else {
+            commonLength
+        }
 
         val effectiveDay: Int
+        var dayWasShortened = false
         if (memorial.lunarDay > length) {
             when (memorial.rule.missingDayPolicy) {
                 MissingDayPolicy.SKIP ->
@@ -65,8 +71,7 @@ class MemorialDateResolver(private val calendar: LunarCalendarService) {
                     )
                 MissingDayPolicy.LAST_VALID_DAY_OF_MONTH -> {
                     effectiveDay = length
-                    // Điều chỉnh ngày quan trọng hơn việc đã lùi tháng ⇒ ghi đè lý do.
-                    adjustment = ResolvedMemorialDate.AdjustmentReason.MISSING_DAY_IN_MONTH
+                    dayWasShortened = true
                 }
             }
         } else {
@@ -87,7 +92,8 @@ class MemorialDateResolver(private val calendar: LunarCalendarService) {
                 lunarYear = lunarYear,
                 isLeapMonth = useLeap,
                 solarDate = solar,
-                adjustment = adjustment,
+                dayWasShortened = dayWasShortened,
+                fellBackToCommonMonth = fellBackToCommonMonth,
             ),
         )
     }
@@ -98,14 +104,24 @@ class MemorialDateResolver(private val calendar: LunarCalendarService) {
      * Ngày giỗ của hôm nay vẫn tính là "sắp tới" — hôm nay là ngày phải làm cỗ, không
      * phải ngày đã lỡ.
      *
-     * Năm nào bị policy bỏ qua thì dò tiếp năm sau, tối đa [lookAheadYears] năm. Trả
-     * `null` khi không tìm được trong khoảng đó — một trạng thái hợp lệ mà UI phải
-     * nói ra, không phải lỗi.
+     * Dò tới **hết phạm vi dữ liệu**, không dùng một cửa sổ cố định. Bản đầu tiên
+     * giới hạn 25 năm với lý do "phủ chu kỳ Meton 19 năm"; đo cạn kiệt ở
+     * `MemorialSearchWindowTest` cho thấy lý do đó **sai**: tháng nhuận mang một số
+     * cụ thể không lặp theo chu kỳ 19 năm, và khoảng cách thật giữa hai lần giỗ liên
+     * tiếp lên tới **114 năm âm** (ngày 30 tháng 4, chỉ tháng nhuận, bỏ qua năm
+     * thiếu). Cửa sổ 25 năm sẽ báo "không có ngày giỗ nào" trong khi thực tế có.
+     *
+     * Vòng lặp vẫn hữu hạn vì phạm vi dữ liệu hữu hạn: nhiều nhất ~200 lượt tra bảng,
+     * và trường hợp thường gặp thoát ngay ở vòng đầu.
+     *
+     * Trả `null` khi trong toàn bộ phạm vi không có lần nào — một trạng thái hợp lệ
+     * mà UI phải nói ra, không phải lỗi.
      */
     fun nextOccurrence(memorial: Memorial, today: LocalDate): ResolvedMemorialDate? {
         val startYear = calendar.lunarYearOf(today) ?: return null
-        for (offset in 0..lookAheadYears) {
-            val r = resolve(memorial, startYear + offset)
+        val lastYear = calendar.supportedYears?.last ?: return null
+        for (year in startYear..(lastYear + 1)) {
+            val r = resolve(memorial, year)
             if (r is MemorialResolution.Resolved && !r.date.solarDate.isBefore(today)) {
                 return r.date
             }

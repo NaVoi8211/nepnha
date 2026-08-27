@@ -89,9 +89,10 @@ bảo đảm có `Resolved` thì chắc chắn có `solarDate`.
 2. Quy đổi; nếu ngày dương chưa qua thì đó là lần kế tiếp. **Ngày giỗ của đúng hôm nay
    vẫn tính là sắp tới** — hôm nay là ngày phải làm cỗ, không phải ngày đã lỡ.
 3. Nếu đã qua hoặc bị policy bỏ qua thì dò năm sau.
-4. Tối đa **25 năm âm** rồi dừng. 25 chứ không phải 2–3: với `LEAP_MONTH_ONLY`, một
-   tháng nhuận mang số cụ thể chỉ quay lại sau nhiều chục năm. 25 phủ trọn một chu kỳ
-   Meton (19 năm) và vẫn hữu hạn — vòng lặp không bao giờ chạy mãi.
+4. Dò tới **hết phạm vi dữ liệu** (1901–2100), không dùng cửa sổ cố định. Bản đầu giới
+   hạn 25 năm với lý do "phủ chu kỳ Meton"; đo cạn kiệt cho thấy khoảng cách thật giữa
+   hai lần giỗ liên tiếp lên tới **114 năm âm** — xem
+   [PHASE_5_AUDIT.md §B](PHASE_5_AUDIT.md). Vòng lặp vẫn hữu hạn vì phạm vi hữu hạn.
 5. Không tìm được thì trả `null`; **đó là trạng thái hợp lệ mà UI phải nói ra**, không
    phải lỗi và không được giấu ngày giỗ đi.
 
@@ -139,6 +140,6 @@ Thông báo, nhắc trước, sao lưu, xuất/nhập, đồng bộ, chia sẻ. 
 | # | Giới hạn |
 |---|---|
 | **M1** | Chưa lưu **năm mất**, nên chưa hiện được "giỗ năm thứ N" |
-| **M2** | Tầm dò lần kế tiếp là 25 năm âm. `LEAP_MONTH_ONLY` cho một tháng lâu không nhuận có thể không tìm được lần nào — UI nói rõ chứ không giấu |
+| **M2** | `LEAP_MONTH_ONLY` cho một tháng chưa từng nhuận trong 1901–2100 (182/2160 cấu hình) thì **không có** lần giỗ nào — UI nói rõ chứ không giấu |
 | **M3** | Ngày "hôm nay" chốt một lần lúc tạo ViewModel, như Phase 4 (giới hạn P1) |
 | **M4** | Chưa có tìm kiếm/lọc trong danh sách ngày giỗ |

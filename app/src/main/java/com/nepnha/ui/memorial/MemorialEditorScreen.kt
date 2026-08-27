@@ -263,18 +263,24 @@ private fun PreviewCard(state: MemorialEditorUiState) {
     val next = state.preview
     when {
         next != null -> {
-            val explanation = when (next.adjustment) {
-                com.nepnha.domain.event.ResolvedMemorialDate.AdjustmentReason.MISSING_DAY_IN_MONTH ->
+            // Hai điều chỉnh có thể xảy ra CÙNG LÚC ⇒ nói cả hai, không chọn một.
+            val explanation = listOfNotNull(
+                if (next.fellBackToCommonMonth) {
+                    stringResource(R.string.memorial_adjusted_leap_fallback, next.lunarMonth)
+                } else {
+                    null
+                },
+                if (next.dayWasShortened) {
                     stringResource(
                         R.string.memorial_adjusted_missing_day,
                         next.lunarMonth,
                         next.originalLunarDay,
                         next.effectiveLunarDay,
                     )
-                com.nepnha.domain.event.ResolvedMemorialDate.AdjustmentReason.LEAP_MONTH_FELL_BACK_TO_COMMON ->
-                    stringResource(R.string.memorial_adjusted_leap_fallback, next.lunarMonth)
-                com.nepnha.domain.event.ResolvedMemorialDate.AdjustmentReason.NONE -> null
-            }
+                } else {
+                    null
+                },
+            ).joinToString("\n\n").takeIf { it.isNotEmpty() }
             InfoCard(
                 title = stringResource(R.string.memorial_preview_title),
                 body = "${VietnameseDateFormatter.dayOfWeek(next.solarDate)}, " +

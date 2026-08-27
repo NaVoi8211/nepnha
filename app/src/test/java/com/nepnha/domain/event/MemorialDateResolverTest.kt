@@ -80,7 +80,8 @@ class MemorialDateResolverTest {
         assertEquals(30, r.originalLunarDay)             // dữ liệu gốc KHÔNG đổi
         assertEquals(29, r.effectiveLunarDay)
         assertTrue(r.wasAdjusted)
-        assertEquals(ResolvedMemorialDate.AdjustmentReason.MISSING_DAY_IN_MONTH, r.adjustment)
+        assertTrue(r.dayWasShortened)
+        assertFalse("không có chuyện lùi tháng ở đây", r.fellBackToCommonMonth)
         assertEquals(LocalDate.of(2026, 9, 10), r.solarDate)
     }
 
@@ -140,10 +141,40 @@ class MemorialDateResolverTest {
         val plainYear = resolved(m, 2026)
         assertFalse(plainYear.isLeapMonth)
         assertTrue(plainYear.wasAdjusted)
-        assertEquals(
-            ResolvedMemorialDate.AdjustmentReason.LEAP_MONTH_FELL_BACK_TO_COMMON,
-            plainYear.adjustment,
-        )
+        assertTrue(plainYear.fellBackToCommonMonth)
+        assertFalse("ngày không bị lùi ở đây", plainYear.dayWasShortened)
+    }
+
+    /**
+     * Hai điều chỉnh có thể xảy ra **cùng lúc**: giỗ 30 tháng 7 nhuận, năm 2026 không
+     * có tháng 7 nhuận (lùi tháng thường) và tháng 7 thường chỉ có 29 ngày (lùi ngày).
+     *
+     * Sai thì: một enum `adjustment` duy nhất khiến nhánh sau ghi đè nhánh trước, và
+     * người dùng chỉ được nghe một nửa sự thật về quyết định app tự làm thay họ.
+     */
+    @Test
+    fun `lui thang va lui ngay cung luc thi giu ca hai`() {
+        val m = memorial(30, 7, LeapMonthPolicy.LEAP_MONTH_PREFERRED)
+        val r = resolved(m, 2026)
+        assertTrue("phải ghi nhận đã lùi về tháng thường", r.fellBackToCommonMonth)
+        assertTrue("phải ghi nhận đã lùi ngày", r.dayWasShortened)
+        assertEquals(30, r.originalLunarDay)
+        assertEquals(29, r.effectiveLunarDay)
+        assertFalse(r.isLeapMonth)
+        assertEquals(LocalDate.of(2026, 9, 10), r.solarDate)
+    }
+
+    /**
+     * Năm ngoài phạm vi dữ liệu phải báo đúng lý do, không được báo nhầm thành "năm
+     * không có tháng nhuận".
+     *
+     * Sai thì: biểu mẫu khuyên người dùng đổi lựa chọn cho một vấn đề không phải của họ.
+     */
+    @Test
+    fun `ngoai pham vi khong bi bao nham la khong co thang nhuan`() {
+        val m = memorial(1, 8, LeapMonthPolicy.LEAP_MONTH_ONLY)
+        assertEquals(MemorialResolution.Reason.OUT_OF_SUPPORTED_RANGE, skipped(m, 2200))
+        assertEquals(MemorialResolution.Reason.OUT_OF_SUPPORTED_RANGE, skipped(m, 1800))
     }
 
     /** 1987 nhuận tháng 7: tháng thường 29 ngày, tháng nhuận 30 ngày. */
@@ -281,6 +312,27 @@ class MemorialDateResolverTest {
         assertNotNull(list[0].daysUntil)
         assertEquals(16L, list[0].daysUntil)
         assertTrue(list[1].next!!.solarDate.isAfter(list[0].next!!.solarDate))
+    }
+
+    /**
+     * `daysUntil` không bao giờ âm, và bằng 0 đúng khi giỗ rơi vào hôm nay.
+     *
+     * Sai thì: giao diện hiện "Còn -3 ngày", hoặc hiện "Còn 0 ngày" thay vì "Hôm nay".
+     */
+    @Test
+    fun `so ngay con lai khong bao gio am`() {
+        val today = LocalDate.of(2026, 8, 26)
+        val list = resolver.upcoming(
+            (1..12).map { memorial(15, it).copy(id = it.toLong()) } +
+                memorial(14, 7).copy(id = 99),
+            today,
+        )
+        list.forEach { item ->
+            val d = item.daysUntil
+            if (d != null) assertTrue("số ngày còn lại âm: $d", d >= 0)
+        }
+        // 14/7 âm 2026 = đúng hôm nay ⇒ phải là 0, để UI đọc thành "Hôm nay".
+        assertEquals(0L, list.single { it.memorial.id == 99L }.daysUntil)
     }
 
     // ---------- O: timezone ----------
