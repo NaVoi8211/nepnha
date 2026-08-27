@@ -8,8 +8,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.nepnha.AppContainer
 import com.nepnha.domain.event.MemorialDateResolver
 import com.nepnha.domain.event.UpcomingMemorial
-import java.time.LocalDate
 import com.nepnha.domain.model.displayName
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.StateFlow
@@ -24,20 +24,26 @@ import kotlinx.coroutines.launch
  */
 class MemorialListViewModel(
     private val container: AppContainer,
-    private val today: LocalDate = LocalDate.now(),
 ) : ViewModel() {
 
     private val resolver: MemorialDateResolver = container.memorialResolver
+    private val todayFlow = MutableStateFlow(container.dateProvider.today())
 
     val state: StateFlow<MemorialListUiState> = combine(
         container.memorials.observe(),
         container.familyOverview.observe(),
-    ) { list, overview ->
+        todayFlow,
+    ) { list, overview, today ->
         MemorialListUiState(
             items = resolver.upcoming(list, today) { it.displayName(overview.members) },
             isLoaded = true,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MemorialListUiState())
+
+    /** Đọc lại ngày khi màn hình quay lại tiền cảnh. */
+    fun refreshToday() {
+        todayFlow.value = container.dateProvider.today()
+    }
 
     fun delete(id: Long) {
         viewModelScope.launch { container.memorialRepository.delete(id) }

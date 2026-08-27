@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
  */
 class CalendarViewModel(
     private val service: LunarCalendarService,
-    private val today: LocalDate = LocalDate.now(),
+    private var today: LocalDate = LocalDate.now(),
     memorials: Flow<List<Memorial>> = flowOf(emptyList()),
     members: Flow<List<FamilyMember>> = flowOf(emptyList()),
 ) : ViewModel() {
@@ -70,6 +70,18 @@ class CalendarViewModel(
                 _state.value = build(view, knownMemorials)
             }
         }
+    }
+
+    /**
+     * Đọc lại ngày. Nếu ngày đổi, ô "hôm nay" trên lưới phải nhảy theo — và nếu người
+     * dùng đang xem đúng tháng đó thì cả lựa chọn cũng dời sang ngày mới.
+     */
+    fun refreshToday(newToday: LocalDate) {
+        if (newToday == today) return
+        val wasOnOldToday = view.selected == today
+        today = newToday
+        view = if (wasOnOldToday) ViewSelection(YearMonth.from(newToday), newToday) else view
+        _state.value = build(view, knownMemorials)
     }
 
     fun showPreviousMonth() = moveMonth(-1)
@@ -128,6 +140,7 @@ class CalendarViewModel(
             initializer {
                 CalendarViewModel(
                     container.lunarCalendar,
+                    today = container.dateProvider.today(),
                     memorials = container.memorials.observe(),
                     members = container.familyOverview.observe().map { it.members },
                 )

@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 class MemorialEditorViewModel(
     private val container: AppContainer,
     private val memorialId: Long?,
-    private val today: LocalDate = LocalDate.now(),
+    private val today: LocalDate = container.dateProvider.today(),
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MemorialEditorUiState(isEditing = memorialId != null))

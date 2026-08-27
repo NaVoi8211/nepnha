@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.nepnha.core.lunar.LunarDataset
+import com.nepnha.core.time.DateProvider
 import com.nepnha.core.lunar.VietnameseLunarCalendar
 import com.nepnha.data.db.NepNhaDatabase
 import com.nepnha.data.prefs.SettingsRepository
@@ -61,6 +62,8 @@ class AppContainer(
     val settingsRepository: SettingsRepository,
     val lunarCalendar: LunarCalendarService,
     val memorialRepository: MemorialRepository,
+    /** Nguồn "hôm nay" duy nhất. Test tiêm bản giả để mô phỏng qua nửa đêm. */
+    val dateProvider: DateProvider = DateProvider.System,
 ) {
     val familyOverview = FamilyOverviewSource(familyRepository, memberRepository, settingsRepository)
     val memorials = MemorialSource(familyRepository, memorialRepository)

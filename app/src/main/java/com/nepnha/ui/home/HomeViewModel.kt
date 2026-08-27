@@ -11,6 +11,7 @@ import com.nepnha.domain.calendar.LunarDay
 import com.nepnha.domain.event.UpcomingMemorial
 import com.nepnha.domain.model.displayName
 import java.time.LocalDate
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.StateFlow
@@ -29,24 +30,45 @@ import kotlinx.coroutines.flow.stateIn
  * chưa cần bộ đếm cho tới khi có nhắc việc theo giờ.
  */
 class HomeViewModel(
-    container: AppContainer,
-    today: LocalDate = LocalDate.now(),
+    private val container: AppContainer,
 ) : ViewModel() {
 
-    private val initial = HomeUiState(today = today, lunar = container.lunarCalendar.dayOf(today))
+    /**
+     * "Hôm nay" là **state**, không phải hằng số chốt lúc khởi tạo. Đọc lại khi màn
+     * hình quay lại tiền cảnh — xem [refreshToday].
+     */
+    private val todayFlow = MutableStateFlow(container.dateProvider.today())
 
     val state: StateFlow<HomeUiState> = combine(
         container.familyOverview.observe(),
         container.memorials.observe(),
-    ) { overview, memorials ->
-        overview.toHomeState(initial).copy(
+        todayFlow,
+    ) { overview, memorials, today ->
+        overview.toHomeState(
+            HomeUiState(today = today, lunar = container.lunarCalendar.dayOf(today)),
+        ).copy(
             // Chỉ vài mục gần nhất — màn Nhà là nơi trả lời "hôm nay nhà mình có việc
             // gì", không phải danh sách đầy đủ.
             upcoming = container.memorialResolver
                 .upcoming(memorials, today) { it.displayName(overview.members) }
                 .take(3),
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        HomeUiState(
+            today = container.dateProvider.today(),
+            lunar = container.lunarCalendar.dayOf(container.dateProvider.today()),
+        ),
+    )
+
+    /**
+     * Đọc lại ngày. Gọi khi màn hình quay lại tiền cảnh; không làm gì nếu ngày chưa
+     * đổi, nên gọi thừa cũng vô hại.
+     */
+    fun refreshToday() {
+        todayFlow.value = container.dateProvider.today()
+    }
 
     companion object {
         fun factory(container: AppContainer): ViewModelProvider.Factory = viewModelFactory {

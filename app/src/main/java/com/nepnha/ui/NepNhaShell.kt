@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -104,6 +106,10 @@ fun NepNhaShell(
             composable(TopLevelDestination.HOME.route) {
                 val vm: HomeViewModel = viewModel(factory = HomeViewModel.factory(container))
                 val state by vm.state.collectAsStateWithLifecycle()
+                // Đọc lại ngày mỗi khi màn hình quay lại tiền cảnh. KHÔNG bộ đếm,
+                // KHÔNG AlarmManager, KHÔNG việc chạy nền — chỉ một lần đọc khi người
+                // dùng thực sự nhìn vào màn hình.
+                LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { vm.refreshToday() }
                 HomeScreen(
                     state = state,
                     onSetupFamily = { navController.navigateToTab(TopLevelDestination.FAMILY) },
@@ -114,6 +120,9 @@ fun NepNhaShell(
             composable(TopLevelDestination.CALENDAR.route) {
                 val vm: CalendarViewModel = viewModel(factory = CalendarViewModel.factory(container))
                 val state by vm.state.collectAsStateWithLifecycle()
+                LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+                    vm.refreshToday(container.dateProvider.today())
+                }
                 CalendarScreen(
                     state = state,
                     onPreviousMonth = vm::showPreviousMonth,
@@ -165,6 +174,7 @@ fun NepNhaShell(
                 val vm: MemorialListViewModel =
                     viewModel(factory = MemorialListViewModel.factory(container))
                 val state by vm.state.collectAsStateWithLifecycle()
+                LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { vm.refreshToday() }
                 MemorialListScreen(
                     state = state,
                     onAdd = { navController.navigate(Routes.memorialEditor(null)) },

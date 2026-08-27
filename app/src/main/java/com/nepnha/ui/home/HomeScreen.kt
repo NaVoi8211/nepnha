@@ -159,7 +159,11 @@ private fun UpcomingRow(item: UpcomingMemorial, onClick: () -> Unit) {
                         style = MaterialTheme.typography.labelLarge,
                         maxLines = 1,
                         softWrap = false,
-                        modifier = Modifier.padding(start = 12.dp),
+                        // Tag riêng vì chữ "Hôm nay" còn xuất hiện ở tiêu đề mục và ở
+                        // nhãn đầu màn hình — không tag thì test không chỉ đúng chỗ được.
+                        modifier = Modifier
+                            .padding(start = 12.dp)
+                            .testTag("home_countdown_${item.memorial.id}"),
                     )
                 }
             }
@@ -219,6 +223,7 @@ private fun TodayHeader(today: LocalDate, lunar: LunarDay, modifier: Modifier = 
         Text(
             text = VietnameseDateFormatter.fullDate(today),
             style = MaterialTheme.typography.displaySmall,
+            modifier = Modifier.testTag("home_solar_date"),
         )
         Spacer(Modifier.height(6.dp))
         Text(

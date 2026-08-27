@@ -45,12 +45,21 @@ class TestEnvironment(context: Context) {
 
     // Nạp dataset lịch âm THẬT từ asset: test giao diện phải nhìn thấy đúng thứ
     // người dùng nhìn thấy, không phải một engine giả.
+    /**
+     * Ngày giả, đổi được giữa chừng để mô phỏng qua nửa đêm mà không phải chờ đồng
+     * hồ thật. `@Volatile` vì `ON_RESUME` đọc nó trên luồng chính còn test ghi từ
+     * luồng của mình.
+     */
+    @Volatile
+    var fakeToday: java.time.LocalDate = java.time.LocalDate.now()
+
     val container = AppContainer(
         familyRepository,
         memberRepository,
         settingsRepository,
         AppContainer.loadLunarCalendar(context),
         memorialRepository,
+        dateProvider = com.nepnha.core.time.DateProvider { fakeToday },
     )
 
     fun close() {
