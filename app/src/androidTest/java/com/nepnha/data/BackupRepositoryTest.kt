@@ -11,6 +11,7 @@ import com.nepnha.data.repository.MemberRepository
 import com.nepnha.data.repository.MemorialRepository
 import com.nepnha.domain.backup.BackupCodec
 import com.nepnha.domain.backup.BackupData
+import com.nepnha.domain.backup.BackupLunarBirth
 import com.nepnha.domain.backup.BackupMember
 import com.nepnha.domain.backup.BackupMemorial
 import com.nepnha.domain.backup.BackupResult
@@ -333,5 +334,226 @@ class BackupRepositoryTest {
         val text = BackupCodec.encode(runBlocking { env.backup.readAll() }, "2026-01-01T00:00:00Z", "t")
         assertTrue("phải phân tích lại được", BackupCodec.decode(text) is BackupResult.Valid)
         env.db.close()
+    }
+
+    // ------------------------------------------------------ Phase 7.5: máy hoàn toàn trống
+
+    /**
+     * Kịch bản thật của tính năng này: **máy mới, database rỗng hoàn toàn**.
+     *
+     * Đây là lần duy nhất mọi thứ trong file phải được áp dụng: tên gia đình, tín chủ,
+     * quan hệ, policy, dấu tiếng Việt, ngày sinh âm. Các test khác đều nhập vào máy đã
+     * có sẵn dữ liệu nên không chứng minh được nhánh này.
+     *
+     * Sai thì: người mất điện thoại cầm file sao lưu trong tay mà không lấy lại được gia
+     * đình của mình — toàn bộ Phase 7 vô nghĩa.
+     */
+    @Test
+    fun nhap_vao_database_hoan_toan_trong_tai_hien_du_moi_thu() {
+        val source = newEnv("empty_src")
+        seed(source)
+        val exported = runBlocking { source.backup.readAll() }
+        val text = BackupCodec.encode(exported, "2026-08-27T10:00:00Z", "test")
+        source.db.close()
+
+        val target = newEnv("empty_dst")
+        // Chứng minh là thật sự rỗng trước khi nhập.
+        assertNull("chưa được có gia đình nào", runBlocking { target.db.familyDao().firstId() })
+        assertNull("chưa được có tín chủ", runBlocking { target.settings.primaryMemberId.first() })
+
+        val parsed = (BackupCodec.decode(text) as BackupResult.Valid).file.data
+        val outcome = runBlocking { target.backup.importAdditive(parsed) }
+
+        assertEquals(2, outcome.membersAdded)
+        assertEquals(2, outcome.memorialsAdded)
+        assertTrue("máy trống thì tín chủ trong file PHẢI được áp dụng", outcome.primaryMemberApplied)
+
+        val familyId = runBlocking { target.db.familyDao().firstId() }!!
+        val family = runBlocking { FamilyRepository(target.db.familyDao()).observeFamily().first() }!!
+        assertEquals("máy trống thì tên gia đình lấy theo file", "Nhà họ Nguyễn", family.name)
+
+        val members = runBlocking { target.db.memberDao().observeByFamily(familyId).first() }
+        val a = members.single { it.fullName == "Nguyễn Văn A" }
+        val b = members.single { it.fullName == "Trần Thị B" }
+
+        // Unicode tiếng Việt nguyên vẹn tới từng dấu.
+        assertEquals("Nguyễn Văn A", a.fullName)
+        assertEquals("Trưởng nam", a.role)
+        assertEquals("ghi chú", b.note)
+
+        // Ngày sinh dương và âm.
+        assertEquals("1950-03-14", a.solarBirthDate.toString())
+        assertEquals(26, a.lunarBirthDay)
+        assertEquals(1, a.lunarBirthMonth)
+        assertEquals(1950, a.lunarBirthYear)
+        assertEquals(false, a.lunarBirthIsLeapMonth)
+        assertNull("người không có ngày sinh âm phải vẫn không có", b.lunarBirthDay)
+
+        // Quan hệ và policy.
+        val memorials = runBlocking { MemorialRepository(target.db.memorialDao()).observe(familyId).first() }
+        val linked = memorials.single { it.name == "Cụ ông" }
+        assertEquals(a.id, linked.memberId)
+        assertEquals(LeapMonthPolicy.LEAP_MONTH_ONLY, linked.rule.leapMonthPolicy)
+        assertEquals(MissingDayPolicy.SKIP, linked.rule.missingDayPolicy)
+        assertNull(memorials.single { it.name == "Cụ tổ không liên kết" }.memberId)
+
+        // Tín chủ trỏ đúng người, với id mới.
+        assertEquals(a.id, runBlocking { target.settings.primaryMemberId.first() })
+        target.db.close()
+    }
+
+    // ------------------------------------------------------------ Phase 7.5: atomicity lớn
+
+    /**
+     * Rollback trên bộ dữ liệu **lớn**, lỗi rơi vào giữa chừng.
+     *
+     * Test rollback cũ chỉ có 2 bản ghi, nên không phân biệt được "giao dịch thật" với
+     * "may mắn vì quá ngắn". Ở đây 60 thành viên và 120 ngày giỗ đã ghi xong thì bản ghi
+     * thứ 100 mới hỏng — nếu Room không gói tất cả trong một giao dịch, database sẽ còn
+     * lại đúng cái đống nửa vời đó.
+     *
+     * Sai thì: nhập hỏng để lại một gia đình lẫn lộn mà không có cách nào dọn ngoài xoá
+     * sạch dữ liệu.
+     */
+    @Test
+    fun rollback_toan_bo_tren_bo_du_lieu_lon() {
+        val env = newEnv("atomic_big")
+        seed(env)
+        val before = runBlocking { env.backup.readAll() }
+        val familyId = runBlocking { env.db.familyDao().firstId() }!!
+        val membersBefore = runBlocking { env.db.memberDao().observeByFamily(familyId).first() }.size
+        val memorialsBefore = runBlocking { env.db.memorialDao().observeByFamily(familyId).first() }.size
+
+        val broken = BackupData(
+            familyName = "Nhà lớn hỏng",
+            primaryMemberRef = null,
+            members = (1..60).map {
+                BackupMember(it, "Thành viên $it", Gender.UNSPECIFIED, null, null, null, null)
+            },
+            memorials = (1..120).map {
+                BackupMemorial(
+                    "Giỗ $it",
+                    // Bản ghi thứ 100 trỏ tới ref không tồn tại ⇒ ném khi đã ghi 99 cái trước.
+                    if (it == 100) 9999 else ((it % 60) + 1),
+                    (it % 30) + 1, (it % 12) + 1,
+                    LeapMonthPolicy.COMMON_MONTH_DEFAULT, MissingDayPolicy.LAST_VALID_DAY_OF_MONTH, null,
+                )
+            },
+        )
+
+        assertTrue(
+            "phải ném để rollback",
+            runCatching { runBlocking { env.backup.importAdditive(broken) } }.isFailure,
+        )
+
+        val familyIdAfter = runBlocking { env.db.familyDao().firstId() }!!
+        val membersAfter = runBlocking { env.db.memberDao().observeByFamily(familyIdAfter).first() }.size
+        val memorialsAfter = runBlocking { env.db.memorialDao().observeByFamily(familyIdAfter).first() }.size
+        assertEquals("không được sót thành viên nào của lần nhập hỏng", membersBefore, membersAfter)
+        assertEquals("không được sót ngày giỗ nào của lần nhập hỏng", memorialsBefore, memorialsAfter)
+        assertEquals("dữ liệu phải y nguyên từng trường", before, runBlocking { env.backup.readAll() })
+        env.db.close()
+    }
+
+    // ------------------------------------------------------------- Phase 7.5: bộ dữ liệu lớn
+
+    /**
+     * Bộ dữ liệu lớn phải nhập được, đúng, và trong thời gian chấp nhận được.
+     *
+     * Đo trên thiết bị thật rồi in ra logcat — không tối ưu gì cho tới khi có số.
+     *
+     * Sai thì: gia đình đông người khôi phục xong thấy thiếu bản ghi, hoặc app đứng
+     * hình đủ lâu để hệ thống báo ANR.
+     */
+    @Test
+    fun bo_du_lieu_lon_nhap_dung_va_do_thoi_gian() {
+        for ((members, memorials) in listOf(50 to 100, 200 to 500)) {
+            val data = BackupData(
+                familyName = "Nhà rất đông",
+                primaryMemberRef = 1,
+                members = (1..members).map {
+                    BackupMember(
+                        it, "Nguyễn Văn Số $it", if (it % 2 == 0) Gender.FEMALE else Gender.MALE,
+                        "19%02d-01-01".format(it % 100),
+                        BackupLunarBirth((it % 30) + 1, (it % 12) + 1, 1900 + (it % 100), it % 7 == 0),
+                        "vai trò $it", "ghi chú $it",
+                    )
+                },
+                memorials = (1..memorials).map {
+                    BackupMemorial(
+                        "Giỗ cụ $it", (it % members) + 1, (it % 30) + 1, (it % 12) + 1,
+                        LeapMonthPolicy.entries[it % LeapMonthPolicy.entries.size],
+                        MissingDayPolicy.entries[it % MissingDayPolicy.entries.size],
+                        "ghi chú giỗ $it",
+                    )
+                },
+            )
+
+            // Đi qua đúng đường thật: mã hoá ra văn bản, phân tích lại, rồi mới nhập.
+            val encodeMs = measure { BackupCodec.encode(data, "2026-01-01T00:00:00Z", "t") }
+            val text = BackupCodec.encode(data, "2026-01-01T00:00:00Z", "t")
+            val decodeMs = measure { BackupCodec.decode(text) }
+            val parsed = (BackupCodec.decode(text) as BackupResult.Valid).file.data
+            assertEquals("phân tích lại phải giống hệt", data, parsed)
+
+            // `importAdditive` là CHỈ-THÊM: đo bằng cách lặp trên cùng một database sẽ
+            // cộng dồn 7 lần dữ liệu. Mỗi lần đo phải có database sạch riêng.
+            val importSamples = (1..5).map {
+                val fresh = newEnv("big_${members}_${memorials}_run$it")
+                // Room dựng database ở truy vấn ĐẦU TIÊN. Không chạm trước thì phép đo
+                // gộp cả thời gian tạo schema vào thời gian nhập và cho ra con số sai.
+                runBlocking { fresh.db.familyDao().firstId() }
+                val t0 = System.nanoTime()
+                runBlocking { fresh.backup.importAdditive(parsed) }
+                val ms = (System.nanoTime() - t0) / 1_000_000
+                fresh.db.close()
+                ms
+            }
+            val importMs = importSamples.sorted()[2]
+
+            // Env cuối cùng dùng để kiểm đúng/sai, nhập đúng MỘT lần.
+            val env = newEnv("big_${members}_$memorials")
+            runBlocking { env.backup.importAdditive(parsed) }
+            val exportMs = measure { runBlocking { env.backup.readAll() } }
+
+            val familyId = runBlocking { env.db.familyDao().firstId() }!!
+            assertEquals(
+                members,
+                runBlocking { env.db.memberDao().observeByFamily(familyId).first() }.size,
+            )
+            assertEquals(
+                memorials,
+                runBlocking { env.db.memorialDao().observeByFamily(familyId).first() }.size,
+            )
+            // Khớp về NGHĨA, kể cả policy và ngày sinh âm. Thành viên giữ nguyên thứ tự
+            // chèn; ngày giỗ thì không — DAO sắp lại theo `lunarMonth, lunarDay`, nên so
+            // sánh theo tập hợp chứ không theo thứ tự.
+            val reread = runBlocking { env.backup.readAll() }
+            assertEquals(data.familyName, reread.familyName)
+            assertEquals(data.primaryMemberRef, reread.primaryMemberRef)
+            assertEquals(data.members, reread.members)
+            assertEquals(data.memorials.toSet(), reread.memorials.toSet())
+            assertEquals("không được trùng lặp hay thiếu", data.memorials.size, reread.memorials.size)
+
+            android.util.Log.i(
+                "NepNhaPerf",
+                "backup $members thành viên / $memorials ngày giỗ | " +
+                    "kích thước ${text.length / 1024} KB | encode ${encodeMs}ms | " +
+                    "decode ${decodeMs}ms | import trung vị ${importMs}ms " +
+                    "(xấu nhất ${importSamples.max()}ms) | export ${exportMs}ms",
+            )
+            env.db.close()
+        }
+    }
+
+    /** Trung vị của 5 lần đo — một lần chạy không phải là con số. */
+    private fun measure(block: () -> Unit): Long {
+        repeat(2) { block() } // làm nóng
+        val samples = (1..5).map {
+            val t0 = System.nanoTime()
+            block()
+            (System.nanoTime() - t0) / 1_000_000
+        }
+        return samples.sorted()[2]
     }
 }

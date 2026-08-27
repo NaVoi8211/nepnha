@@ -316,4 +316,153 @@ class BackupCodecTest {
         assertEquals(300, back.memorials.size)
         assertEquals(big, back)
     }
+
+    // ------------------------------------------------- Phase 7.5: giá trị biên & sai kiểu
+
+    /**
+     * Bốn biên của ngày/tháng âm, kiểm riêng từng cái.
+     *
+     * Sai thì: `lunarDay: 0` hoặc `lunarMonth: 13` lọt vào database và mọi phép quy đổi
+     * sau đó đều vô nghĩa — mà lỗi chỉ lộ ra khi tới ngày giỗ.
+     */
+    @Test
+    fun `bien duoi va bien tren cua ngay va thang am deu bi chan`() {
+        val cases = listOf(
+            Triple("lunarDay", 0, Triple("memorials[0].lunarDay", 1, 30)),
+            Triple("lunarDay", 31, Triple("memorials[0].lunarDay", 1, 30)),
+            Triple("lunarMonth", 0, Triple("memorials[0].lunarMonth", 1, 12)),
+            Triple("lunarMonth", 13, Triple("memorials[0].lunarMonth", 1, 12)),
+        )
+        for ((field, bad, expect) in cases) {
+            val day = if (field == "lunarDay") bad else 1
+            val month = if (field == "lunarMonth") bad else 1
+            val e = errors(
+                withMemorial(
+                    """{"name":"x","lunarDay":$day,"lunarMonth":$month,
+                       "leapMonthPolicy":"common_month","missingDayPolicy":"skip"}""",
+                ),
+            )
+            assertTrue(
+                "$field=$bad phải bị chặn, nhận được: $e",
+                e.contains(BackupError.OutOfRange(expect.first, bad, expect.second, expect.third)),
+            )
+        }
+        // Và các giá trị ngay bên trong biên vẫn phải đi lọt.
+        for ((day, month) in listOf(1 to 1, 30 to 12)) {
+            val text = withMemorial(
+                """{"name":"x","lunarDay":$day,"lunarMonth":$month,
+                   "leapMonthPolicy":"common_month","missingDayPolicy":"skip"}""",
+            )
+            assertTrue("$day/$month là hợp lệ", BackupCodec.decode(text) is BackupResult.Valid)
+        }
+    }
+
+    /**
+     * File bị cắt cụt giữa chừng phải bị từ chối, không được nhập "phần đọc được".
+     *
+     * Sai thì: sao chép file đứt quãng ⇒ nhập vào một nửa gia đình, và người dùng
+     * tưởng đã khôi phục xong.
+     */
+    @Test
+    fun `file bi cat cut bi tu choi`() {
+        val full = encoded()
+        for (fraction in listOf(0.25, 0.5, 0.75, 0.95)) {
+            val cut = full.substring(0, (full.length * fraction).toInt())
+            val result = BackupCodec.decode(cut)
+            assertTrue(
+                "cắt còn ${(fraction * 100).toInt()}% phải bị từ chối",
+                result is BackupResult.Invalid,
+            )
+        }
+    }
+
+    /**
+     * `exportedAt` là **siêu dữ liệu**, không phải dữ liệu nghiệp vụ: sai định dạng
+     * thì không được chặn việc khôi phục.
+     *
+     * Sai thì: một cái mốc thời gian xấu làm người dùng không lấy lại được gia đình
+     * của mình — cái giá quá đắt cho một trường chẳng dùng vào việc gì.
+     */
+    @Test
+    fun `moc thoi gian sai dinh dang khong chan viec nhap`() {
+        val text = encoded().replace("\"2026-08-27T10:00:00Z\"", "\"hôm qua\"")
+        val f = valid(text)
+        assertEquals("hôm qua", f.exportedAt)
+        assertEquals(2, f.data.members.size)
+    }
+
+    /**
+     * `leapMonth` phải là boolean thật.
+     *
+     * Sai thì: `1` hay `"yes"` âm thầm thành `false` — người sinh tháng nhuận khôi phục
+     * xong thành sinh tháng thường, không một lời cảnh báo.
+     */
+    @Test
+    fun `leapMonth sai kieu bi bao loi chu khong am tham thanh false`() {
+        for (bad in listOf("1", "\"yes\"", "\"true\"")) {
+            val e = errors(
+                """{"formatVersion":1,"data":{"members":[
+                   {"ref":1,"fullName":"A","gender":"male",
+                    "lunarBirthDate":{"day":1,"month":1,"year":1950,"leapMonth":$bad}}],
+                   "memorials":[]}}""",
+            )
+            assertTrue(
+                "leapMonth=$bad phải bị báo, nhận được: $e",
+                e.contains(BackupError.WrongType("members[0].lunarBirthDate.leapMonth", "boolean")),
+            )
+        }
+        // Boolean thật thì đi lọt và giữ đúng giá trị.
+        val ok = valid(
+            """{"formatVersion":1,"data":{"members":[
+               {"ref":1,"fullName":"A","gender":"male",
+                "lunarBirthDate":{"day":1,"month":1,"year":1950,"leapMonth":true}}],
+               "memorials":[]}}""",
+        )
+        assertEquals(true, ok.data.members[0].lunarBirthDate?.leapMonth)
+    }
+
+    /**
+     * `lunarBirthDate` sai kiểu phải bị báo, không được lặng lẽ biến thành `null`.
+     *
+     * Sai thì: ngày sinh âm biến mất trong im lặng — vẫn là mất dữ liệu.
+     */
+    @Test
+    fun `lunarBirthDate sai kieu bi bao loi chu khong am tham bien mat`() {
+        val e = errors(
+            """{"formatVersion":1,"data":{"members":[
+               {"ref":1,"fullName":"A","gender":"male","lunarBirthDate":"26/1/1950"}],
+               "memorials":[]}}""",
+        )
+        assertTrue(e.contains(BackupError.WrongType("members[0].lunarBirthDate", "object")))
+    }
+
+    /**
+     * `primaryMemberRef` sai kiểu phải bị báo.
+     *
+     * Sai thì: khôi phục xong mất tín chủ mà không biết vì sao.
+     */
+    @Test
+    fun `primaryMemberRef sai kieu bi bao loi`() {
+        val e = errors(
+            """{"formatVersion":1,"data":{"primaryMemberRef":"một",
+               "members":[{"ref":1,"fullName":"A","gender":"male"}],"memorials":[]}}""",
+        )
+        assertTrue(e.contains(BackupError.WrongType("primaryMemberRef", "number")))
+    }
+
+    /**
+     * `null` tường minh vẫn là "không có", không phải sai kiểu.
+     *
+     * Sai thì: file do chính app ghi ra bị chính app từ chối.
+     */
+    @Test
+    fun `null tuong minh khong bi coi la sai kieu`() {
+        val f = valid(
+            """{"formatVersion":1,"data":{"primaryMemberRef":null,
+               "members":[{"ref":1,"fullName":"A","gender":"male","lunarBirthDate":null}],
+               "memorials":[]}}""",
+        )
+        assertNull(f.data.primaryMemberRef)
+        assertNull(f.data.members[0].lunarBirthDate)
+    }
 }

@@ -1,4 +1,30 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+/**
+ * Thông tin ký bản phát hành đọc từ `keystore.properties` ở gốc dự án — một file
+ * **không bao giờ được commit** (xem `.gitignore`).
+ *
+ * Cố ý không có giá trị mặc định và không có keystore nào nằm trong repo: keystore là
+ * tài sản của chủ dự án. Không có file thì bản release vẫn build được nhưng **không
+ * được ký**, và Gradle nói thẳng điều đó thay vì lặng lẽ ký bằng debug key rồi để chủ
+ * dự án tải một file vô dụng lên Play.
+ */
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+/** Thiếu khoá nào thì fail ngay, kèm tên khoá — không bao giờ in giá trị. */
+fun requiredKeystoreProperty(name: String): String =
+    keystoreProperties.getProperty(name)?.takeIf { it.isNotBlank() }
+        ?: throw GradleException(
+            "keystore.properties thiếu '$name'. Cần đủ: storeFile, storePassword, " +
+                "keyAlias, keyPassword. Xem docs/PHASE_7_5_RELEASE_AUDIT.md.",
+        )
+
 
 plugins {
     alias(libs.plugins.android.application)
@@ -22,11 +48,26 @@ android {
         vectorDrawables.useSupportLibrary = false
     }
 
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                storeFile = rootProject.file(requiredKeystoreProperty("storeFile"))
+                storePassword = requiredKeystoreProperty("storePassword")
+                keyAlias = requiredKeystoreProperty("keyAlias")
+                keyPassword = requiredKeystoreProperty("keyPassword")
+                // Play App Signing nhận cả hai; bật đủ để APK cài trực tiếp cũng hợp lệ.
+                enableV1Signing = true
+                enableV2Signing = true
+            }
+        }
+    }
+
     buildTypes {
         debug {
             isMinifyEnabled = false
         }
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -53,6 +94,9 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            // Bảng dò của trình gỡ lỗi coroutine. Chỉ có tác dụng khi cài debug agent,
+            // nên với người dùng cuối nó là 1,7 KB chết nằm trong mọi bản cài.
+            excludes += "DebugProbesKt.bin"
         }
     }
 }

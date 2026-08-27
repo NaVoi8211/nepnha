@@ -102,7 +102,13 @@ object BackupCodec {
         val members = decodeMembers(body, errors)
         val memorials = decodeMemorials(body, members.map { it.ref }.toSet(), errors)
 
-        val primaryRef = body["primaryMemberRef"]?.jsonPrimitiveOrNull()?.intOrNull
+        val primaryRaw = body["primaryMemberRef"]
+        val primaryRef = primaryRaw?.jsonPrimitiveOrNull()?.intOrNull
+        if (primaryRaw != null && primaryRaw !is kotlinx.serialization.json.JsonNull && primaryRef == null) {
+            // Tín chủ ghi sai kiểu mà lặng lẽ bỏ qua thì người dùng khôi phục xong
+            // mất tín chủ và không biết vì sao.
+            errors += BackupError.WrongType("primaryMemberRef", "number")
+        }
         if (primaryRef != null && members.none { it.ref == primaryRef }) {
             errors += BackupError.DanglingReference("primaryMemberRef", primaryRef)
         }
@@ -190,7 +196,15 @@ object BackupCodec {
         where: String,
         errors: MutableList<BackupError>,
     ): BackupLunarBirth? {
-        val l = o["lunarBirthDate"]?.let { runCatching { it.jsonObject }.getOrNull() } ?: return null
+        val raw = o["lunarBirthDate"]
+        if (raw == null || raw is kotlinx.serialization.json.JsonNull) return null
+        // Có mặt nhưng sai kiểu thì phải BÁO, không được lặng lẽ bỏ đi: ngày sinh âm
+        // biến mất không một lời nào cũng là mất dữ liệu.
+        val l = runCatching { raw.jsonObject }.getOrNull()
+        if (l == null) {
+            errors += BackupError.WrongType("$where.lunarBirthDate", "object")
+            return null
+        }
         val day = l["day"]?.jsonPrimitiveOrNull()?.intOrNull
         val month = l["month"]?.jsonPrimitiveOrNull()?.intOrNull
         val year = l["year"]?.jsonPrimitiveOrNull()?.intOrNull
@@ -206,8 +220,7 @@ object BackupCodec {
                 BackupFormat.LUNAR_YEAR_RANGE.first, BackupFormat.LUNAR_YEAR_RANGE.last,
             )
         }
-        val leap = l["leapMonth"]?.jsonPrimitiveOrNull()?.contentOrNull == "true"
-        return BackupLunarBirth(day, month, year, leap)
+        return BackupLunarBirth(day, month, year, decodeLeapMonth(l, where, errors))
     }
 
     private fun decodeMemorials(
@@ -269,6 +282,28 @@ object BackupCodec {
             )
         }
         return out
+    }
+
+    /**
+     * `leapMonth` phải là boolean JSON thật.
+     *
+     * Bản đầu so sánh chuỗi `== "true"`, nên `1`, `"yes"` hay `"True"` đều âm thầm
+     * thành `false` — người sinh tháng nhuận khôi phục xong thành sinh tháng thường
+     * mà không có lời cảnh báo nào. Giống hệt lỗi "policy lạ về mặc định" mà hợp đồng
+     * đã cấm, chỉ khác chỗ xảy ra.
+     */
+    private fun decodeLeapMonth(l: JsonObject, where: String, errors: MutableList<BackupError>): Boolean {
+        val raw = l["leapMonth"]
+        if (raw == null || raw is kotlinx.serialization.json.JsonNull) return false
+        val value = raw.jsonPrimitiveOrNull()
+            ?.takeIf { !it.isString }
+            ?.content
+            ?.toBooleanStrictOrNull()
+        if (value == null) {
+            errors += BackupError.WrongType("$where.lunarBirthDate.leapMonth", "boolean")
+            return false
+        }
+        return value
     }
 
     private fun String.checkLength(where: String, errors: MutableList<BackupError>): String {

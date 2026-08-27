@@ -24,8 +24,13 @@ object BackupChecksum {
         val sb = StringBuilder()
         sb.append(data.familyName.orEmpty()).append(SEP)
         sb.append(data.primaryMemberRef?.toString().orEmpty()).append(ROW)
-        // KHÔNG sắp xếp lại: thứ tự phần tử là một phần dữ liệu — nó quyết định thứ tự
-        // danh sách sau khi nhập.
+        // KHÔNG sắp xếp lại ở đây: checksum phải tính trên đúng thứ tự đang có trong
+        // file, nếu không thì hai bên tính ra hai kết quả khác nhau.
+        //
+        // Lưu ý cho người đọc sau: thứ tự này KHÔNG quyết định thứ tự hiển thị sau khi
+        // nhập. Thành viên giữ thứ tự chèn (`ORDER BY createdAt, id`) nhưng ngày giỗ
+        // được sắp lại theo `lunarMonth, lunarDay` — nên bản xuất lần hai có thể xếp
+        // ngày giỗ khác bản gốc trong khi dữ liệu vẫn y hệt.
         for (m in data.members) {
             sb.append(m.ref).append(SEP)
                 .append(m.fullName).append(SEP)

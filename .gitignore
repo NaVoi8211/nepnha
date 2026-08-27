@@ -12,6 +12,13 @@ app/build/
 # --- Máy cục bộ: chứa đường dẫn SDK, KHÔNG commit ---
 local.properties
 
+# --- Bí mật ký bản phát hành: TUYỆT ĐỐI KHÔNG commit ---
+# `keystore.properties` chứa mật khẩu; `*.jks`/`*.keystore` là chính khoá ký.
+# Lộ upload key là mất quyền cập nhật app trên Play.
+keystore.properties
+*.jks
+*.keystore
+
 # --- IDE ---
 .idea/
 *.iml
