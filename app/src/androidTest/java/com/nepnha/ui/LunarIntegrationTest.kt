@@ -2,7 +2,9 @@ package com.nepnha.ui
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -115,9 +117,13 @@ class LunarIntegrationTest {
         val service = AppContainer.loadLunarCalendar(rule.activity)
         val vm = CalendarViewModel(service, LocalDate.of(1938, 9, 24))
         rule.setContent {
+            // Đọc qua `collectAsStateWithLifecycle` chứ không phải `.value`: ở đây state
+            // đứng yên nên cả hai cùng chạy được, nhưng `.value` trong composition là
+            // thói quen sai — nó không đăng ký nhận cập nhật.
+            val state by vm.state.collectAsStateWithLifecycle()
             NepNhaTheme {
                 CalendarScreen(
-                    state = vm.state.value,
+                    state = state,
                     onPreviousMonth = {},
                     onNextMonth = {},
                     onSelectDay = {},

@@ -49,6 +49,22 @@
     <string name="settings_about_body">Nếp Nhà giúp gia đình bạn biết hôm nay có nghi lễ gì, cần chuẩn bị những gì và có bài khấn phù hợp.</string>
     <string name="settings_lunar_title">Nguồn và phương pháp lịch âm</string>
     <string name="settings_lunar_body">Nếp Nhà tính lịch âm Việt Nam từ dữ liệu thiên văn và quy tắc lịch Việt Nam, quy chiếu theo kinh tuyến 105°Đ. Dữ liệu điểm sóc lấy từ Moon Phase Predictions by Fred Espenak, NASA/GSFC; dữ liệu tiết khí tạo bằng ERFA, thư viện phái sinh từ IAU SOFA. Kết quả được đối chiếu với các nguồn lịch công khai và văn bản nhà nước.\n\nPhạm vi: 1901–2100. Ứng dụng dùng quy ước múi giờ UTC+7 cho toàn bộ phạm vi này; đây không phải bản tái hiện chính xác tập quán lịch của mọi thời kỳ lịch sử. Mọi phép tính chạy hoàn toàn trên máy bạn, không cần mạng.</string>
+    <!-- Phase 7: xuất/nhập cục bộ -->
+    <string name="settings_backup_title">Sao lưu dữ liệu</string>
+    <string name="settings_backup_body">Nếp Nhà không lưu dữ liệu của bạn ở đâu ngoài chiếc máy này. Hãy tự xuất một bản để giữ, phòng khi đổi điện thoại.\n\nFile xuất ra ở dạng văn bản thường, KHÔNG mã hoá — ai mở được file là đọc được nội dung. Hãy cất ở nơi bạn tin tưởng.</string>
+    <string name="settings_export">Xuất dữ liệu ra file</string>
+    <string name="settings_import">Nhập dữ liệu từ file</string>
+    <string name="export_done">Đã xuất %1$d thành viên và %2$d ngày giỗ.</string>
+    <string name="export_failed">Không ghi được file. Hãy thử chọn chỗ lưu khác.</string>
+    <string name="import_unreadable">Không đọc được file này.</string>
+    <string name="import_failed">Nhập không thành công. Dữ liệu trên máy giữ nguyên như trước.</string>
+    <string name="import_done">Đã thêm %1$d thành viên và %2$d ngày giỗ.</string>
+    <string name="import_invalid_title">File không dùng được</string>
+    <string name="import_preview_title">Xem trước khi nhập</string>
+    <string name="import_preview_counts">File này có %1$d thành viên và %2$d ngày giỗ.</string>
+    <string name="import_preview_warning">Nhập sẽ THÊM những mục này vào dữ liệu hiện có. Không có gì bị xoá hay ghi đè.\n\nNhập cùng một file hai lần sẽ tạo ra hai bản — Nếp Nhà không tự gộp hai người trùng tên, vì không có cách nào biết chắc đó là một người.</string>
+    <string name="import_preview_primary">Người đứng khấn trong file sẽ được áp dụng, vì máy này chưa chọn ai.</string>
+    <string name="import_confirm">Nhập dữ liệu</string>
     <string name="settings_version_title">Phiên bản</string>
     <string name="settings_privacy_title">Dữ liệu của bạn</string>
     <string name="settings_privacy_body">Toàn bộ dữ liệu gia đình và ngày giỗ được lưu trên thiết bị này. Nếp Nhà không có tài khoản, không gửi dữ liệu đi đâu và hoạt động bình thường khi không có mạng.</string>
@@ -103,6 +119,7 @@
     <string name="delete_member_title">Xoá thành viên này?</string>
     <string name="delete_member_body">Thông tin thành viên sẽ bị xoá khỏi thiết bị.</string>
     <string name="action_cancel">Huỷ</string>
+    <string name="action_ok">Đã hiểu</string>
     <string name="action_delete">Xoá</string>
     <string name="action_save">Lưu</string>
 

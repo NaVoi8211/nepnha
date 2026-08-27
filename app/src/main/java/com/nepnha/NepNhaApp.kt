@@ -11,6 +11,7 @@ import com.nepnha.core.time.DateProvider
 import com.nepnha.core.lunar.VietnameseLunarCalendar
 import com.nepnha.data.db.NepNhaDatabase
 import com.nepnha.data.prefs.SettingsRepository
+import com.nepnha.data.repository.BackupRepository
 import com.nepnha.data.repository.FamilyOverviewSource
 import com.nepnha.data.repository.FamilyRepository
 import com.nepnha.data.repository.MemberRepository
@@ -62,6 +63,15 @@ class AppContainer(
     val settingsRepository: SettingsRepository,
     val lunarCalendar: LunarCalendarService,
     val memorialRepository: MemorialRepository,
+    /**
+     * Xuất/nhập cục bộ.
+     *
+     * Bắt buộc trong constructor chứ không phải `var` gán sau: bản đầu tiên để nó là
+     * `var … = null` và bản test dựng container quên gán, nên nút "Xuất dữ liệu" **im
+     * lặng không làm gì** — không lỗi, không thông báo. Kiểu không-null làm trình biên
+     * dịch bắt lỗi đó thay cho người đọc.
+     */
+    val backupRepository: BackupRepository,
     /** Nguồn "hôm nay" duy nhất. Test tiêm bản giả để mô phỏng qua nửa đêm. */
     val dateProvider: DateProvider = DateProvider.System,
 ) {
@@ -102,12 +112,14 @@ class AppContainer(
                 produceFile = { context.applicationContext.preferencesDataStoreFile("settings") },
             )
             val settings = SettingsRepository(dataStore)
+            val familyRepository = FamilyRepository(database.familyDao())
             return AppContainer(
-                familyRepository = FamilyRepository(database.familyDao()),
+                familyRepository = familyRepository,
                 memberRepository = MemberRepository(database.memberDao(), settings),
                 settingsRepository = settings,
                 lunarCalendar = loadLunarCalendar(context),
                 memorialRepository = MemorialRepository(database.memorialDao()),
+                backupRepository = BackupRepository(database, familyRepository, settings),
             )
         }
     }

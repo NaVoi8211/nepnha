@@ -11,7 +11,7 @@
 | 4 | Nối lịch âm vào Home + màn Lịch | ✅ **Xong** — lưới tháng, tháng nhuận, can chi năm |
 | 5 | Ngày giỗ: CRUD, quy đổi, lịch, màn Nhà | ✅ **Xong** — 3 policy nhuận, 2 policy ngày thiếu, migration v1→v2 |
 | 6 | Hardening: liên kết thành viên, nửa đêm, hiệu năng, release | ✅ **Xong** |
-| 7 | Xuất/nhập cục bộ (điều kiện trước khi phát hành) | ⏳ Chờ duyệt |
+| 7 | Xuất/nhập cục bộ (điều kiện trước khi phát hành) | ✅ **Xong** — định dạng v1 độc lập schema, chỉ-thêm, checksum, kiểm trên bản release |
 | 8 | Nhắc ngày giỗ (notification) | ⏳ Chờ duyệt |
 | 6 | Ritual content + local JSON + ritual engine | ⏳ Chờ duyệt |
 | 5 | Prayer template engine + Prayer Reader | |

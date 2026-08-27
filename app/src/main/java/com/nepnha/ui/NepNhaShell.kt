@@ -44,6 +44,7 @@ import com.nepnha.ui.memorial.MemorialListViewModel
 import com.nepnha.ui.navigation.Routes
 import com.nepnha.ui.navigation.TopLevelDestination
 import com.nepnha.ui.settings.SettingsScreen
+import com.nepnha.ui.settings.SettingsViewModel
 
 /**
  * Vỏ ứng dụng: thanh điều hướng dưới + NavHost.
@@ -144,7 +145,29 @@ fun NepNhaShell(
                 )
             }
 
-            composable(TopLevelDestination.SETTINGS.route) { SettingsScreen() }
+            composable(TopLevelDestination.SETTINGS.route) {
+                val ctx = androidx.compose.ui.platform.LocalContext.current
+                // buildConfig bị tắt để build nhanh ⇒ lấy version từ PackageManager.
+                val version = remember(ctx) {
+                    runCatching {
+                        ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
+                    }.getOrNull() ?: "—"
+                }
+                val vm: SettingsViewModel = viewModel(
+                    factory = SettingsViewModel.factory(container, ctx.contentResolver, version),
+                )
+                val state by vm.state.collectAsStateWithLifecycle()
+                SettingsScreen(
+                    state = state,
+                    versionName = version,
+                    suggestedFileName = vm.suggestedFileName(),
+                    onExportTo = vm::export,
+                    onImportFrom = vm::prepareImport,
+                    onConfirmImport = vm::confirmImport,
+                    onCancelImport = vm::cancelImport,
+                    onDismissMessage = vm::dismissMessage,
+                )
+            }
 
             composable(
                 route = Routes.MEMBER_EDITOR,

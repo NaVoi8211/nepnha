@@ -42,6 +42,9 @@ class TestEnvironment(context: Context) {
     val familyRepository = FamilyRepository(database.familyDao())
     val memberRepository = MemberRepository(database.memberDao(), settingsRepository)
     val memorialRepository = MemorialRepository(database.memorialDao())
+    val backupRepository = com.nepnha.data.repository.BackupRepository(
+        database, familyRepository, settingsRepository,
+    )
 
     // Nạp dataset lịch âm THẬT từ asset: test giao diện phải nhìn thấy đúng thứ
     // người dùng nhìn thấy, không phải một engine giả.
@@ -59,6 +62,7 @@ class TestEnvironment(context: Context) {
         settingsRepository,
         AppContainer.loadLunarCalendar(context),
         memorialRepository,
+        backupRepository,
         dateProvider = com.nepnha.core.time.DateProvider { fakeToday },
     )
 
