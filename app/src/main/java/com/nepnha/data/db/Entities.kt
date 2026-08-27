@@ -80,13 +80,28 @@ data class MemberEntity(
             childColumns = ["familyId"],
             onDelete = ForeignKey.CASCADE,
         ),
+        // SET_NULL, **không** CASCADE: xoá một thành viên tuyệt đối không được kéo
+        // theo ngày giỗ. Liên kết đứt thì quay về tên đã lưu, dữ liệu người dùng
+        // nhập không bao giờ biến mất vì một thao tác ở màn hình khác.
+        ForeignKey(
+            entity = MemberEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["memberId"],
+            onDelete = ForeignKey.SET_NULL,
+        ),
     ],
-    indices = [Index("familyId")],
+    indices = [Index("familyId"), Index("memberId")],
 )
 data class MemorialEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val familyId: Long,
+    /**
+     * Tên hiển thị khi **không** liên kết thành viên, và là **bản chụp** để quay về
+     * khi liên kết bị đứt. Không bao giờ bị xoá.
+     */
     val name: String,
+    /** Liên kết tuỳ chọn tới một thành viên trong nhà. `null` = nhập tên tự do. */
+    val memberId: Long? = null,
     /** 1..30 — giữ nguyên vĩnh viễn, kể cả năm phải lùi về 29. */
     val lunarDay: Int,
     /** 1..12. */

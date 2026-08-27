@@ -87,7 +87,7 @@ fun CalendarScreen(
                 )
                 state.selectedMemorials.forEach { item ->
                     InfoCard(
-                        title = item.memorial.name,
+                        title = item.displayName,
                         body = if (item.resolved.wasAdjusted) {
                             stringResource(R.string.memorial_adjusted_badge)
                         } else {

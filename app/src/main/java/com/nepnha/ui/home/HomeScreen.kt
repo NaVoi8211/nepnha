@@ -147,7 +147,7 @@ private fun UpcomingRow(item: UpcomingMemorial, onClick: () -> Unit) {
                 // Cùng lý do như ở màn danh sách: không có `weight` thì tên dài bóp
                 // nát phần đếm ngược.
                 Text(
-                    text = item.memorial.name,
+                    text = item.displayName,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,

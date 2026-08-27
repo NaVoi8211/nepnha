@@ -60,6 +60,7 @@ import com.nepnha.ui.components.InfoCard
 fun MemorialEditorScreen(
     state: MemorialEditorUiState,
     onInputChange: ((com.nepnha.domain.model.MemorialFormInput) -> com.nepnha.domain.model.MemorialFormInput) -> Unit,
+    onSelectMember: (com.nepnha.domain.model.FamilyMember?) -> Unit,
     onSave: () -> Unit,
     onDelete: () -> Unit,
     onBack: () -> Unit,
@@ -97,9 +98,32 @@ fun MemorialEditorScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            // --- Chọn người trong nhà, hoặc gõ tên ---
+            if (state.members.isNotEmpty()) {
+                Text(
+                    text = stringResource(R.string.memorial_who),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                state.members.forEach { member ->
+                    LabeledRadio(
+                        selected = state.input.memberId == member.id,
+                        label = member.fullName,
+                        tag = "memorial_member_${member.id}",
+                    ) { onSelectMember(member) }
+                }
+                LabeledRadio(
+                    selected = state.input.memberId == null,
+                    label = stringResource(R.string.memorial_who_other),
+                    tag = "memorial_member_none",
+                ) { onSelectMember(null) }
+            }
+
             OutlinedTextField(
                 value = state.input.name,
                 onValueChange = { v -> onInputChange { it.copy(name = v) } },
+                // Đã chọn thành viên thì tên do thành viên quyết định — khoá ô lại để
+                // không có hai nguồn sự thật trên cùng một màn hình.
+                enabled = state.input.memberId == null,
                 label = { Text(stringResource(R.string.memorial_name)) },
                 placeholder = { Text(stringResource(R.string.memorial_name_hint)) },
                 isError = MemorialFormError.NAME_REQUIRED in state.errors,

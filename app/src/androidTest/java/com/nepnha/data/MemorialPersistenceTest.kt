@@ -95,6 +95,50 @@ class MemorialPersistenceTest {
     }
 
     /**
+     * Liên kết thành viên phải sống sót qua đóng/mở lại database.
+     *
+     * Sai thì: mở lại app là ngày giỗ mất liên kết và quay về tên cũ mà không ai biết.
+     */
+    @Test
+    fun lien_ket_thanh_vien_song_sot_qua_dong_mo_lai() {
+        dbFile.parentFile?.mkdirs(); dbFile.delete()
+        val first = open()
+        val memorialId: Long
+        val memberId: Long
+        val familyId: Long
+        runBlocking {
+            FamilyRepository(first.familyDao()).ensureDefaultFamily("Gia đình tôi")
+            familyId = first.familyDao().firstId()!!
+            memberId = first.memberDao().insert(
+                com.nepnha.data.db.MemberEntity(
+                    familyId = familyId, fullName = "Nguyễn Văn A", gender = "MALE",
+                    solarBirthDate = null, lunarBirthDay = null, lunarBirthMonth = null,
+                    lunarBirthYear = null, lunarBirthIsLeapMonth = false,
+                    lunarBirthSource = null, role = null, note = null,
+                    createdAt = 1, updatedAt = 1,
+                ),
+            )
+            memorialId = MemorialRepository(first.memorialDao()).add(
+                familyId,
+                MemorialDraft("Nguyễn Văn A", 5, 5, MemorialRule(), null, memberId = memberId),
+            )
+        }
+        first.close()
+
+        val second = open()
+        try {
+            runBlocking {
+                val m = MemorialRepository(second.memorialDao()).observe(familyId).first().single()
+                assertEquals(memorialId, m.id)
+                assertEquals(memberId, m.memberId)
+                assertEquals("Nguyễn Văn A", m.name)
+            }
+        } finally {
+            second.close()
+        }
+    }
+
+    /**
      * Xoá gia đình phải kéo theo ngày giỗ — nếu không sẽ còn bản ghi mồ côi.
      *
      * Sai thì: database tích tụ dữ liệu rác không ai truy cập được.

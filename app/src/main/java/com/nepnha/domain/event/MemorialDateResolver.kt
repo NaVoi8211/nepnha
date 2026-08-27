@@ -136,12 +136,17 @@ class MemorialDateResolver(private val calendar: LunarCalendarService) {
      * cho một tháng lâu không nhuận) vẫn nằm trong danh sách nhưng xếp cuối — người
      * dùng cần thấy nó tồn tại chứ không phải nó biến mất.
      */
-    fun upcoming(memorials: List<Memorial>, today: LocalDate): List<UpcomingMemorial> =
+    fun upcoming(
+        memorials: List<Memorial>,
+        today: LocalDate,
+        displayName: (Memorial) -> String = { it.name },
+    ): List<UpcomingMemorial> =
         memorials
             .map { m ->
                 val next = nextOccurrence(m, today)
                 UpcomingMemorial(
                     memorial = m,
+                    displayName = displayName(m),
                     next = next,
                     daysUntil = next?.let { ChronoUnit.DAYS.between(today, it.solarDate) },
                 )
@@ -181,6 +186,11 @@ class MemorialDateResolver(private val calendar: LunarCalendarService) {
  */
 data class UpcomingMemorial(
     val memorial: Memorial,
+    /**
+     * Tên để hiển thị — đã áp quy tắc liên kết thành viên. Tính sẵn ở đây để không
+     * màn hình nào phải tự tra danh sách thành viên.
+     */
+    val displayName: String = memorial.name,
     val next: ResolvedMemorialDate?,
     val daysUntil: Long?,
 )

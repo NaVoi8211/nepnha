@@ -9,9 +9,10 @@ import com.nepnha.AppContainer
 import com.nepnha.domain.event.MemorialDateResolver
 import com.nepnha.domain.event.UpcomingMemorial
 import java.time.LocalDate
+import com.nepnha.domain.model.displayName
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -28,9 +29,15 @@ class MemorialListViewModel(
 
     private val resolver: MemorialDateResolver = container.memorialResolver
 
-    val state: StateFlow<MemorialListUiState> = container.memorials.observe()
-        .map { list -> MemorialListUiState(items = resolver.upcoming(list, today), isLoaded = true) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MemorialListUiState())
+    val state: StateFlow<MemorialListUiState> = combine(
+        container.memorials.observe(),
+        container.familyOverview.observe(),
+    ) { list, overview ->
+        MemorialListUiState(
+            items = resolver.upcoming(list, today) { it.displayName(overview.members) },
+            isLoaded = true,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MemorialListUiState())
 
     fun delete(id: Long) {
         viewModelScope.launch { container.memorialRepository.delete(id) }

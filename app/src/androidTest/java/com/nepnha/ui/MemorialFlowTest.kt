@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -193,6 +194,87 @@ class MemorialFlowTest {
         } else {
             assertTrue("phải rơi vào tháng nhuận", hasDate.isLeapMonth)
         }
+    }
+
+    /**
+     * Liên kết ngày giỗ với một thành viên: danh sách phải hiện **tên hiện tại của
+     * thành viên**, và đổi tên thành viên thì ngày giỗ đổi theo.
+     *
+     * Sai thì: liên kết trở nên vô nghĩa — người dùng vẫn phải sửa tên ở hai chỗ.
+     */
+    @Test
+    fun lien_ket_thanh_vien_va_doi_ten_thi_ngay_gio_doi_theo() {
+        val memberId = runBlocking {
+            env.memberRepository.add(
+                familyId,
+                com.nepnha.domain.model.FamilyMemberDraft(
+                    fullName = "Nguyễn Văn A",
+                    gender = com.nepnha.domain.model.Gender.MALE,
+                    solarBirthDate = null, lunarBirthDate = null, role = null, note = null,
+                ),
+            )
+        }
+        val id = runBlocking {
+            env.memorialRepository.add(
+                familyId,
+                MemorialDraft("Tên cũ", 5, 5, MemorialRule(), null, memberId = memberId),
+            )
+        }
+
+        launch()
+        openMemorials()
+        // Hiện tên THÀNH VIÊN, không phải "Tên cũ" đã lưu trong ngày giỗ.
+        rule.onNodeWithText("Nguyễn Văn A", substring = true).assertIsDisplayed()
+
+        // Đổi tên thành viên ⇒ danh sách ngày giỗ đổi theo, không phải sửa hai chỗ.
+        runBlocking {
+            env.memberRepository.update(
+                memberId,
+                com.nepnha.domain.model.FamilyMemberDraft(
+                    fullName = "Nguyễn Văn B",
+                    gender = com.nepnha.domain.model.Gender.MALE,
+                    solarBirthDate = null, lunarBirthDate = null, role = null, note = null,
+                ),
+            )
+        }
+        rule.waitUntil(timeoutMillis = 5_000) {
+            rule.onAllNodesWithText("Nguyễn Văn B", substring = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+        assertEquals(memberId, runBlocking { env.memorialRepository.get(id)!!.memberId })
+    }
+
+    /**
+     * Xoá thành viên chỉ làm đứt liên kết — ngày giỗ vẫn còn và quay về tên đã lưu.
+     *
+     * Sai thì: xoá một người trong danh sách gia đình làm bay mất ngày giỗ của họ.
+     */
+    @Test
+    fun xoa_thanh_vien_thi_ngay_gio_quay_ve_ten_da_luu() {
+        val memberId = runBlocking {
+            env.memberRepository.add(
+                familyId,
+                com.nepnha.domain.model.FamilyMemberDraft(
+                    fullName = "Nguyễn Văn A",
+                    gender = com.nepnha.domain.model.Gender.MALE,
+                    solarBirthDate = null, lunarBirthDate = null, role = null, note = null,
+                ),
+            )
+        }
+        runBlocking {
+            env.memorialRepository.add(
+                familyId,
+                MemorialDraft("Cụ ông Nguyễn Văn A", 5, 5, MemorialRule(), null, memberId = memberId),
+            )
+            env.memberRepository.delete(memberId)
+        }
+
+        launch()
+        openMemorials()
+        rule.onNodeWithText("Cụ ông Nguyễn Văn A", substring = true).assertIsDisplayed()
+        val after = runBlocking { env.memorialRepository.observe(familyId).first() }
+        assertEquals(1, after.size)
+        org.junit.Assert.assertNull("liên kết phải đứt", after.single().memberId)
     }
 
     /**

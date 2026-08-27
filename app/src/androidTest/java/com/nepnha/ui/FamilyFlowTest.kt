@@ -3,6 +3,7 @@ package com.nepnha.ui
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -132,8 +133,17 @@ class FamilyFlowTest {
         rule.onNodeWithText(text(R.string.family_choose_worshipper)).performScrollTo().performClick()
         rule.onNodeWithTag("screen_choose_worshipper").assertIsDisplayed()
         rule.onNodeWithTag("worshipper_option_$memberId").performClick()
-        rule.waitForIdle()
 
+        // `setPrimaryMember` ghi xuống DataStore trong một coroutine rồi mới
+        // `popBackStack`. `waitForIdle` chỉ chờ Compose, không chờ coroutine đó ⇒
+        // khẳng định ngay là một cuộc đua. Production ĐÚNG (`setPrimaryMemberId` là
+        // suspend và hoàn tất trước khi điều hướng); chỗ sai là test.
+        rule.waitUntil(timeoutMillis = 5_000) {
+            runBlocking { env.settingsRepository.primaryMemberId.first() } == memberId
+        }
+        rule.waitUntil(timeoutMillis = 5_000) {
+            rule.onAllNodesWithTag("card_worshipper").fetchSemanticsNodes().isNotEmpty()
+        }
         rule.onNodeWithTag("card_worshipper").assertIsDisplayed()
         assertEquals(memberId, runBlocking { env.settingsRepository.primaryMemberId.first() })
 

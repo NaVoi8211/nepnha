@@ -52,6 +52,7 @@ private fun MemorialEntity.toDomain(): Memorial = Memorial(
     id = id,
     familyId = familyId,
     name = name,
+    memberId = memberId,
     lunarDay = lunarDay,
     lunarMonth = lunarMonth,
     rule = MemorialRule(
@@ -74,6 +75,7 @@ private fun MemorialDraft.toEntity(
     id = id,
     familyId = familyId,
     name = name,
+    memberId = memberId,
     lunarDay = lunarDay,
     lunarMonth = lunarMonth,
     leapMonthPolicy = rule.leapMonthPolicy.name,

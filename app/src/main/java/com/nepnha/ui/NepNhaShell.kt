@@ -192,6 +192,7 @@ fun NepNhaShell(
                 MemorialEditorScreen(
                     state = state,
                     onInputChange = vm::updateInput,
+                    onSelectMember = vm::selectMember,
                     onSave = { vm.save { navController.popBackStack() } },
                     onDelete = { vm.delete { navController.popBackStack() } },
                     onBack = { navController.popBackStack() },

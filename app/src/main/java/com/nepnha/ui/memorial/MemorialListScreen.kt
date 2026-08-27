@@ -120,7 +120,7 @@ private fun MemorialRow(item: UpcomingMemorial, onClick: () -> Unit) {
                 // dài bóp cột đếm ngược còn một ký tự và nó xuống dòng theo từng chữ
                 // cái — audit trực quan ở 720×1600 đã bắt đúng lỗi này.
                 Text(
-                    text = item.memorial.name,
+                    text = item.displayName,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,

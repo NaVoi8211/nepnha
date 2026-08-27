@@ -117,6 +117,8 @@
     <string name="memorial_edit">Sửa ngày giỗ</string>
     <string name="memorial_empty_title">Chưa có ngày giỗ nào</string>
     <string name="memorial_empty_body">Thêm ngày giỗ theo ngày âm. Nếp Nhà sẽ tự tính ra ngày dương cho từng năm.</string>
+    <string name="memorial_who">Người mất là ai</string>
+    <string name="memorial_who_other">Người khác (nhập tên bên dưới)</string>
     <string name="memorial_name">Tên người mất</string>
     <string name="memorial_name_hint">Ví dụ: Cụ ông Nguyễn Văn A</string>
     <string name="memorial_lunar_date">Ngày mất theo âm lịch</string>

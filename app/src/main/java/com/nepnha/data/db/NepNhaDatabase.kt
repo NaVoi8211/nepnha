@@ -20,7 +20,7 @@ import androidx.sqlite.execSQL
  */
 @Database(
     entities = [FamilyEntity::class, MemberEntity::class, MemorialEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = true,
 )
 abstract class NepNhaDatabase : RoomDatabase() {
@@ -64,10 +64,64 @@ abstract class NepNhaDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * v2 → v3: thêm liên kết tuỳ chọn `memorials.memberId` → `members.id`.
+         *
+         * SQLite **không** ALTER TABLE thêm được khoá ngoại, nên phải dựng bảng mới
+         * rồi chép sang. Cột mới để `NULL` cho mọi bản ghi cũ — không đoán xem ngày
+         * giỗ cũ ứng với thành viên nào; đoán sai còn tệ hơn để trống.
+         *
+         * `ON DELETE SET NULL`, **không** CASCADE: xoá thành viên chỉ làm đứt liên
+         * kết, ngày giỗ vẫn còn nguyên và quay về dùng tên đã lưu.
+         */
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `memorials_new` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `familyId` INTEGER NOT NULL,
+                        `name` TEXT NOT NULL,
+                        `memberId` INTEGER,
+                        `lunarDay` INTEGER NOT NULL,
+                        `lunarMonth` INTEGER NOT NULL,
+                        `leapMonthPolicy` TEXT NOT NULL,
+                        `missingDayPolicy` TEXT NOT NULL,
+                        `note` TEXT,
+                        `createdAt` INTEGER NOT NULL,
+                        `updatedAt` INTEGER NOT NULL,
+                        FOREIGN KEY(`familyId`) REFERENCES `families`(`id`)
+                            ON UPDATE NO ACTION ON DELETE CASCADE,
+                        FOREIGN KEY(`memberId`) REFERENCES `members`(`id`)
+                            ON UPDATE NO ACTION ON DELETE SET NULL
+                    )
+                    """.trimIndent(),
+                )
+                connection.execSQL(
+                    """
+                    INSERT INTO `memorials_new`
+                        (`id`, `familyId`, `name`, `memberId`, `lunarDay`, `lunarMonth`,
+                         `leapMonthPolicy`, `missingDayPolicy`, `note`, `createdAt`, `updatedAt`)
+                    SELECT `id`, `familyId`, `name`, NULL, `lunarDay`, `lunarMonth`,
+                           `leapMonthPolicy`, `missingDayPolicy`, `note`, `createdAt`, `updatedAt`
+                    FROM `memorials`
+                    """.trimIndent(),
+                )
+                connection.execSQL("DROP TABLE `memorials`")
+                connection.execSQL("ALTER TABLE `memorials_new` RENAME TO `memorials`")
+                connection.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_memorials_familyId` ON `memorials` (`familyId`)",
+                )
+                connection.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_memorials_memberId` ON `memorials` (`memberId`)",
+                )
+            }
+        }
+
         fun create(context: Context): NepNhaDatabase =
             Room.databaseBuilder(context.applicationContext, NepNhaDatabase::class.java, NAME)
                 // Bật ràng buộc khoá ngoại: xoá Family phải kéo theo Member.
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build()
     }
 }

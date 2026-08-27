@@ -10,7 +10,9 @@ import com.nepnha.domain.calendar.LunarCalendarService
 import com.nepnha.domain.calendar.LunarDay
 import com.nepnha.domain.event.MemorialDateResolver
 import com.nepnha.domain.event.ResolvedMemorialDate
+import com.nepnha.domain.model.FamilyMember
 import com.nepnha.domain.model.Memorial
+import com.nepnha.domain.model.displayName
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -32,6 +35,7 @@ class CalendarViewModel(
     private val service: LunarCalendarService,
     private val today: LocalDate = LocalDate.now(),
     memorials: Flow<List<Memorial>> = flowOf(emptyList()),
+    members: Flow<List<FamilyMember>> = flowOf(emptyList()),
 ) : ViewModel() {
 
     /** Stateless, nên dựng tại chỗ cho gọn thay vì kéo cả container vào ViewModel này. */
@@ -39,6 +43,7 @@ class CalendarViewModel(
 
     private var view = ViewSelection(YearMonth.from(today), today)
     private var knownMemorials: List<Memorial> = emptyList()
+    private var knownMembers: List<FamilyMember> = emptyList()
 
     private val _state = MutableStateFlow(build(view, knownMemorials))
 
@@ -57,6 +62,12 @@ class CalendarViewModel(
             memorials.collect { list ->
                 knownMemorials = list
                 _state.value = build(view, list)
+            }
+        }
+        viewModelScope.launch {
+            members.collect { list ->
+                knownMembers = list
+                _state.value = build(view, knownMemorials)
             }
         }
     }
@@ -104,7 +115,8 @@ class CalendarViewModel(
             today = today,
             selected = v.selected,
             selectedLunar = service.dayOf(v.selected),
-            selectedMemorials = byDate[v.selected].orEmpty().map { (m, r) -> MemorialOnDay(m, r) },
+            selectedMemorials = byDate[v.selected].orEmpty()
+                .map { (m, r) -> MemorialOnDay(m, m.displayName(knownMembers), r) },
             cells = cells,
         )
     }
@@ -114,7 +126,11 @@ class CalendarViewModel(
     companion object {
         fun factory(container: AppContainer): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                CalendarViewModel(container.lunarCalendar, memorials = container.memorials.observe())
+                CalendarViewModel(
+                    container.lunarCalendar,
+                    memorials = container.memorials.observe(),
+                    members = container.familyOverview.observe().map { it.members },
+                )
             }
         }
     }
@@ -130,7 +146,12 @@ data class CalendarUiState(
 )
 
 /** Một ngày giỗ rơi vào ngày đang chọn, kèm kết quả quy đổi của chính năm đó. */
-data class MemorialOnDay(val memorial: Memorial, val resolved: ResolvedMemorialDate)
+data class MemorialOnDay(
+    val memorial: Memorial,
+    /** Đã áp quy tắc liên kết thành viên — màn hình không tự tra danh sách. */
+    val displayName: String,
+    val resolved: ResolvedMemorialDate,
+)
 
 /** Ô lưới. [Blank] là chỗ đệm đầu tháng, không phải một ngày. */
 sealed interface CalendarCell {

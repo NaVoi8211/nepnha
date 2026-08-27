@@ -9,6 +9,7 @@ import com.nepnha.AppContainer
 import com.nepnha.data.repository.FamilyOverview
 import com.nepnha.domain.calendar.LunarDay
 import com.nepnha.domain.event.UpcomingMemorial
+import com.nepnha.domain.model.displayName
 import java.time.LocalDate
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -41,7 +42,9 @@ class HomeViewModel(
         overview.toHomeState(initial).copy(
             // Chỉ vài mục gần nhất — màn Nhà là nơi trả lời "hôm nay nhà mình có việc
             // gì", không phải danh sách đầy đủ.
-            upcoming = container.memorialResolver.upcoming(memorials, today).take(3),
+            upcoming = container.memorialResolver
+                .upcoming(memorials, today) { it.displayName(overview.members) }
+                .take(3),
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)
 

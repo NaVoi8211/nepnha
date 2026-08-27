@@ -9,6 +9,7 @@ import com.nepnha.AppContainer
 import com.nepnha.domain.event.LeapMonthPolicy
 import com.nepnha.domain.event.MemorialResolution
 import com.nepnha.domain.event.ResolvedMemorialDate
+import com.nepnha.domain.model.FamilyMember
 import com.nepnha.domain.model.Memorial
 import com.nepnha.domain.model.MemorialFormError
 import com.nepnha.domain.model.MemorialFormInput
@@ -39,6 +40,13 @@ class MemorialEditorViewModel(
     val state: StateFlow<MemorialEditorUiState> = _state.asStateFlow()
 
     init {
+        // Danh sách thành viên để người dùng chọn. Không có ai thì biểu mẫu chỉ còn
+        // ô nhập tên, đúng như trước Gate 1.
+        viewModelScope.launch {
+            container.familyOverview.observe().collect { overview ->
+                _state.update { it.copy(members = overview.members) }
+            }
+        }
         if (memorialId != null) {
             viewModelScope.launch {
                 container.memorialRepository.get(memorialId)?.let { m ->
@@ -46,6 +54,19 @@ class MemorialEditorViewModel(
                     refreshPreview()
                 }
             }
+        }
+    }
+
+    /**
+     * Chọn một thành viên, hoặc bỏ chọn để quay lại nhập tên tự do.
+     *
+     * Khi chọn, **chép tên thành viên vào `name`** làm bản chụp: nếu sau này thành
+     * viên bị xoá thì ngày giỗ vẫn còn tên chứ không thành bản ghi vô danh.
+     */
+    fun selectMember(member: FamilyMember?) {
+        updateInput { input ->
+            if (member == null) input.copy(memberId = null)
+            else input.copy(memberId = member.id, name = member.fullName)
         }
     }
 
@@ -120,6 +141,8 @@ class MemorialEditorViewModel(
 
 data class MemorialEditorUiState(
     val input: MemorialFormInput = MemorialFormInput(),
+    /** Thành viên trong nhà, để chọn thay vì gõ tay. */
+    val members: List<FamilyMember> = emptyList(),
     val errors: Set<MemorialFormError> = emptySet(),
     val isEditing: Boolean = false,
     /** Lần giỗ kế tiếp nếu tính được — dùng để xem trước và cảnh báo điều chỉnh. */
@@ -130,6 +153,7 @@ data class MemorialEditorUiState(
 
 private fun Memorial.toFormInput() = MemorialFormInput(
     name = name,
+    memberId = memberId,
     lunarDay = lunarDay.toString(),
     lunarMonth = lunarMonth.toString(),
     leapMonthPolicy = rule.leapMonthPolicy,

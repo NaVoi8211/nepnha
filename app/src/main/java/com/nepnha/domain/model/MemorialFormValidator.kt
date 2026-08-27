@@ -32,6 +32,7 @@ object MemorialFormValidator {
         return MemorialFormResult.Valid(
             MemorialDraft(
                 name = name,
+                memberId = input.memberId,
                 lunarDay = day!!,
                 lunarMonth = month!!,
                 rule = MemorialRule(
@@ -47,6 +48,8 @@ object MemorialFormValidator {
 /** Nội dung thô của biểu mẫu — chuỗi, đúng như người dùng gõ. */
 data class MemorialFormInput(
     val name: String = "",
+    /** Thành viên được chọn. `null` = nhập tên tự do. */
+    val memberId: Long? = null,
     val lunarDay: String = "",
     val lunarMonth: String = "",
     val leapMonthPolicy: LeapMonthPolicy = LeapMonthPolicy.COMMON_MONTH_DEFAULT,

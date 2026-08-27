@@ -10,6 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -85,9 +86,10 @@ class MemorialMigrationTest {
             db.version = 1
         }
 
-        // --- mở bằng Room v2 kèm migration thật ---
+        // Mở bằng Room ở phiên bản HIỆN TẠI, đăng ký đủ chuỗi migration. Database
+        // đã lên v3 nên chỉ có MIGRATION_1_2 là Room không tìm được đường đi.
         val db = Room.databaseBuilder(context, NepNhaDatabase::class.java, dbFile.absolutePath)
-            .addMigrations(NepNhaDatabase.MIGRATION_1_2)
+            .addMigrations(NepNhaDatabase.MIGRATION_1_2, NepNhaDatabase.MIGRATION_2_3)
             .build()
 
         try {
@@ -113,6 +115,155 @@ class MemorialMigrationTest {
                     ),
                 )
                 assertEquals("Cụ bà", db.memorialDao().getById(id)?.name)
+                // Đi qua cả 1→2 lẫn 2→3: cột mới của v3 phải có mặt và để trống.
+                assertNull(db.memorialDao().getById(id)?.memberId)
+            }
+        } finally {
+            db.close()
+        }
+    }
+}
+
+/**
+ * Nâng cấp v2 → v3: thêm liên kết tuỳ chọn `memorials.memberId`.
+ *
+ * SQLite không ALTER TABLE thêm được khoá ngoại nên migration phải dựng bảng mới rồi
+ * chép sang — đúng chỗ dễ làm mất dữ liệu nhất. Test này là thứ chứng minh không mất.
+ */
+@RunWith(AndroidJUnit4::class)
+class MemorialMigrationV2V3Test {
+
+    private val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+    private val dbFile: java.io.File = context.getDatabasePath("migration_v3_test.db")
+
+    /** Hash schema v2, lấy từ `app/schemas/.../2.json`. */
+    private val v2IdentityHash = "cb525de22f005aad0a15b53d3705aeb9"
+
+    @org.junit.After
+    fun tearDown() {
+        dbFile.delete()
+        java.io.File("${dbFile.path}-wal").delete()
+        java.io.File("${dbFile.path}-shm").delete()
+    }
+
+    /**
+     * Sai thì: người dùng cập nhật app và mất ngày giỗ đã nhập, hoặc app crash vì
+     * schema không khớp.
+     */
+    @Test
+    fun nang_cap_v2_len_v3_giu_nguyen_ngay_gio() {
+        dbFile.parentFile?.mkdirs(); dbFile.delete()
+
+        android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(dbFile, null).use { db ->
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `families` (`id` INTEGER PRIMARY KEY AUTOINCREMENT " +
+                    "NOT NULL, `name` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, " +
+                    "`updatedAt` INTEGER NOT NULL)",
+            )
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `members` (`id` INTEGER PRIMARY KEY AUTOINCREMENT " +
+                    "NOT NULL, `familyId` INTEGER NOT NULL, `fullName` TEXT NOT NULL, " +
+                    "`gender` TEXT NOT NULL, `solarBirthDate` TEXT, `lunarBirthDay` INTEGER, " +
+                    "`lunarBirthMonth` INTEGER, `lunarBirthYear` INTEGER, " +
+                    "`lunarBirthIsLeapMonth` INTEGER NOT NULL, `lunarBirthSource` TEXT, " +
+                    "`role` TEXT, `note` TEXT, `createdAt` INTEGER NOT NULL, " +
+                    "`updatedAt` INTEGER NOT NULL, FOREIGN KEY(`familyId`) " +
+                    "REFERENCES `families`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_members_familyId` ON `members` (`familyId`)")
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `memorials` (`id` INTEGER PRIMARY KEY AUTOINCREMENT " +
+                    "NOT NULL, `familyId` INTEGER NOT NULL, `name` TEXT NOT NULL, " +
+                    "`lunarDay` INTEGER NOT NULL, `lunarMonth` INTEGER NOT NULL, " +
+                    "`leapMonthPolicy` TEXT NOT NULL, `missingDayPolicy` TEXT NOT NULL, " +
+                    "`note` TEXT, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, " +
+                    "FOREIGN KEY(`familyId`) REFERENCES `families`(`id`) " +
+                    "ON UPDATE NO ACTION ON DELETE CASCADE )",
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_memorials_familyId` ON `memorials` (`familyId`)")
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY, identity_hash TEXT)",
+            )
+            db.execSQL(
+                "INSERT OR REPLACE INTO room_master_table (id, identity_hash) VALUES (42, ?)",
+                arrayOf(v2IdentityHash),
+            )
+            db.execSQL("INSERT INTO families (name, createdAt, updatedAt) VALUES ('Gia đình tôi', 1, 1)")
+            db.execSQL(
+                "INSERT INTO memorials (familyId, name, lunarDay, lunarMonth, leapMonthPolicy, " +
+                    "missingDayPolicy, note, createdAt, updatedAt) VALUES " +
+                    "(1, 'Cụ ông', 30, 7, 'LEAP_MONTH_ONLY', 'SKIP', 'ghi chú', 111, 222)",
+            )
+            db.version = 2
+        }
+
+        val db = Room.databaseBuilder(context, NepNhaDatabase::class.java, dbFile.absolutePath)
+            .addMigrations(NepNhaDatabase.MIGRATION_1_2, NepNhaDatabase.MIGRATION_2_3)
+            .build()
+        try {
+            runBlocking {
+                val m = db.memorialDao().getById(1)!!
+                // Mọi cột cũ giữ nguyên từng giá trị.
+                assertEquals("Cụ ông", m.name)
+                assertEquals(30, m.lunarDay)
+                assertEquals(7, m.lunarMonth)
+                assertEquals("LEAP_MONTH_ONLY", m.leapMonthPolicy)
+                assertEquals("SKIP", m.missingDayPolicy)
+                assertEquals("ghi chú", m.note)
+                assertEquals(111L, m.createdAt)
+                assertEquals(222L, m.updatedAt)
+                // Cột mới để trống — không đoán ngày giỗ cũ ứng với ai.
+                assertNull(m.memberId)
+            }
+        } finally {
+            db.close()
+        }
+    }
+
+    /**
+     * Xoá thành viên chỉ được làm **đứt liên kết**, tuyệt đối không xoá ngày giỗ.
+     *
+     * Sai thì: xoá một người trong danh sách gia đình làm bay mất ngày giỗ của họ —
+     * mất dữ liệu người dùng vì một thao tác ở màn hình khác.
+     */
+    @Test
+    fun xoa_thanh_vien_chi_lam_dut_lien_ket_khong_xoa_ngay_gio() {
+        dbFile.parentFile?.mkdirs(); dbFile.delete()
+        val db = Room.databaseBuilder(context, NepNhaDatabase::class.java, dbFile.absolutePath)
+            .addMigrations(NepNhaDatabase.MIGRATION_1_2, NepNhaDatabase.MIGRATION_2_3)
+            .build()
+        try {
+            runBlocking {
+                com.nepnha.data.repository.FamilyRepository(db.familyDao())
+                    .ensureDefaultFamily("Gia đình tôi")
+                val familyId = db.familyDao().firstId()!!
+                val memberId = db.memberDao().insert(
+                    com.nepnha.data.db.MemberEntity(
+                        familyId = familyId, fullName = "Nguyễn Văn A", gender = "MALE",
+                        solarBirthDate = null, lunarBirthDay = null, lunarBirthMonth = null,
+                        lunarBirthYear = null, lunarBirthIsLeapMonth = false,
+                        lunarBirthSource = null, role = null, note = null,
+                        createdAt = 1, updatedAt = 1,
+                    ),
+                )
+                val memorialId = db.memorialDao().insert(
+                    com.nepnha.data.db.MemorialEntity(
+                        familyId = familyId, name = "Nguyễn Văn A", memberId = memberId,
+                        lunarDay = 1, lunarMonth = 1,
+                        leapMonthPolicy = "COMMON_MONTH_DEFAULT",
+                        missingDayPolicy = "LAST_VALID_DAY_OF_MONTH",
+                        note = null, createdAt = 1, updatedAt = 1,
+                    ),
+                )
+                assertEquals(memberId, db.memorialDao().getById(memorialId)?.memberId)
+
+                db.memberDao().deleteById(memberId)
+
+                val after = db.memorialDao().getById(memorialId)
+                assertNotNull("ngày giỗ bị xoá theo thành viên", after)
+                assertNull("liên kết phải đứt", after!!.memberId)
+                // Tên đã lưu vẫn còn ⇒ vẫn hiển thị được cho người dùng.
+                assertEquals("Nguyễn Văn A", after.name)
             }
         } finally {
             db.close()
