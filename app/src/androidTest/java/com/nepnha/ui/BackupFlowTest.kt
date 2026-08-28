@@ -162,6 +162,15 @@ class BackupFlowTest {
         )
 
         rule.onNodeWithTag("btn_import_confirm").performClick()
+        // Chờ tín hiệu NGƯỜI DÙNG nhìn thấy — hộp thoại "đã xong" — chứ không chỉ chờ
+        // database đổi. Room phát ra thay đổi TRƯỚC khi ViewModel kịp đặt `busy = false`,
+        // nên nếu dừng ở đây thì test kết thúc giữa lúc thanh tiến trình vô hạn còn quay:
+        // composition tiếp tục xin khung hình, main looper không bao giờ idle, và LỚP TEST
+        // KẾ TIẾP chết vì `AppNotIdleException` — một lỗi trông như thể ở chỗ khác hoàn toàn.
+        rule.waitUntil(timeoutMillis = 5_000) {
+            rule.onAllNodesWithTag("dialog_message").fetchSemanticsNodes().isNotEmpty()
+        }
+        rule.onNodeWithText("Đã thêm", substring = true).assertIsDisplayed()
         rule.waitUntil(timeoutMillis = 5_000) {
             runBlocking { env.memberRepository.observeMembers(familyId).first().size } == beforeMembers + 1
         }

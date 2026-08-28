@@ -12,6 +12,7 @@ import com.nepnha.data.repository.FamilyRepository
 import com.nepnha.data.repository.MemberRepository
 import com.nepnha.data.repository.MemorialRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import java.io.File
@@ -33,8 +34,17 @@ class TestEnvironment(context: Context) {
 
     private val prefsFile = File(context.cacheDir, "test_${System.nanoTime()}.preferences_pb")
 
+    /**
+     * Scope của DataStore, giữ lại để **huỷ được** ở [close].
+     *
+     * Bản đầu tạo scope ngay trong lời gọi và không giữ tham chiếu, nên mỗi test để lại
+     * một scope sống mãi kèm coroutine theo dõi file. Một bộ test dài tích lại hàng chục
+     * cái như vậy — vô hình cho tới khi máy bắt đầu chậm.
+     */
+    private val dataStoreScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
-        scope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
+        scope = dataStoreScope,
         produceFile = { prefsFile },
     )
 
@@ -67,6 +77,7 @@ class TestEnvironment(context: Context) {
     )
 
     fun close() {
+        dataStoreScope.cancel()
         database.close()
         prefsFile.delete()
     }

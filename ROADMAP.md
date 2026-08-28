@@ -13,6 +13,7 @@
 | 6 | Hardening: liên kết thành viên, nửa đêm, hiệu năng, release | ✅ **Xong** |
 | 7 | Xuất/nhập cục bộ (điều kiện trước khi phát hành) | ✅ **Xong** — định dạng v1 độc lập schema, chỉ-thêm, checksum, kiểm trên bản release |
 | 7.5 | Kiểm toán bản ứng viên phát hành | ✅ **Xong** — READY FOR SIGNING ONLY; blocker còn lại đều ở Play Console |
+| — | **Final Release Gate** | ✅ **Xong** — READY FOR SIGNING ONLY; blocker còn lại đều ở keystore/Play Console |
 | 8 | Nhắc ngày giỗ (notification) | ⏳ Chờ duyệt |
 | 6 | Ritual content + local JSON + ritual engine | ⏳ Chờ duyệt |
 | 5 | Prayer template engine + Prayer Reader | |
