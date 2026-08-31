@@ -41,6 +41,21 @@ class CalendarViewModel(
     /** Stateless, nên dựng tại chỗ cho gọn thay vì kéo cả container vào ViewModel này. */
     private val resolver = MemorialDateResolver(service)
 
+    // BẤT BIẾN LUỒNG — đọc kỹ trước khi sửa.
+    //
+    // Bốn biến dưới đây (`today`, `view`, `knownMemorials`, `knownMembers`) là `var`
+    // KHÔNG đồng bộ, được đọc/ghi cả từ thao tác người dùng lẫn từ hai collector trong
+    // `init`. Chúng an toàn **chỉ vì** mọi lần chạm đều nằm trên luồng chính:
+    //
+    //   · thao tác người dùng đến từ callback Compose (`onSelectDay`, `onNextMonth`,
+    //     `onPreviousMonth`) và `LifecycleEventEffect(ON_RESUME)` — đều là luồng chính;
+    //   · `viewModelScope` trên Android là `Dispatchers.Main.immediate`.
+    //
+    // Chuyển một collector sang `Dispatchers.IO`/`Default`, hay `flowOn(...)` phần thu,
+    // là phá bất biến này và tạo ra một race THẬT. Đã đo được: khi `viewModelScope`
+    // không có Main (unit test quên `Dispatchers.setMain`), collector chạy trên
+    // `DefaultDispatcher-worker-*`, đọc `view` cũ rồi ghi đè `_state.value` bằng tháng
+    // khởi tạo — 6 lần lệch trên 2.000 vòng. Xem `CalendarViewModelStressTest`.
     private var view = ViewSelection(YearMonth.from(today), today)
     private var knownMemorials: List<Memorial> = emptyList()
     private var knownMembers: List<FamilyMember> = emptyList()

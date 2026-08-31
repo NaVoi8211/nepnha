@@ -18,9 +18,29 @@ import org.junit.Test
  * ViewModel nhận ngày "hôm nay" qua tham số nên test chốt được một ngày cố định —
  * không có `LocalDate.now()` nào lọt vào kết quả.
  */
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class CalendarViewModelTest {
 
     private val service = LunarCalendarService(LunarTestSupport.calendar)
+
+    /**
+     * Chốt `Dispatchers.Main` để test chạy đúng **mô hình luồng của app thật**.
+     *
+     * Không có nó, `viewModelScope` của lifecycle 2.11 lùi về một context không
+     * dispatcher, hai collector trong `init` chạy trên `Dispatchers.Default`, và chúng
+     * ghi đè `_state.value` từ một luồng khác. Đó chính là thứ đã làm
+     * `chon ngay o thang khac thi luoi doi theo` đỏ đúng một lần rồi không tái hiện —
+     * một race chỉ tồn tại trong test, vì trong app mọi lần ghi đều ở luồng chính.
+     */
+    @org.junit.Before
+    fun setUpDispatcher() {
+        kotlinx.coroutines.Dispatchers.setMain(kotlinx.coroutines.test.UnconfinedTestDispatcher())
+    }
+
+    @org.junit.After
+    fun tearDownDispatcher() {
+        kotlinx.coroutines.Dispatchers.resetMain()
+    }
 
     private fun vm(today: LocalDate) = CalendarViewModel(service, today)
 

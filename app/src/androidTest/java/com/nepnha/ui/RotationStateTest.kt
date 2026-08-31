@@ -12,8 +12,15 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.nepnha.MainActivity
+import com.nepnha.core.time.VietnameseDateFormatter
+import com.nepnha.domain.calendar.LunarDay
+import com.nepnha.domain.event.MemorialRule
+import com.nepnha.domain.model.MemorialDraft
 import java.time.LocalDate
 import java.time.YearMonth
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -78,9 +85,17 @@ class RotationStateTest {
         return collect(node).joinToString(" ").trim()
     }
 
+    /**
+     * Chờ một tag xuất hiện — **luôn** trên cây chưa gộp.
+     *
+     * `useUnmergedTree = true` không phải tuỳ chọn: `home_countdown_<id>` nằm trong một
+     * hàng `clickable`, mà `clickable` gộp semantics của con vào cha. Trên cây đã gộp,
+     * tag bên trong **không tồn tại** — chờ nó là chờ mãi, và lỗi hiện ra dưới dạng
+     * "hết giờ" chứ không phải "sai chỗ tìm".
+     */
     private fun waitForTag(tag: String, timeout: Long = 10_000) {
         rule.waitUntil(timeoutMillis = timeout) {
-            rule.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()
+            rule.onAllNodesWithTag(tag, useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
         }
     }
 
@@ -179,5 +194,108 @@ class RotationStateTest {
 
         assertEquals("ngày dương phải giữ nguyên", dateBefore, textOf("home_solar_date"))
         assertEquals("ngày âm phải giữ nguyên", lunarBefore, textOf("home_lunar_date"))
+        // Không chỉ "không đổi" — phải đúng bằng ngày thật của máy, dựng bằng chính
+        // formatter của sản phẩm. "Không đổi" cũng đúng khi cả hai lần đều sai.
+        assertEquals(
+            "ngày dương phải đúng bằng hôm nay",
+            VietnameseDateFormatter.fullDate(LocalDate.now()),
+            textOf("home_solar_date"),
+        )
+    }
+
+    // ----------------------------------------------------- giá trị nghiệp vụ + xoay thật
+
+    /** Container thật của app — cùng database mà người dùng đang dùng. */
+    private val container get() =
+        (rule.activity.application as com.nepnha.NepNhaApp).container
+
+    /** Ngày giỗ do test tạo, dọn sạch ở [tearDown] dù test đỏ hay xanh. */
+    private var seededMemorialId: Long? = null
+
+    @After
+    fun tearDown() {
+        seededMemorialId?.let { id -> runBlocking { container.memorialRepository.delete(id) } }
+    }
+
+    /**
+     * Gieo một ngày giỗ rơi đúng **ngày mai**, để đếm ngược có một giá trị biết trước.
+     *
+     * Dùng ngày âm của mai chứ không phải một ngày cố định: như vậy khẳng định
+     * "Ngày mai" đúng vào bất kỳ hôm nào chạy test.
+     */
+    private fun seedTomorrowMemorial(): Long = runBlocking {
+        val familyId = container.familyRepository.ensureDefaultFamily("Gia đình tôi")
+        val lunar = (container.lunarCalendar.dayOf(LocalDate.now().plusDays(1)) as LunarDay.Known).lunar
+        container.memorialRepository.add(
+            familyId,
+            MemorialDraft("Cụ xoay máy", lunar.day, lunar.month, MemorialRule(), null),
+        ).also { seededMemorialId = it }
+    }
+
+    /**
+     * Sau khi dựng lại Activity, ngày giỗ phải giữ **giá trị nghiệp vụ** — tên, đếm
+     * ngược — và **không được nhân bản** trong database.
+     *
+     * Sai thì: xoay máy một cái là danh sách ngày giỗ dài gấp đôi, hoặc đếm ngược nhảy
+     * sai một ngày. Kiểm bằng chuỗi người dùng đọc được, không phải bằng `assertIsDisplayed`.
+     */
+    @Test
+    fun ngay_gio_giu_gia_tri_nghiep_vu_va_khong_nhan_ban_sau_khi_dung_lai() {
+        val id = seedTomorrowMemorial()
+        val familyId = runBlocking { container.familyRepository.observeFamily().first()!!.id }
+        val rowsBefore = runBlocking { container.memorialRepository.observe(familyId).first().size }
+
+        rule.onNodeWithTag("tab_home").performClick()
+        waitForTag("home_countdown_$id")
+
+        assertEquals("ngày giỗ rơi vào mai phải hiện đúng chữ", "Ngày mai", textOf("home_countdown_$id"))
+        val rowBefore = textOf("home_upcoming_$id")
+        assertTrue("dòng ngày giỗ phải mang tên đã lưu", rowBefore.contains("Cụ xoay máy"))
+
+        recreateActivity("home_countdown_$id")
+
+        assertEquals("đếm ngược phải giữ nguyên", "Ngày mai", textOf("home_countdown_$id"))
+        assertEquals("cả dòng phải giữ nguyên từng chữ", rowBefore, textOf("home_upcoming_$id"))
+        assertEquals(
+            "dựng lại Activity KHÔNG được nhân bản bản ghi",
+            rowsBefore,
+            runBlocking { container.memorialRepository.observe(familyId).first().size },
+        )
+    }
+
+    /**
+     * **Xoay màn hình thật**, không phải `recreate()` mô phỏng.
+     *
+     * `requestedOrientation` bắt hệ thống đổi cấu hình thật sự; `MainActivity` không khai
+     * `configChanges` nên nó bị huỷ và dựng lại đúng như khi người dùng nghiêng máy.
+     *
+     * Sai thì: nghiêng máy là mất chỗ đang đứng trên lịch.
+     */
+    @Test
+    fun xoay_ngang_roi_doc_that_su_giu_nguyen_thang_va_ngay_dang_chon() {
+        rule.onNodeWithTag("tab_calendar").performClick()
+        waitForTag("screen_calendar")
+        rule.onNodeWithTag("calendar_next").performClick()
+        rule.waitForIdle()
+
+        val target = YearMonth.from(LocalDate.now()).plusMonths(1).atDay(12)
+        rule.onNodeWithTag("day_$target").performClick()
+        rule.waitForIdle()
+        val monthBefore = textOf("calendar_month_title")
+        val selectedBefore = textOf("calendar_selected")
+
+        for (orientation in listOf(
+            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
+            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
+        )) {
+            rule.activityRule.scenario.onActivity { it.requestedOrientation = orientation }
+            rule.waitForIdle()
+            waitForTag("screen_calendar")
+            assertEquals("tháng phải giữ nguyên qua lần xoay", monthBefore, textOf("calendar_month_title"))
+            assertEquals("ngày đang chọn phải giữ nguyên qua lần xoay", selectedBefore, textOf("calendar_selected"))
+        }
+        rule.activityRule.scenario.onActivity {
+            it.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
     }
 }
