@@ -9,6 +9,14 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 **Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
 **Phase 6 hoàn thành** — liên kết ngày giỗ ↔ thành viên, sửa vòng đời nửa đêm, đo hiệu năng, dựng được APK/AAB release. Trước đó: **Phase 5** — ngày giỗ theo lịch âm. Trước đó: **Phase 4** — lịch âm hiển thị trên màn Nhà và màn Lịch. Trước đó: **Phase 3** — engine lịch âm Việt Nam (Kotlin thuần, offline). Trước đó: **Phase 3A.5** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
 
+## Chính sách quyền riêng tư
+
+Bản chính thức nằm ở repo riêng, **không** ở đây — để chỉ có đúng một nguồn sự thật cho
+tài liệu mà Google đối chiếu với phần khai báo Data safety:
+
+* trang đang chạy: <https://navoi8211.github.io/nepnha-privacy/>
+* mã nguồn trang: <https://github.com/NaVoi8211/nepnha-privacy>
+
 ## Build
 
 Máy này chưa có JDK trên PATH; dùng JBR đi kèm Android Studio:
