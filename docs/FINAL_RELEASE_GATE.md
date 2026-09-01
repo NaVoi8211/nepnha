@@ -223,7 +223,7 @@ mã hoá** — màn Cài đặt trong app đã nói đúng như vậy.
 
 ## 6. Tái lập bản build — và một đính chính
 
-Build sạch (`clean` + `--no-build-cache`) **ba lần** hôm nay, tất cả tại commit `6bf9dcd`:
+Build sạch (`clean` + `--no-build-cache`) **ba lần** hôm nay, tất cả tại commit `70198da`:
 
 | Lần | APK SHA-256 | AAB SHA-256 |
 |---|---|---|
@@ -241,12 +241,12 @@ lần được Gradle build cache phục hồi, tức không phải hai lần d�
 
 Kết luận đúng, đã truy ra nguyên nhân chính xác: AGP nhúng git SHA vào
 `META-INF/version-control-info.textproto`, và file đó chứa đúng
-`revision: "6bf9dcdf45ff…"`. Vì SHA-1 dài cố định nên **kích thước artifact không đổi
+`revision: "70198daf45ff…"`. Vì SHA-1 dài cố định nên **kích thước artifact không đổi
 (1 766 674 B / 4 260 795 B) mà hash đổi theo commit**.
 
 > **Cùng commit ⇒ artifact byte-identical. Khác commit ⇒ hash đổi theo thiết kế.**
 
-Hệ quả thực tế: hash trong tài liệu này chỉ đúng cho commit `6bf9dcd`. Sau bất kỳ commit
+Hệ quả thực tế: hash trong tài liệu này chỉ đúng cho commit `70198da`. Sau bất kỳ commit
 nào — kể cả commit thêm chính tài liệu này — phải build lại để có hash mới. Đây **không**
 phải lỗi và không cần sửa cho việc phát hành lên Play.
 
@@ -426,8 +426,8 @@ là không tối ưu khi chưa có vấn đề đo được. Ghi số ở đây 
 
 | Hạng mục | Bằng chứng |
 |---|---|
-| `core/lunar` | commit cuối cùng chạm vào là `db73eb7` (Phase 3). **0 thay đổi** kể từ đó |
-| Dataset | commit cuối cùng chạm vào là `aa5d31f`. SHA-256 `b9f9613a…20f33d`, **không** regenerate |
+| `core/lunar` | commit cuối cùng chạm vào là `eb0f550` (Phase 3). **0 thay đổi** kể từ đó |
+| Dataset | commit cuối cùng chạm vào là `f12edbb`. SHA-256 `b9f9613a…20f33d`, **không** regenerate |
 | Dataset trong APK | cùng hash `b9f9613a…20f33d` |
 | Thuật toán lịch âm / ΔT / quy tắc nhuận | không đụng |
 | API lịch âm Phase 3 | không đụng |

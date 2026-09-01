@@ -250,8 +250,8 @@ Không chạy `keytool`, không tạo `.jks`/`.keystore`/password file.
 
 | Hạng mục | Trạng thái |
 |---|---|
-| `core/lunar` | **0 thay đổi** — commit cuối chạm vào là `db73eb7` (Phase 3) |
-| Dataset | **0 thay đổi** — commit cuối chạm vào là `aa5d31f`; SHA `b9f9613a…20f33d` không đổi |
+| `core/lunar` | **0 thay đổi** — commit cuối chạm vào là `eb0f550` (Phase 3) |
+| Dataset | **0 thay đổi** — commit cuối chạm vào là `f12edbb`; SHA `b9f9613a…20f33d` không đổi |
 | Room schema | không đổi, không thêm migration |
 | Dependency | `libs.versions.toml` không đổi |
 | `app/src/main` | **1 file thay đổi: `CalendarViewModel.kt`, +15 dòng, TOÀN BỘ là chú thích** ghi bất biến luồng. Không đổi một dòng hành vi nào |
@@ -273,6 +273,22 @@ Không chạy `keytool`, không tạo `.jks`/`.keystore`/password file.
 7. Các giới hạn đã ghi ở `FINAL_RELEASE_GATE.md` §14 vẫn còn nguyên giá trị.
 
 ---
+
+## 10b. Lịch sử git đã được viết lại (01/09/2026)
+
+Sau khi cổng này đóng, toàn bộ **29 commit** được viết lại để đổi email tác giả và
+committer từ email công ty sang email cá nhân của chủ dự án. Repo **chưa từng được push**
+nên không ảnh hưởng tới ai.
+
+Điều đó có nghĩa:
+
+* **Mọi commit SHA đã đổi.** Các SHA trích dẫn trong tài liệu này và trong
+  `FINAL_RELEASE_GATE.md` đã được cập nhật sang giá trị mới;
+* **Nội dung không đổi một byte nào** — đã chứng minh bằng cách so `HEAD^{tree}` trước và
+  sau: cùng là `9e936ab9c927fabea2039fa6ab658afa7bd46b69`;
+* **Hash artifact ghi trong các tài liệu cũ không còn tái lập được**, vì AGP nhúng git SHA
+  vào `META-INF/version-control-info.textproto`. Đây là hệ quả đã lường trước, không phải
+  lỗi. Muốn có hash hiện hành thì build lại tại commit hiện tại.
 
 ## 11. Việc tiếp theo — của chủ dự án
 

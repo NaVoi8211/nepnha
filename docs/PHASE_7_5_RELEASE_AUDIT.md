@@ -20,7 +20,7 @@ công bố; hai thứ đó Play bắt buộc và không thể tự tạo thay ch
 
 | Hạng mục | Giá trị |
 |---|---|
-| Commit gốc khi bắt đầu | `6788c8c` |
+| Commit gốc khi bắt đầu | `e2ae29d` |
 | Thiết bị | Samsung Galaxy A32 (SM-A325F), Android 13, arm64-v8a |
 | Máy build | MacBook Pro 2019 Intel i5, 8 GB RAM, JBR 25, AGP 9.3.1 |
 | `applicationId` | `com.nepnha` |
