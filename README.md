@@ -6,8 +6,23 @@ Trợ lý nghi lễ gia đình Việt. **Offline-first, không backend, không t
 
 ## Trạng thái
 
-**Phase 2 hoàn thành** — app shell + Family/Member lưu bằng Room.
-**Phase 6 hoàn thành** — liên kết ngày giỗ ↔ thành viên, sửa vòng đời nửa đêm, đo hiệu năng, dựng được APK/AAB release. Trước đó: **Phase 5** — ngày giỗ theo lịch âm. Trước đó: **Phase 4** — lịch âm hiển thị trên màn Nhà và màn Lịch. Trước đó: **Phase 3** — engine lịch âm Việt Nam (Kotlin thuần, offline). Trước đó: **Phase 3A.5** — bảng tiết khí 1901–2100 đã sinh & kiểm toàn vẹn. Engine lịch âm **vẫn chưa được phép viết** (BLOCKED).
+**Nguồn đã đóng băng, đang chờ đưa lên Google Play.** Phần mã nguồn đã xong; việc còn lại
+nằm ở Play Console.
+
+| Phase | Nội dung |
+|---|---|
+| 0–2 | Kiến trúc, app shell, Room, Family/Member |
+| 3 | Engine lịch âm Việt Nam — Kotlin thuần, offline, dataset dựng từ NASA + ERFA |
+| 4 | Lịch âm trên màn Nhà và màn Lịch |
+| 5 | Ngày giỗ theo lịch âm: 3 policy tháng nhuận, 2 policy ngày thiếu |
+| 6 | Liên kết ngày giỗ ↔ thành viên, vòng đời qua nửa đêm, hiệu năng, dựng được APK/AAB |
+| 7 | Xuất/nhập cục bộ — định dạng độc lập schema, chỉ-thêm, có checksum |
+| 7.5 · Release Gate · Stability Gate | Ba vòng kiểm toán: artifact, R8, migration, riêng tư, hiệu năng, vòng đời |
+
+Kiểm chứng gần nhất trên **Samsung Galaxy A32 (Android 13)**: **160 unit test** và
+**75 instrumented test** đều xanh, lint 0 error, bản release đã minify chạy đúng.
+
+Chi tiết ở [docs/FINAL_PRESIGNING_STABILITY_GATE.md](docs/FINAL_PRESIGNING_STABILITY_GATE.md).
 
 ## Chính sách quyền riêng tư
 
